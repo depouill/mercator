@@ -92,7 +92,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $tasks])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -102,7 +104,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.task.title_singular"),
     'URL' => route('admin.tasks.massDestroy'),
-    'canDelete' => auth()->user()->can('task_delete') ? true : false
+    'canDelete' => auth()->user()->can('task_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

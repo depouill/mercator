@@ -20,7 +20,16 @@ class SiteController extends Controller
     {
         abort_if(Gate::denies('site_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $sites = Site::with('buildings')->orderBy('name')->get();
+        $sites = Site::with('buildings')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Site::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.sites.index', compact('sites'));
     }

@@ -200,7 +200,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $physicalLinks])
+</div>
 </div>
 @endsection
 
@@ -211,7 +213,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.physicalLink.title_singular"),
     'URL' => route('admin.links.massDestroy'),
-    'canDelete' => auth()->user()->can('physical_link_delete') ? true : false
+    'canDelete' => auth()->user()->can('physical_link_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

@@ -168,7 +168,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $relations])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -178,7 +180,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.relation.title_singular"),
     'URL' => route('admin.relations.massDestroy'),
-    'canDelete' => auth()->user()->can('relation_delete') ? true : false
+    'canDelete' => auth()->user()->can('relation_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

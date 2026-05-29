@@ -120,7 +120,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $certificates])
+</div>
 </div>
 @endsection
 
@@ -131,7 +133,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.certificate.title_singular"),
     'URL' => route('admin.certificates.massDestroy'),
-    'canDelete' => auth()->user()->can('certificate_delete') ? true : false
+    'canDelete' => auth()->user()->can('certificate_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

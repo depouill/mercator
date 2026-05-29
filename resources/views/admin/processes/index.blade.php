@@ -141,7 +141,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $processes])
+</div>
 </div>
 
 
@@ -154,7 +156,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.process.title_singular"),
     'URL' => route('admin.processes.massDestroy'),
-    'canDelete' => auth()->user()->can('process_delete') ? true : false
+    'canDelete' => auth()->user()->can('process_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

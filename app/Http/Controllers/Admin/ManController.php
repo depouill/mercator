@@ -18,7 +18,17 @@ class ManController extends Controller
     {
         abort_if(Gate::denies('man_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $mans = Man::with('wans', 'lans', 'parentMan')->get()->sortBy('name');
+        $mans = Man::query()
+            ->with('wans', 'lans', 'parentMan')
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Man::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.mans.index', compact('mans'));
     }

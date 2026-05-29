@@ -119,7 +119,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $macroProcessuses])
+</div>
 </div>
 
 
@@ -132,7 +134,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.macroProcessus.title_singular"),
     'URL' => route('admin.macro-processuses.massDestroy'),
-    'canDelete' => auth()->user()->can('site_delete') ? true : false
+    'canDelete' => auth()->user()->can('site_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

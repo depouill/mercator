@@ -112,7 +112,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $entities])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -122,7 +124,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.entity.title_singular"),
     'URL' => route('admin.entities.massDestroy'),
-    'canDelete' => auth()->user()->can('entity_delete')
+    'canDelete' => auth()->user()->can('entity_delete'),
+    'serverSidePagination' => true
     )
 );
 </script>

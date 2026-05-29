@@ -19,7 +19,16 @@ class VlanController extends Controller
     {
         abort_if(Gate::denies('vlan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $vlans = Vlan::with('subnetworks')->orderBy('name')->get();
+        $vlans = Vlan::with('subnetworks')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Vlan::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.vlans.index', compact('vlans'));
     }

@@ -37,127 +37,16 @@ class LogicalServerController extends Controller
     {
         abort_if(Gate::denies('logical_server_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        /*
-        // Normal code
-        $logicalServers = LogicalServer
-            ::with('applications:id,name', 'physicalServers:id,name', 'cluster:id,name')
-            ->orderBy('name')
-            ->get();
-        */
-
-        // Optimized code
-        $result = DB::table('logical_servers as ls')
-            ->select(
-                'ls.*',
-                'ma.id as application_id',
-                'ma.name as application_name',
-                'ps.id as physical_server_id',
-                'ps.name as physical_server_name',
-                'cl.id as cluster_id',
-                'cl.name as cluster_name',
-            )
-            ->leftJoin('application_logical_server as lsma', 'ls.id', '=', 'lsma.logical_server_id')
-            ->leftJoin('applications as ma', function ($join): void {
-                $join->on('lsma.application_id', '=', 'ma.id')
-                    ->whereNull('ma.deleted_at');
-            })
-            ->leftJoin('logical_server_physical_server as lsps', 'ls.id', '=', 'lsps.logical_server_id')
-            ->leftJoin('cluster_logical_server as cls', 'ls.id', '=', 'cls.logical_server_id')
-            ->leftJoin('clusters as cl', function ($join): void {
-                $join->on('cls.cluster_id', '=', 'cl.id')
-                    ->whereNull('ma.deleted_at');
-            })
-            ->leftJoin('physical_servers as ps', function ($join): void {
-                $join->on('lsps.physical_server_id', '=', 'ps.id')
-                    ->whereNull('ps.deleted_at');
-            })
-            ->whereNull('ls.deleted_at')
-            ->orderBy('ls.name', 'asc')
-            ->get();
-
-        // Start Grouping Objects
-        /*
-        // Code v1
-        $logicalServers = collect();
-        $curLogicalServer = null;
-        foreach ($result as $res) {
-            if (($curLogicalServer === null) || ($curLogicalServer->id !== $res->id)) {
-                $curLogicalServerId = $res;
-                $curLogicalServer = (object) [
-                    'id' => $res->id,
-                    'name' => $res->name,
-                    'description' => $res->description,
-                    'active' => $res->active,
-                    'operating_system' => $res->operating_system,
-                    'environment' => $res->environment,
-                    'type' => $res->type,
-                    'attributes' => $res->attributes,
-                    'configuration' => $res->configuration,
-                    'address_ip' => $res->address_ip,
-                    'cluster' => $res->cluster_id === null ? null : (object) ['id' => $res->cluster_id, 'name' => $res->cluster_name ],
-                        //    ...
-                    'applications' => collect(),
-                    'physicalServers' => collect(),
-                ];
-                $logicalServers->push($curLogicalServer);
-            }
-            // add application to list if not already in
-            if (($res->application_id !== null) && ! $curLogicalServer->applications->contains(function ($item) use ($res) {
-                return $item->id === $res->application_id;
-            })) {
-                $curLogicalServer->applications->push(
-                    (object) [
-                        'id' => $res->application_id,
-                        'name' => $res->application_name,
-                    ]
-                );
-            }
-
-            // add physical server to list if not already in
-            if (($res->physical_server_id !== null) && ! $curLogicalServer->physicalServers->contains(function ($item) use ($res) {
-                return $item->id === $res->physical_server_id;
-            })) {
-                //dd($curLogicalServer);
-                $curLogicalServer->physicalServers->push((object) [
-                    'id' => $res->physical_server_id,
-                    'name' => $res->physical_server_name,
-                ]);
-            }
-        }
-        */
-
-        // Code v2
-        $logicalServers = $result->groupBy('id')->map(function ($items) {
-            $logicalServer = $items->first();
-
-            return (object) [
-                'id' => $logicalServer->id,
-                'name' => $logicalServer->name,
-                'description' => $logicalServer->description,
-                'active' => $logicalServer->active,
-                'operating_system' => $logicalServer->operating_system,
-                'environment' => $logicalServer->environment,
-                'type' => $logicalServer->type,
-                'attributes' => $logicalServer->attributes,
-                'configuration' => $logicalServer->configuration,
-                'address_ip' => $logicalServer->address_ip,
-                'applications' => $items->filter(function ($item) {
-                    return ! is_null($item->application_id);
-                })->unique('application_id')->map(function ($item) {
-                    return (object) ['id' => $item->application_id, 'name' => $item->application_name];
-                })->values(),
-                'clusters' => $items->filter(function ($item) {
-                    return ! is_null($item->cluster_id);
-                })->unique('cluster_id')->map(function ($item) {
-                    return (object) ['id' => $item->cluster_id, 'name' => $item->cluster_name];
-                })->values(),
-                'physicalServers' => $items->filter(function ($item) {
-                    return ! is_null($item->physical_server_id);
-                })->unique('physical_server_id')->map(function ($item) {
-                    return (object) ['id' => $item->physical_server_id, 'name' => $item->physical_server_name];
-                })->values(),
-            ];
-        })->values();
+        $logicalServers = LogicalServer::with('applications:id,name', 'physicalServers:id,name', 'clusters:id,name')
+        ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (LogicalServer::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.logicalServers.index', compact('logicalServers'));
     }

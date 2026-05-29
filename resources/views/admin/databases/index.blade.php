@@ -128,7 +128,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $databases])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -138,7 +140,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.database.title_singular"),
     'URL' => route('admin.databases.massDestroy'),
-    'canDelete' => auth()->user()->can('database_delete') ? true : false
+    'canDelete' => auth()->user()->can('database_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

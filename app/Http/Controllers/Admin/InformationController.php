@@ -19,8 +19,16 @@ class InformationController extends Controller
 
         $information = Information::query()
             ->with('parents','children')
-            ->orderBy('name')
-            ->get();
+            
+        ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Information::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.information.index', compact('information'));
     }

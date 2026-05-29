@@ -153,6 +153,7 @@ class LoadTestSeeder extends Seeder
                 'name'                     => "LOAD-FLOW-{$i}",
                 'protocol'                 => self::PROTOCOLS[array_rand(self::PROTOCOLS)],
                 'dest_port'                => self::PORTS[array_rand(self::PORTS)],
+                'interface'                 => $this->faker->randomElement(['eth0', 'eth1', 'eth2', 'eth3']),
                 'workstation_source_id'    => null,
                 'logical_server_source_id' => null,
                 'physical_server_source_id' => null,

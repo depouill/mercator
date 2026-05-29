@@ -16,7 +16,16 @@ class ZoneAdminController extends Controller
     {
         abort_if(Gate::denies('zone_admin_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $zoneAdmins = ZoneAdmin::all()->sortBy('name');
+        $zoneAdmins = ZoneAdmin::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (ZoneAdmin::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.zoneAdmins.index', compact('zoneAdmins'));
     }

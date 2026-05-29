@@ -145,7 +145,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $applications])
+</div>
 </div>
 @endsection
 
@@ -156,7 +158,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.application.title_singular"),
     'URL' => route('admin.applications.massDestroy'),
-    'canDelete' => auth()->user()->can('application_delete') ? true : false
+    'canDelete' => auth()->user()->can('application_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

@@ -143,7 +143,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $physicalSwitches])
+</div>
     </div>
 @endsection
 
@@ -154,7 +156,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.physicalSwitch.title_singular"),
             'URL' => route('admin.physical-switches.massDestroy'),
-            'canDelete' => auth()->user()->can('physical_switch_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('physical_switch_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

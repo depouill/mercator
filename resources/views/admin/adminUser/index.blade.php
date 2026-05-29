@@ -111,7 +111,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $users])
+</div>
     </div>
 @endsection
 
@@ -122,7 +124,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.adminUser.title_singular"),
             'URL' => route('admin.admin-users.massDestroy'),
-            'canDelete' => auth()->user()->can('admin_user_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('admin_user_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

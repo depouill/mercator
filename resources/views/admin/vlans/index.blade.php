@@ -97,7 +97,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $vlans])
+</div>
 </div>
 @endsection
 
@@ -108,7 +110,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.vlan.title_singular"),
     'URL' => route('admin.vlans.massDestroy'),
-    'canDelete' => auth()->user()->can('vlan_delete') ? true : false
+    'canDelete' => auth()->user()->can('vlan_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

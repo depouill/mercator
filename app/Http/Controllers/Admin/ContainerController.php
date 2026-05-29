@@ -22,7 +22,16 @@ class ContainerController extends Controller
     {
         abort_if(Gate::denies('container_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $containers = Container::orderBy('name')->get();
+        $containers = Container::query()
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Container::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.containers.index', compact('containers'));
     }

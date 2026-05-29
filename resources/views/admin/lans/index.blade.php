@@ -87,7 +87,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $lans])
+</div>
     </div>
 @endsection
 
@@ -98,7 +100,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.lan.title_singular"),
             'URL' => route('admin.lans.massDestroy'),
-            'canDelete' => auth()->user()->can('lan_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('lan_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

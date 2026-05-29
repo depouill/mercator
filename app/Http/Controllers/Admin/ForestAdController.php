@@ -18,7 +18,16 @@ class ForestAdController extends Controller
     {
         abort_if(Gate::denies('forest_ad_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $forestAds = ForestAd::all()->sortBy('name');
+        $forestAds = ForestAd::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (ForestAd::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.forestAds.index', compact('forestAds'));
     }

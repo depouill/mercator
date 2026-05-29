@@ -18,7 +18,16 @@ class WanController extends Controller
     {
         abort_if(Gate::denies('wan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $wans = Wan::all()->sortBy('name');
+        $wans = Wan::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Wan::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.wans.index', compact('wans'));
     }

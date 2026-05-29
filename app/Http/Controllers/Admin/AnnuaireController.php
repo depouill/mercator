@@ -17,7 +17,16 @@ class AnnuaireController extends Controller
     {
         abort_if(Gate::denies('annuaire_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $annuaires = Annuaire::all()->sortBy('name');
+        $annuaires = Annuaire::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Annuaire::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.annuaires.index', compact('annuaires'));
     }

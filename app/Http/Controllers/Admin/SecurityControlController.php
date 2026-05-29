@@ -20,7 +20,16 @@ class SecurityControlController extends Controller
     {
         abort_if(Gate::denies('security_control_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $controls = SecurityControl::All()->sortBy('name');
+        $controls = SecurityControl::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (SecurityControl::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.securityControls.index', compact('controls'));
     }

@@ -133,7 +133,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $workstations])
+</div>
     </div>
 @endsection
 
@@ -144,7 +146,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.workstation.title_singular"),
             'URL' => route('admin.workstations.massDestroy'),
-            'canDelete' => auth()->user()->can('workstation_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('workstation_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection
