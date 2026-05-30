@@ -8,6 +8,7 @@ use App\Traits\Auditable;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -170,5 +171,20 @@ class ApplicationFlow extends Model implements HasPrefix
     public function databaseDest(): BelongsTo
     {
         return $this->belongsTo(Database::class, 'database_dest_id');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->orWhere(fn ($q) => $q
+                ->whereNotNull('application_source_id')
+                ->whereNotNull('module_source_id')
+                ->whereNotNull('database_source_id'))
+            ->orWhere(fn ($q) => $q
+                ->whereNotNull('application_dest_id')
+                ->whereNotNull('module_dest_id')
+                ->whereNotNull('database_dest_id'));
     }
 }

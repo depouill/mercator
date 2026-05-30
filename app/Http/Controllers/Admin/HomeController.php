@@ -55,8 +55,6 @@ use App\Models\WifiTerminal;
 use App\Models\Workstation;
 use App\Models\Zone;
 use App\Models\ZoneAdmin;
-use Illuminate\Support\Facades\DB;
-
 // ecosystem
 // information system
 // Applications
@@ -125,555 +123,169 @@ class HomeController extends Controller
     {
         $levels = [
             // GDPR
-            'data_processing' => DataProcessing::count(),
+            'data_processing'  => DataProcessing::count(),
             'security_controls' => SecurityControl::count(),
 
-            // ecosystem
-            'entities' => Entity::count(),
-            'relations' => Relation::count(),
+            // Ecosystem
+            'entities'      => Entity::count(),
+            'entities_lvl1' => Entity::maturityLevel1()->count(),
 
-            'entities_lvl1' => Entity::where('description', '<>', null)
-                ->where('security_level', '<>', null)
-                ->where('contact_point', '<>', 'null')
-                // entity must support at least one process
-                ->whereExists(function ($query): void {
-                    $query->select('entity_process.entity_id')
-                        ->from('entity_process')
-                        ->whereRaw('entity_process.entity_id = entities.id');
-                })
-                ->count(),
+            'relations'      => Relation::count(),
+            'relations_lvl1' => Relation::maturityLevel1()->count(),
+            'relations_lvl2' => Relation::maturityLevel2()->count(),
 
-            'relations_lvl1' => Relation::where('type', '<>', null)
-                ->where('description', '<>', null)
-                ->count(),
+            // Information system
+            'macroProcessuses'      => MacroProcessus::count(),
+            'macroProcessuses_lvl2' => MacroProcessus::maturityLevel2()->count(),
+            'macroProcessuses_lvl3' => MacroProcessus::maturityLevel3()->count(),
 
-            'relations_lvl2' => Relation::where('type', '<>', null)
-                ->where('description', '<>', null)
-                ->where('importance', '>', 0)
-                ->count(),
+            'processes'      => Process::count(),
+            'processes_lvl1' => Process::maturityLevel1()->count(),
+            'processes_lvl2' => Process::maturityLevel2()->count(),
 
-            // information system
-            'macroProcessuses' => MacroProcessus::count(),
-            'macroProcessuses_lvl2' => MacroProcessus::where('description', '<>', null)
-                ->where('io_elements', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                ->count(),
+            'activities'      => Activity::count(),
+            'activities_lvl2' => Activity::maturityLevel2()->count(),
 
-            'macroProcessuses_lvl3' => MacroProcessus::where('description', '<>', null)
-                ->where('io_elements', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                ->where('owner', '<>', null)
-                ->count(),
+            'operations'      => Operation::count(),
+            'operations_lvl1' => Operation::maturityLevel1()->count(),
+            'operations_lvl2' => Operation::maturityLevel2()->count(),
+            'operations_lvl3' => Operation::maturityLevel3()->count(),
 
-            'processes' => Process::count(),
-            'processes_lvl1' => Process::where('description', '<>', null)
-                ->where('in_out', '<>', null)
-                ->where('owner', '<>', null)
-                /*
-                // process must have one activity
-                ->whereExists(function ($query) {
-                    $query->select("activity_process.process_id")
-                        ->from("activity_process")
-                        ->whereRaw("activity_process.process_id = processes.id");
-                })
-                // process must have one entity
-                ->whereExists(function ($query) {
-                    $query->select("entity_process.process_id")
-                        ->from("entity_process")
-                        ->whereRaw("entity_process.process_id = processes.id");
-                })
-                // process must be supported by one application
-                ->whereExists(function ($query) {
-                    $query->select("application_process.process_id")
-                        ->from("application_process")
-                        ->whereRaw("application_process.process_id = processes.id");
-                })
-                */
-                ->count(),
+            'tasks'      => Task::count(),
+            'tasks_lvl3' => Task::maturityLevel3()->count(),
 
-            'processes_lvl2' => Process::where('name', '<>', null)
-                ->where('description', '<>', null)
-                ->where('in_out', '<>', null)
-                ->where('owner', '<>', null)
-                ->where('macroprocess_id', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                ->count(),
+            'actors'      => Actor::count(),
+            'actors_lvl2' => Actor::maturityLevel2()->count(),
 
-            'activities' => Activity::count(),
-            'activities_lvl2' => Activity::where('description', '<>', null)
-                    // activity must have one process
-                    /*
-                    ->whereExists(function ($query) {
-                        $query->select('activity_operation.activity_id')
-                            ->from('activity_operation')
-                            ->whereRaw('activity_operation.activity_id = activities.id');
-                    })
-                    */
-                ->count(),
+            'informations'      => Information::count(),
+            'informations_lvl1' => Information::maturityLevel1()->count(),
+            'informations_lvl2' => Information::maturityLevel2()->count(),
 
-            'operations' => Operation::count(),
-            'operations_lvl1' => Operation::where('description', '<>', null)
-                ->count(),
+            // Applications
+            'applicationBlocks'      => ApplicationBlock::count(),
+            'applicationBlocks_lvl2' => ApplicationBlock::maturityLevel2()->count(),
 
-            'operations_lvl2' => Operation::where('description', '<>', null)
-                // must have at least one actor
-                ->whereExists(function ($query): void {
-                    $query->select('actor_operation.operation_id')
-                        ->from('actor_operation')
-                        ->whereRaw('actor_operation.operation_id = operations.id');
-                })
-                ->count(),
+            'applications'      => Application::count(),
+            'applications_lvl1' => Application::maturityLevel1()->count(),
+            'applications_lvl2' => Application::maturityLevel2()->count(),
+            'applications_lvl3' => Application::maturityLevel3()->count(),
 
-            'operations_lvl3' => Operation::where('description', '<>', null)
-                // must have at least one actor
-                ->whereExists(function ($query): void {
-                    $query->select('actor_operation.operation_id')
-                        ->from('actor_operation')
-                        ->whereRaw('actor_operation.operation_id = operations.id');
-                })
-                // must have at least one task
-                ->whereExists(function ($query): void {
-                    $query->select('operation_task.operation_id')
-                        ->from('operation_task')
-                        ->whereRaw('operation_task.operation_id = operations.id');
-                })
-                ->count(),
+            'applicationServices'      => ApplicationService::count(),
+            'applicationServices_lvl2' => ApplicationService::maturityLevel2()->count(),
 
-            'tasks' => Task::count(),
-            'tasks_lvl3' => Task::where('description', '<>', null)
-                // task must have one operation
-                ->whereExists(function ($query): void {
-                    $query->select('operation_task.task_id')
-                        ->from('operation_task')
-                        ->whereRaw('operation_task.task_id = tasks.id');
-                })
-                ->count(),
+            'applicationModules'      => ApplicationModule::count(),
+            'applicationModules_lvl2' => ApplicationModule::maturityLevel2()->count(),
 
-            'actors' => Actor::count(),
-            'actors_lvl2' => Actor::where('contact', '<>', null)
-                ->where('nature', '<>', null)
-                ->where('type', '<>', null)
-                ->count(),
+            'databases'      => Database::count(),
+            'databases_lvl1' => Database::maturityLevel1()->count(),
+            'databases_lvl2' => Database::maturityLevel2()->count(),
 
-            'informations' => Information::count(),
-            'informations_lvl1' => Information::where('description', '<>', null)
-                ->where('owner', '<>', null)
-                ->where('administrator', '<>', null)
-                ->where('storage', '<>', null)
-                ->count(),
-
-            'informations_lvl2' => Information::where('description', '<>', null)
-                ->where('owner', '<>', null)
-                ->where('administrator', '<>', null)
-                ->where('storage', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                ->where('sensitivity', '<>', null)
-                ->count(),
-
-            // Application vue
-            'applicationBlocks' => ApplicationBlock::count(),
-            'applicationBlocks_lvl2' => ApplicationBlock::where('description', '<>', null)
-                ->where('responsible', '<>', null)
-                // applicationBlock must have one application
-                ->whereExists(function ($query): void {
-                    $query->select('applications.id')
-                        ->from('applications')
-                        ->whereRaw('applications.application_block_id = application_blocks.id');
-                })
-                ->count(),
-
-            'applications' => Application::count(),
-            'applications_lvl1' => Application::where('description', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('technology', '<>', null)
-                ->where('type', '<>', null)
-                ->where('users', '<>', null)
-                // application must have one process
-                ->whereExists(function ($query): void {
-                    $query->select('application_process.application_id')
-                        ->from('application_process')
-                        ->whereRaw('application_process.application_id = applications.id');
-                })
-                // application must have one logical server
-                /* No - fat client application does not have a logical server
-                ->whereExists(function ($query) {
-                    $query->select("application_logical_server.application_id")
-                        ->from("application_logical_server")
-                        ->whereRaw("application_logical_server.application_id = applications.id");
-                })
-                */
-                ->count(),
-
-            'applications_lvl2' => Application::where('description', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('technology', '<>', null)
-                ->where('type', '<>', null)
-                ->where('users', '<>', null)
-                ->where('entity_resp_id', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                // application must have one process
-                ->whereExists(function ($query): void {
-                    $query->select('application_process.application_id')
-                        ->from('application_process')
-                        ->whereRaw('application_process.application_id = applications.id');
-                })
-                // application must have one logical server
-                /* No - fat client application does not have a logical server
-                ->whereExists(function ($query) {
-                    $query->select("application_logical_server.application_id")
-                        ->from("application_logical_server")
-                        ->whereRaw("application_logical_server.application_id = applications.id");
-                })
-                */
-
-                // application must have one application service
-                // NO - services of external applications are not documented
-                /*
-                ->whereExists(function ($query) {
-                   $query->select("application_application_service.application_id")
-                        ->from("application_application_service")
-                        ->whereRaw("application_application_service.application_id = applications.id");
-                })
-                */
-                ->count(),
-
-            'applications_lvl3' => Application::where('description', '<>', null)
-                ->where('entity_resp_id', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('technology', '<>', null)
-                ->where('type', '<>', null)
-                ->where('users', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                // application must have one process
-                ->whereExists(function ($query): void {
-                    $query->select('application_process.application_id')
-                        ->from('application_process')
-                        ->whereRaw('application_process.application_id = applications.id');
-                })
-                // CPE must be given
-                //    ->where('vendor', '<>', null)
-                //    ->where('product', '<>', null)
-                //    ->where('version', '<>', null)
-                ->count(),
-
-            'applicationServices' => ApplicationService::count(),
-            'applicationServices_lvl2' => ApplicationService::where('description', '<>', null)
-                // applicationService must have one application
-                ->whereExists(function ($query): void {
-                    $query->select('application_application_service.application_id')
-                        ->from('application_application_service')
-                        ->whereRaw('application_application_service.application_service_id = application_services.id');
-                })
-                ->count(),
-
-            'applicationModules' => ApplicationModule::count(),
-            'applicationModules_lvl2' => ApplicationModule::where('description', '<>', null)
-                ->count(),
-
-            'databases' => Database::count(),
-            'databases_lvl1' => Database::where('description', '<>', null)
-                ->where('entity_resp_id', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('type', '<>', null)
-                ->count(),
-
-            'databases_lvl2' => Database::where('description', '<>', null)
-                ->where('entity_resp_id', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('type', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                // ->where('external', '<>', null) //lvl2
-                ->count(),
-
-            'flows' => ApplicationFlow::count(),
-            'flows_lvl1' => ApplicationFlow::where('description', '<>', null)
-                ->orWhere(function ($query): void {
-                    $query->where('application_source_id', '<>', null)
-                        ->where('module_source_id', '<>', null)
-                        ->where('database_source_id', '<>', null);
-                })
-                ->orWhere(function ($query): void {
-                    $query->where('application_dest_id', '<>', null)
-                        ->where('module_dest_id', '<>', null)
-                        ->where('database_dest_id', '<>', null);
-                })
-                    // ->where('crypted', '<>', null)
-                ->count(),
+            'flows'      => ApplicationFlow::count(),
+            'flows_lvl1' => ApplicationFlow::maturityLevel1()->count(),
 
             // Administration
-            'zones_ad' => ZoneAdmin::count(),
-            'zones_ad_lvl1' => ZoneAdmin::where('description', '<>', null)
-                ->count(),
+            'zones_ad'      => ZoneAdmin::count(),
+            'zones_ad_lvl1' => ZoneAdmin::maturityLevel1()->count(),
 
-            'annuaires' => Annuaire::count(),
-            'annuaires_lvl1' => Annuaire::where('description', '<>', null)
-                ->where('solution', '<>', null)
-                ->where('zone_admin_id', '<>', null)
-                ->count(),
+            'annuaires'      => Annuaire::count(),
+            'annuaires_lvl1' => Annuaire::maturityLevel1()->count(),
 
-            'forests' => ForestAd::count(),
-            'forests_lvl1' => ForestAd::where('description', '<>', null)
-                ->where('zone_admin_id', '<>', null)
-                ->count(),
+            'forests'      => ForestAd::count(),
+            'forests_lvl1' => ForestAd::maturityLevel1()->count(),
 
-            'domains' => Domain::count(),
-            'domaines_lvl1' => Domain::where('description', '<>', null)
-                ->where('domain_ctrl_cnt', '<>', null)
-                ->where('user_count', '<>', null)
-                ->where('machine_count', '<>', null)
-                ->where('relation_inter_domaine', '<>', null)
-                ->count(),
+            'domains'        => Domain::count(),
+            'domaines_lvl1'  => Domain::maturityLevel1()->count(),
 
             // Logique
-            'networks' => Network::count(),
-            'networks_lvl1' => Network::where('description', '<>', null)
-                ->where('protocol_type', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('responsible_sec', '<>', null)
-                ->where('security_need_c', '<>', null)
-                ->where('security_need_i', '<>', null)
-                ->where('security_need_a', '<>', null)
-                ->where('security_need_t', '<>', null)
-                ->count(),
+            'networks'      => Network::count(),
+            'networks_lvl1' => Network::maturityLevel1()->count(),
 
-            'subnetworks' => Subnetwork::count(),
-            'subnetworks_lvl1' => Subnetwork::where('description', '<>', null)
-                ->where('address', '<>', null)
-                ->where('default_gateway', '<>', null)
-                ->where('ip_allocation_type', '<>', null)
-                ->where('responsible_exp', '<>', null)
-                ->where('dmz', '<>', null)
-                ->where('wifi', '<>', null)
-                ->where('vlan_id', '<>', null)
-                ->count(),
+            'subnetworks'      => Subnetwork::count(),
+            'subnetworks_lvl1' => Subnetwork::maturityLevel1()->count(),
 
-            'gateways' => Gateway::count(),
-            'gateways_lvl1' => Gateway::where('description', '<>', null)
-                ->where('authentification', '<>', null)
-                ->where('ip', '<>', null)
-                ->count(),
+            'gateways'      => Gateway::count(),
+            'gateways_lvl1' => Gateway::maturityLevel1()->count(),
 
-            'externalConnectedEntities' => ExternalConnectedEntity::count(),
-            'externalConnectedEntities_lvl2' => ExternalConnectedEntity::where('type', '<>', null)
-                ->where('contacts', '<>', null)
-                ->count(),
+            'externalConnectedEntities'      => ExternalConnectedEntity::count(),
+            'externalConnectedEntities_lvl2' => ExternalConnectedEntity::maturityLevel2()->count(),
 
-            'switches' => NetworkSwitch::count(),
-            'switches_lvl1' => NetworkSwitch::where('description', '<>', null)
-                // IP not mandatory on a switch
-                // ->where('ip', '<>', null)
-                ->count(),
+            'switches'      => NetworkSwitch::count(),
+            'switches_lvl1' => NetworkSwitch::maturityLevel1()->count(),
 
-            'routers' => Router::count(),
-            'routers_lvl1' => Router::where('description', '<>', null)
-                ->count(),
+            'routers'      => Router::count(),
+            'routers_lvl1' => Router::maturityLevel1()->count(),
 
-            'securityDevices' => SecurityDevice::count(),
-            'securityDevices_lvl1' => SecurityDevice::where('description', '<>', null)
-                ->count(),
+            'securityDevices'      => SecurityDevice::count(),
+            'securityDevices_lvl1' => SecurityDevice::maturityLevel1()->count(),
 
-            'DHCPServers' => DhcpServer::count(),
-            'DHCPServers_lvl2' => DhcpServer::where('description', '<>', null)
-                ->count(),
+            'DHCPServers'      => DhcpServer::count(),
+            'DHCPServers_lvl2' => DhcpServer::maturityLevel2()->count(),
 
-            'DNSServers' => Dnsserver::count(),
-            'DNSServers_lvl2' => Dnsserver::where('description', '<>', null)
-                ->count(),
+            'DNSServers'      => Dnsserver::count(),
+            'DNSServers_lvl2' => Dnsserver::maturityLevel2()->count(),
 
-            'clusters' => Cluster::count(),
-            'clusters_lvl1' => Cluster::where('description', '<>', null)
-                ->where('type', '<>', null)
-                ->count(),
+            'clusters'      => Cluster::count(),
+            'clusters_lvl1' => Cluster::maturityLevel1()->count(),
 
-            'logicalServers' => LogicalServer::count(),
-            'logicalServers_lvl1' => LogicalServer::query()
-                ->whereNotNull('description')
-                ->where('active', 1)
-                ->whereNotNull('operating_system')
-                ->whereNotNull('environment')
-                ->whereNotNull('address_ip')
+            'logicalServers'      => LogicalServer::count(),
+            'logicalServers_lvl1' => LogicalServer::maturityLevel1()->count(),
 
-                // doit avoir au moins une application
-                ->whereExists(function ($q): void {
-                    $q->select(DB::raw(1))
-                        ->from('application_logical_server')
-                        ->whereColumn('application_logical_server.logical_server_id', 'logical_servers.id');
-                })
+            'containers'      => Container::count(),
+            'containers_lvl1' => Container::maturityLevel1()->count(),
 
-                // doit être installé sur un serveur physique OU appartenir à un cluster
-                ->where(function ($q): void {
-                    $q->whereExists(function ($q1): void {
-                        $q1->select(DB::raw(1))
-                            ->from('logical_server_physical_server')
-                            ->whereColumn('logical_server_physical_server.logical_server_id', 'logical_servers.id');
-                    })->orWhereExists(function ($q2): void {
-                        $q2->select(DB::raw(1))
-                            ->from('cluster_logical_server') // <-- table pivot N-M
-                            ->whereColumn('cluster_logical_server.logical_server_id', 'logical_servers.id');
-                    });
-                })
-                ->count(),
-
-            'containers' => Container::count(),
-            'containers_lvl1' => Container::where('description', '<>', null)
-                ->where('type', '<>', null)
-                // Container must have one application
-                ->whereExists(function ($query): void {
-                    $query->select('application_container.application_id')
-                        ->from('application_container')
-                        ->whereRaw('application_container.container_id = containers.id');
-                })
-                // Container must be deployer one logical_server
-                ->whereExists(function ($query): void {
-                    $query->select('container_logical_server.logical_server_id')
-                        ->from('container_logical_server')
-                        ->whereRaw('container_logical_server.container_id = containers.id');
-                })
-                ->count(),
-
-            'certificates' => Certificate::count(),
-            'certificates_lvl2' => Certificate::where('description', '<>', null)
-                ->where('type', '<>', null)
-                ->where('start_validity', '<>', null)
-                ->where('end_validity', '<>', null)
-                // certificate must be on a logical server
-                ->whereExists(function ($query): void {
-                    $query->select('certificate_logical_server.logical_server_id')
-                        ->from('certificate_logical_server')
-                        ->whereRaw(
-                            'certificate_logical_server.certificate_id = certificates.id'
-                        );
-                })
-                ->count(),
+            'certificates'      => Certificate::count(),
+            'certificates_lvl2' => Certificate::maturityLevel2()->count(),
 
             // Physical
-            'sites' => Site::count(),
-            'sites_lvl1' => Site::where('description', '<>', null)
-                ->count(),
+            'sites'      => Site::count(),
+            'sites_lvl1' => Site::maturityLevel1()->count(),
 
-            'buildings' => Building::count(),
-            'buildings_lvl1' => Building::where('description', '<>', null)
-                ->count(),
+            'buildings'      => Building::count(),
+            'buildings_lvl1' => Building::maturityLevel1()->count(),
 
-            'bays' => Bay::count(),
-            'bays_lvl1' => Bay::where('description', '<>', null)
-                ->count(),
+            'bays'      => Bay::count(),
+            'bays_lvl1' => Bay::maturityLevel1()->count(),
 
             'zones' => Zone::count(),
 
-            'physicalServers' => PhysicalServer::count(),
-            'physicalServers_lvl1' => PhysicalServer::where('description', '<>', null)
-                ->where('configuration', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // a server is not necessary in a bay
-                // ->where('bay_id', '<>', null)
-                ->where('responsible', '<>', null)
-                ->count(),
+            'physicalServers'      => PhysicalServer::count(),
+            'physicalServers_lvl1' => PhysicalServer::maturityLevel1()->count(),
 
-            'workstations' => Workstation::count(),
-            'workstations_lvl1' => Workstation::where('description', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                ->count(),
+            'workstations'      => Workstation::count(),
+            'workstations_lvl1' => Workstation::maturityLevel1()->count(),
 
-            'storageDevices' => StorageDevice::count(),
-            'storageDevices_lvl1' => StorageDevice::where('description', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // not always in a bay
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'storageDevices'      => StorageDevice::count(),
+            'storageDevices_lvl1' => StorageDevice::maturityLevel1()->count(),
 
-            'peripherals' => Peripheral::count(),
-            'peripherals_lvl1' => Peripheral::where('type', '<>', null)
-                ->where('description', '<>', null)
-                ->where('responsible', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // not always in a bay
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'peripherals'      => Peripheral::count(),
+            'peripherals_lvl1' => Peripheral::maturityLevel1()->count(),
 
-            'phones' => Phone::count(),
-            'phones_lvl1' => Phone::where('type', '<>', null)
-                ->where('description', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'phones'      => Phone::count(),
+            'phones_lvl1' => Phone::maturityLevel1()->count(),
 
-            'physicalSwitchs' => PhysicalSwitch::count(),
-            'physicalSwitchs_lvl1' => PhysicalSwitch::where('type', '<>', null)
-                ->where('description', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // not always in a bay
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'physicalSwitchs'      => PhysicalSwitch::count(),
+            'physicalSwitchs_lvl1' => PhysicalSwitch::maturityLevel1()->count(),
 
-            'physicalRouters' => PhysicalRouter::count(),
-            'physicalRouters_lvl1' => PhysicalRouter::where('description', '<>', null)
-                ->where('type', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // not always in a bay
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'physicalRouters'      => PhysicalRouter::count(),
+            'physicalRouters_lvl1' => PhysicalRouter::maturityLevel1()->count(),
 
-            'wifiTerminals' => WifiTerminal::count(),
-            'wifiTerminals_lvl1' => WifiTerminal::where('description', '<>', null)
-                ->where('type', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                ->count(),
+            'wifiTerminals'      => WifiTerminal::count(),
+            'wifiTerminals_lvl1' => WifiTerminal::maturityLevel1()->count(),
 
-            'physicalSecurityDevices' => PhysicalSecurityDevice::count(),
-            'physicalSecurityDevices_lvl1' => PhysicalSecurityDevice::where('description', '<>', null)
-                ->where('type', '<>', null)
-                ->where('site_id', '<>', null)
-                ->where('building_id', '<>', null)
-                // not always in a bay
-                // ->where('bay_id', '<>', null)
-                ->count(),
+            'physicalSecurityDevices'      => PhysicalSecurityDevice::count(),
+            'physicalSecurityDevices_lvl1' => PhysicalSecurityDevice::maturityLevel1()->count(),
 
-            // Too many links...
-            // 'links' => PhysicalLink::count(),
-
-            'wans' => ($wan_count = Wan::count()),
+            'wans'      => ($wan_count = Wan::count()),
             'wans_lvl1' => $wan_count,
 
-            'mans' => ($man_count = Man::count()),
+            'mans'      => ($man_count = Man::count()),
             'mans_lvl1' => $man_count,
 
-            'lans' => Lan::count(),
-            'lans_lvl1' => Lan::where('description', '<>', null)
-                ->count(),
+            'lans'      => Lan::count(),
+            'lans_lvl1' => Lan::maturityLevel1()->count(),
 
-            'vlans' => Vlan::count(),
-            'vlans_lvl1' => Vlan::where('description', '<>', null)
-                ->count(),
+            'vlans'      => Vlan::count(),
+            'vlans_lvl1' => Vlan::maturityLevel1()->count(),
         ];
 
         // Maturity Level 1

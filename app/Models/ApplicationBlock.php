@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,5 +58,16 @@ class ApplicationBlock extends Model implements HasPrefix, HasIconContract
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class, 'application_block_id', 'id')->orderBy('name');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel2(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->whereNotNull('responsible')
+            ->whereExists(fn ($q) => $q
+                ->from('applications')
+                ->whereColumn('applications.application_block_id', 'application_blocks.id'));
     }
 }

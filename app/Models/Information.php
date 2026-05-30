@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -122,6 +123,27 @@ class Information extends Model implements HasPrefix, HasIconContract
             ->whereLike('content', '%"#'.$this->getUID().'"%')
             ->get()
         );
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->whereNotNull('owner')
+            ->whereNotNull('administrator')
+            ->whereNotNull('storage');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel2(Builder $query): Builder
+    {
+        return $query->maturityLevel1()
+            ->whereNotNull('security_need_c')
+            ->whereNotNull('security_need_i')
+            ->whereNotNull('security_need_a')
+            ->whereNotNull('security_need_t')
+            ->whereNotNull('sensitivity');
     }
 
 }

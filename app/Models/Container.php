@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,5 +70,19 @@ class Container extends Model implements HasIconContract, HasPrefix
     public function logicalServers(): BelongsToMany
     {
         return $this->belongsToMany(LogicalServer::class)->orderBy('name');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->whereNotNull('type')
+            ->whereExists(fn ($q) => $q
+                ->from('application_container')
+                ->whereColumn('application_container.container_id', 'containers.id'))
+            ->whereExists(fn ($q) => $q
+                ->from('container_logical_server')
+                ->whereColumn('container_logical_server.container_id', 'containers.id'));
     }
 }

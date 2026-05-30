@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -95,5 +96,16 @@ class Peripheral extends Model implements HasIconContract, HasPrefix
     public function bay(): BelongsTo
     {
         return $this->belongsTo(Bay::class, 'bay_id');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('type')
+            ->whereNotNull('description')
+            ->whereNotNull('responsible')
+            ->whereNotNull('site_id')
+            ->whereNotNull('building_id');
     }
 }

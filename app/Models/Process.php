@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -123,6 +124,27 @@ class Process extends Model implements HasIconContract, HasPrefix
             ->whereLike('content', '%"#'.$this->getUID().'"%')
             ->get()
         );
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->whereNotNull('in_out')
+            ->whereNotNull('owner');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel2(Builder $query): Builder
+    {
+        return $query->maturityLevel1()
+            ->whereNotNull('name')
+            ->whereNotNull('macroprocess_id')
+            ->whereNotNull('security_need_c')
+            ->whereNotNull('security_need_i')
+            ->whereNotNull('security_need_a')
+            ->whereNotNull('security_need_t');
     }
 
 }

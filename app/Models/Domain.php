@@ -10,6 +10,7 @@ use App\Traits\HasIcon;
 use App\Traits\HasUniqueIdentifier;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -66,5 +67,16 @@ class Domain extends Model implements HasPrefix, HasIconContract
     public function logicalServers(): HasMany
     {
         return $this->hasMany(LogicalServer::class, 'domain_id');
+    }
+
+    /** @param Builder<static> $query */
+    public function scopeMaturityLevel1(Builder $query): Builder
+    {
+        return $query
+            ->whereNotNull('description')
+            ->whereNotNull('domain_ctrl_cnt')
+            ->whereNotNull('user_count')
+            ->whereNotNull('machine_count')
+            ->whereNotNull('relation_inter_domaine');
     }
 }
