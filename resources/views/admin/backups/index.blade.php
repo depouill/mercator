@@ -91,7 +91,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $backups])
+</div>
     </div>
 @endsection
 
@@ -103,6 +105,7 @@
             'title'     => trans('cruds.backup.title_singular'),
             'URL'       => route('admin.backups.massDestroy'),
             'canDelete' => auth()->user()->can('backup_delete') ? true : false,
+            'serverSidePagination' => true,
         ]);
     </script>
 @endsection

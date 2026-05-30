@@ -88,7 +88,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $wans])
+</div>
 </div>
 @endsection
 
@@ -99,7 +101,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.wan.title_singular"),
     'URL' => route('admin.wans.massDestroy'),
-    'canDelete' => auth()->user()->can('wan_delete') ? true : false
+    'canDelete' => auth()->user()->can('wan_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

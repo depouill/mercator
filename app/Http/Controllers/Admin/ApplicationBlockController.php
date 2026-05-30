@@ -17,8 +17,16 @@ class ApplicationBlockController extends Controller
     {
         abort_if(Gate::denies('application_block_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // $applicationBlocks = ApplicationBlock::all();
-        $applicationBlocks = ApplicationBlock::with('applications')->orderBy('name')->get();
+        $applicationBlocks = ApplicationBlock::with('applications')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (ApplicationBlock::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.applicationBlocks.index', compact('applicationBlocks'));
     }

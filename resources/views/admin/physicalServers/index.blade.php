@@ -130,7 +130,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $physicalServers])
+</div>
     </div>
 @endsection
 
@@ -141,7 +143,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.physicalServer.title_singular"),
             'URL' => route('admin.physical-servers.massDestroy'),
-            'canDelete' => auth()->user()->can('physical_server_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('physical_server_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

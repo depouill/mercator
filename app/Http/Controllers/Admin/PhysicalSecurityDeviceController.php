@@ -23,7 +23,16 @@ class PhysicalSecurityDeviceController extends Controller
     {
         abort_if(Gate::denies('physical_security_device_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $physicalSecurityDevices = PhysicalSecurityDevice::all();
+        $physicalSecurityDevices = PhysicalSecurityDevice::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (PhysicalSecurityDevice::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.physicalSecurityDevices.index', compact('physicalSecurityDevices'));
     }

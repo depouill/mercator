@@ -122,12 +122,13 @@
     <label class="btn btn-outline-primary" for="direction-both">
         ↕ {{ trans("cruds.report.explorer.both") }}
     </label>
-</div>
-&nbsp;
-<button id="toggleIP" class="btn btn-outline-secondary" type="button"
-        data-bs-toggle="button">
-    <i class="fa fa-eye"></i> Show IP
-</button>
+    </div>
+    &nbsp;
+    <button id="toggleIP" class="btn btn-outline-secondary" type="button"
+            data-bs-toggle="button">Show IP</button>
+    &nbsp;
+    <button id="toggleAttr" class="btn btn-outline-secondary" type="button"
+            data-bs-toggle="button">Show Attr</button>
 
                                 </td>
                             </tr>
@@ -666,6 +667,9 @@
             if (getShowIP() && node.title != null) {
                 return { ...node, label: node.label + "\n" + node.title };
             }
+            if (getShowAttr() && node.attributes != null) {
+                return { ...node, label: node.label + "\n" + node.attributes };
+            }
             return node;
         }
 
@@ -673,14 +677,23 @@
             return document.getElementById('toggleIP').classList.contains('active');
         }
 
-        function refreshNodeLabels(showIP) {
+        function getShowAttr() {
+            return document.getElementById('toggleAttr').classList.contains('active');
+        }
+
+        function refreshNodeLabels() {
             if (!nodes) return;
+            const showIP   = getShowIP();
+            const showAttr = getShowAttr();
             nodes.forEach(function (visNode) {
                 const srcNode = _nodes.get(visNode.id);
                 if (!srcNode) return;
-                const newLabel = (showIP && srcNode.title)
-                    ? srcNode.label + "\n" + srcNode.title
-                    : srcNode.label;
+                let newLabel = srcNode.label;
+                if (showIP && srcNode.title) {
+                    newLabel += "\n" + srcNode.title;
+                } else if (showAttr && srcNode.attributes) {
+                    newLabel += "\n" + srcNode.attributes;
+                }
                 if (visNode.label !== newLabel) {
                     nodes.update({ id: visNode.id, label: newLabel });
                 }
@@ -730,15 +743,33 @@
             });
 
             // ── Toggle IP ─────────────────────────────────────────────────────
-            const toggleIP = document.getElementById('toggleIP');
+            const toggleIP   = document.getElementById('toggleIP');
+            const toggleAttr = document.getElementById('toggleAttr');
+
             if (localStorage.getItem('showIP') === 'true') {
                 toggleIP.classList.add('active');
+            } else if (localStorage.getItem('showAttr') === 'true') {
+                toggleAttr.classList.add('active');
             }
 
             toggleIP.addEventListener('click', function () {
                 const isActive = this.classList.contains('active');
                 localStorage.setItem('showIP', String(isActive));
-                refreshNodeLabels(isActive);
+                if (isActive) {
+                    toggleAttr.classList.remove('active');
+                    localStorage.setItem('showAttr', 'false');
+                }
+                refreshNodeLabels();
+            });
+
+            toggleAttr.addEventListener('click', function () {
+                const isActive = this.classList.contains('active');
+                localStorage.setItem('showAttr', String(isActive));
+                if (isActive) {
+                    toggleIP.classList.remove('active');
+                    localStorage.setItem('showIP', 'false');
+                }
+                refreshNodeLabels();
             });
 
             // ── Sélection du moteur physique ─────────────────────────────────

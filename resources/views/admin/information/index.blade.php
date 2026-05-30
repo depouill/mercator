@@ -57,21 +57,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($information as $key => $information)
-                        <tr data-entry-id="{{ $information->id }}"
-                            @if(($information->description==null)||
-                                ($information->owner==null)||
-                                ($information->administrator==null)||
-                                ($information->storage==null)||
+                    @foreach($information as $key => $info)
+                        <tr data-entry-id="{{ $info->id }}"
+                            @if(($info->description==null)||
+                                ($info->owner==null)||
+                                ($info->administrator==null)||
+                                ($info->storage==null)||
                                 ((auth()->user()->granularity>=2)&&
                                     (
-                                    ($information->security_need_c==null)||
-                                    ($information->security_need_i==null)||
-                                    ($information->security_need_a==null)||
-                                    ($information->security_need_t==null)
+                                    ($info->security_need_c==null)||
+                                    ($info->security_need_i==null)||
+                                    ($info->security_need_a==null)||
+                                    ($info->security_need_t==null)
                                     )
                                 )||
-                                ($information->sensitivity==null)
+                                ($info->sensitivity==null)
                                 )
                                                       class="table-warning"
                             @endif
@@ -80,80 +80,80 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.information.show', $information->id) }}">
-                                {{ $information->name ?? '' }}
+                                <a href="{{ route('admin.information.show', $info->id) }}">
+                                {{ $info->name ?? '' }}
                                 </a>
                             </td>
                             <td>
-                                {!! $information->description ?? '' !!}
+                                {!! $info->description ?? '' !!}
                             </td>
                             <td>
-                                {!! $information->owner ?? '' !!}
+                                {!! $info->owner ?? '' !!}
                             </td>
                             <td nowrap>
                                 @php
-                                if ($information->security_need_c==0)
+                                if ($info->security_need_c==0)
                                     echo "<span class='noRisk'>0</span>";
-                                elseif ($information->security_need_c==1)
+                                elseif ($info->security_need_c==1)
                                     echo "<span class='veryLowRisk'>1</span>";
-                                elseif ($information->security_need_c==2)
+                                elseif ($info->security_need_c==2)
                                     echo "<span class='lowRisk'>2</span>";
-                                elseif ($information->security_need_c==3)
+                                elseif ($info->security_need_c==3)
                                     echo "<span class='mediumRisk'>3</span>";
-                                elseif ($information->security_need_c==4)
+                                elseif ($info->security_need_c==4)
                                     echo "<span class='highRisk'>4</span>";
                                 else
                                     echo "<span> * </span>";
                                 echo " - ";
-                                if ($information->security_need_i==0)
+                                if ($info->security_need_i==0)
                                     echo "<span class='noRisk'>0</span>";
-                                elseif ($information->security_need_i==1)
+                                elseif ($info->security_need_i==1)
                                     echo "<span class='veryLowRisk'>1</span>";
-                                elseif ($information->security_need_i==2)
+                                elseif ($info->security_need_i==2)
                                     echo "<span class='lowRisk'>2</span>";
-                                elseif ($information->security_need_i==3)
+                                elseif ($info->security_need_i==3)
                                     echo "<span class='mediumRisk'>3</span>";
-                                elseif ($information->security_need_i==4)
+                                elseif ($info->security_need_i==4)
                                     echo "<span class='highRisk'>4</span>";
                                 else
                                     echo "<span> * </span>";
                                 echo " - ";
-                                if ($information->security_need_a==0)
+                                if ($info->security_need_a==0)
                                     echo "<span class='noRisk'>0</span>";
-                                elseif ($information->security_need_a==1)
+                                elseif ($info->security_need_a==1)
                                     echo "<span class='veryLowRisk'>1</span>";
-                                elseif ($information->security_need_a==2)
+                                elseif ($info->security_need_a==2)
                                     echo "<span class='lowRisk'>2</span>";
-                                elseif ($information->security_need_a==3)
+                                elseif ($info->security_need_a==3)
                                     echo "<span class='mediumRisk'>3</span>";
-                                elseif ($information->security_need_a==4)
+                                elseif ($info->security_need_a==4)
                                     echo "<span class='highRisk'>4</span>";
                                 else
                                     echo "<span> * </span>";
                                 echo " - ";
-                                if ($information->security_need_t==0)
+                                if ($info->security_need_t==0)
                                     echo "<span class='noRisk'>0</span>";
-                                elseif ($information->security_need_t==1)
+                                elseif ($info->security_need_t==1)
                                     echo "<span class='veryLowRisk'>1</span>";
-                                elseif ($information->security_need_t==2)
+                                elseif ($info->security_need_t==2)
                                     echo "<span class='lowRisk'>2</span>";
-                                elseif ($information->security_need_t==3)
+                                elseif ($info->security_need_t==3)
                                     echo "<span class='mediumRisk'>3</span>";
-                                elseif ($information->security_need_t==4)
+                                elseif ($info->security_need_t==4)
                                     echo "<span class='highRisk'>4</span>";
                                 else
                                     echo "<span> * </span>";
                                 if (config('mercator-config.parameters.security_need_auth')) {
                                     echo "-";
-                                    if ($information->security_need_auth==0)
+                                    if ($info->security_need_auth==0)
                                         echo "<span class='noRisk'>0</span>";
-                                    elseif ($information->security_need_auth==1)
+                                    elseif ($info->security_need_auth==1)
                                         echo "<span class='veryLowRisk'>1</span>";
-                                    elseif ($information->security_need_auth==2)
+                                    elseif ($info->security_need_auth==2)
                                         echo "<span class='lowRisk'>2</span>";
-                                    elseif ($information->security_need_auth==3)
+                                    elseif ($info->security_need_auth==3)
                                         echo "<span class='mediumRisk'>3</span>";
-                                    elseif ($information->security_need_auth==4)
+                                    elseif ($info->security_need_auth==4)
                                         echo "<span class='highRisk'>4</span>";
                                     else
                                         echo "<span> * </span>";
@@ -161,35 +161,35 @@
                                 @endphp
                             </td>
                             <td>
-                                {{ $information->sensitivity ?? '' }}
+                                {{ $info->sensitivity ?? '' }}
                             </td>
                             <td>
-                            @foreach($information->parents as $parent)
+                            @foreach($info->parents as $parent)
                                 <a href="{{ route('admin.information.show', $parent->id) }}">{{$parent->name}}</a>
                                 @if(!$loop->last), @endif
                             @endforeach
                             </td>
                             <td>
-                            @foreach($information->children as $child)
+                            @foreach($info->children as $child)
                                 <a href="{{ route('admin.information.show', $child->id) }}">{{$child->name}}</a>
                                 @if(!$loop->last), @endif
                             @endforeach
                             </td>
                             <td nowrap>
                                 @can('information_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.information.show', $information->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.information.show', $info->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
 
                                 @can('information_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.information.edit', $information->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.information.edit', $info->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
 
                                 @can('information_delete')
-                                    <form action="{{ route('admin.information.destroy', $information->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ route('admin.information.destroy', $info->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
@@ -203,7 +203,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $information])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -213,7 +215,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.information.title_singular"),
     'URL' => route('admin.information.massDestroy'),
-    'canDelete' => auth()->user()->can('information_delete') ? true : false
+    'canDelete' => auth()->user()->can('information_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

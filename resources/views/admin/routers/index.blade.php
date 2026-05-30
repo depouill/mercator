@@ -108,7 +108,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $routers])
+</div>
     </div>
 @endsection
 
@@ -119,7 +121,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.router.title_singular"),
             'URL' => route('admin.routers.massDestroy'),
-            'canDelete' => auth()->user()->can('router_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('router_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

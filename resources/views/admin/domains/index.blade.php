@@ -121,7 +121,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $domains])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -131,7 +133,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.domaine.title_singular"),
             'URL' => route('admin.domains.massDestroy'),
-            'canDelete' => auth()->user()->can('domaine_ad_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('domaine_ad_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

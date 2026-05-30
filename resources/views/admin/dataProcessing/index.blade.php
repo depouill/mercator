@@ -125,6 +125,7 @@
                 </tbody>
             </table>
         </div>
+    @include('partials.pagination-footer', ['paginator' => $processingRegister])
     </div>
 </div>
 
@@ -136,7 +137,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.dataProcessing.title_singular"),
     'URL' => route('admin.data-processings.massDestroy'),
-    'canDelete' => auth()->user()->can('data_processing_delete') ? true : false
+    'canDelete' => auth()->user()->can('data_processing_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

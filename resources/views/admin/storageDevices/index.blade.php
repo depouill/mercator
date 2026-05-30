@@ -121,7 +121,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $storageDevices])
+</div>
     </div>
 @endsection
 
@@ -132,7 +134,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.storageDevice.title_singular"),
             'URL' => route('admin.storage-devices.massDestroy'),
-            'canDelete' => auth()->user()->can('storage_device_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('storage_device_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

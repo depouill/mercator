@@ -136,7 +136,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $clusters])
+</div>
     </div>
 @endsection
 
@@ -147,7 +149,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.cluster.title_singular"),
             'URL' => route('admin.clusters.massDestroy'),
-            'canDelete' => auth()->user()->can('cluster_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('cluster_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

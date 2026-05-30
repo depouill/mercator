@@ -20,7 +20,16 @@ class OperationController extends Controller
     {
         abort_if(Gate::denies('operation_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $operations = Operation::with(['process', 'tasks', 'actors', 'activities'])->orderBy('name')->get();
+        $operations = Operation::with(['process', 'tasks', 'actors', 'activities'])
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Operation::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.operations.index', compact('operations'));
     }

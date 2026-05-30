@@ -112,7 +112,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $phones])
+</div>
     </div>
 @endsection
 
@@ -123,7 +125,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.phone.title_singular"),
             'URL' => route('admin.phones.massDestroy'),
-            'canDelete' => auth()->user()->can('phone_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('phone_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

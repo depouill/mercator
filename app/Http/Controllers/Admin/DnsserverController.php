@@ -16,7 +16,16 @@ class DnsserverController extends Controller
     {
         abort_if(Gate::denies('dnsserver_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $dnsservers = Dnsserver::all()->sortBy('name');
+        $dnsservers = Dnsserver::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Dnsserver::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.dnsservers.index', compact('dnsservers'));
     }

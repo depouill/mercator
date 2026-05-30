@@ -97,7 +97,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $bays])
+</div>
     </div>
 @endsection
 
@@ -108,7 +110,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.bay.title_singular"),
             'URL' => route('admin.bays.massDestroy'),
-            'canDelete' => auth()->user()->can('bay_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('bay_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

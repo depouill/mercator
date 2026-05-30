@@ -121,7 +121,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $activities])
+</div>
 </div>
 
 
@@ -134,7 +136,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.activity.title_singular"),
     'URL' => route('admin.activities.massDestroy'),
-    'canDelete' => auth()->user()->can('activity_delete') ? true : false
+    'canDelete' => auth()->user()->can('activity_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

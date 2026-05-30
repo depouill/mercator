@@ -25,7 +25,16 @@ class NetworkSwitchController extends Controller
     {
         abort_if(Gate::denies('network_switch_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $networkSwitches = NetworkSwitch::all()->sortBy('name');
+        $networkSwitches = NetworkSwitch::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (NetworkSwitch::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.networkSwitches.index', compact('networkSwitches'));
     }

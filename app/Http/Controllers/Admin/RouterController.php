@@ -18,7 +18,16 @@ class RouterController extends Controller
     {
         abort_if(Gate::denies('router_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $routers = Router::all()->sortBy('name');
+        $routers = Router::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Router::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.routers.index', compact('routers'));
     }

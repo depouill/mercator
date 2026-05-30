@@ -17,7 +17,16 @@ class GatewayController extends Controller
     {
         abort_if(Gate::denies('gateway_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $gateways = Gateway::all()->sortBy('name');
+        $gateways = Gateway::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Gateway::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.gateways.index', compact('gateways'));
     }

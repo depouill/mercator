@@ -19,7 +19,16 @@ class RelationController extends Controller
     {
         abort_if(Gate::denies('relation_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $relations = Relation::with('source', 'destination')->orderBy('name')->get();
+        $relations = Relation::with('source', 'destination')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Relation::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.relations.index', compact('relations'));
     }

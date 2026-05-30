@@ -113,7 +113,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $applicationModules])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -123,7 +125,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.applicationModule.title_singular"),
             'URL' => route('admin.application-modules.massDestroy'),
-            'canDelete' => auth()->user()->can('application_module_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('application_module_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

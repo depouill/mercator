@@ -83,6 +83,7 @@
                 </tbody>
             </table>
         </div>
+    @include('partials.pagination-footer', ['paginator' => $controls])
     </div>
 </div>
 @endsection
@@ -93,7 +94,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.securityControl.title_singular"),
     'URL' => route('admin.security-controls.massDestroy'),
-    'canDelete' => auth()->user()->can('security_control_delete') ? true : false
+    'canDelete' => auth()->user()->can('security_control_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

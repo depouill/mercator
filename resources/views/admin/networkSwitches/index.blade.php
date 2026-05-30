@@ -121,7 +121,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $networkSwitches])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -131,7 +133,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.networkSwitch.title_singular"),
             'URL' => route('admin.network-switches.massDestroy'),
-            'canDelete' => auth()->user()->can('network_switch_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('network_switch_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection
