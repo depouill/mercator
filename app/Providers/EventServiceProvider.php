@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Listeners\LoadCartographerPermissions;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +20,10 @@ class EventServiceProvider extends ServiceProvider
 
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             \SocialiteProviders\Keycloak\KeycloakExtendSocialite::class,
+        ],
+
+        Login::class => [
+            LoadCartographerPermissions::class,
         ],
     ];
 

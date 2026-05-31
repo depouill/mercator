@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\MacroProcessus
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MacroProcessus extends Model implements HasPrefix, HasIconContract
 {
     use Auditable, HasIcon, HasFactory, HasUniqueIdentifier, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'macro_processuses';
 

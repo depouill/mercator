@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Cartographer;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -38,6 +41,36 @@ class AuthServiceProvider extends ServiceProvider
 
             // Sinon, on laisse les autres Gate::define() (ou policies) faire leur travail
             return null;
+        });
+
+        Gate::define('edit-object', function (User $user, \Illuminate\Database\Eloquent\Model $object) {
+            $ability = Str::snake(class_basename($object)) . '_edit';
+
+            // Session-based check (set at login)
+            if (in_array($ability, session('auth_permissions', []), true)) {
+                return true;
+            }
+            // Role-based gate fallback (covers API / test context where session is absent)
+            if (Gate::forUser($user)->check($ability)) {
+                return true;
+            }
+
+            return Cartographer::isAllowed($user, $object);
+        });
+
+        Gate::define('show-object', function (User $user, \Illuminate\Database\Eloquent\Model $object) {
+            $ability = Str::snake(class_basename($object)) . '_show';
+
+            // Session-based check (set at login)
+            if (in_array($ability, session('auth_permissions', []), true)) {
+                return true;
+            }
+            // Role-based gate fallback (covers API / test context where session is absent)
+            if (Gate::forUser($user)->check($ability)) {
+                return true;
+            }
+
+            return Cartographer::isAllowed($user, $object);
         });
     }
 }

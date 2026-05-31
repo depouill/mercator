@@ -350,6 +350,21 @@ return [
             'storage_device_helper'   => 'Storage devices associated with this backup plan',
         ],
     ],
+    'cartographer' => [
+        'title'          => 'Cartographers',
+        'title_singular' => 'Cartographer',
+        'description'    => 'Targeted read and edit access on specific cartography objects, without create or delete rights.',
+        'fields' => [
+            'type'        => 'Object type',
+            'type_helper' => 'Class of the cartographied model',
+            'object'          => 'Object',
+            'object_helper'   => 'Identifier of the cartographied object',
+            'user'                     => 'User',
+            'user_helper'              => 'Authorised user (optional if a role is set)',
+            'role'                     => 'Role',
+            'role_helper'              => 'Authorised role (optional if a user is set)',
+        ],
+    ],
     'certificate' => [
         'description' => 'An electronic certificate (also called a digital certificate or public key certificate) can be thought of as a digital identity card. It is mainly used to identify and authenticate a natural or legal person, but also to encrypt exchanges.',
         'fields' => [

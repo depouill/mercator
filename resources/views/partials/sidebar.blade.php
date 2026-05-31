@@ -171,7 +171,7 @@
                                 class="menu-text">{{ trans('cruds.database.title') }}</span>
                     </a>
                 @endcan
-                @can('flux_access')
+                @can('application_flow_access')
                     <a href="{{ route('admin.application-flows.index') }}"
                        class="ps-4 {{ request()->is('admin/fluxes*') ? 'active' : '' }}">
                         <i class="bi bi-list-columns"></i><span class="menu-text">{{ trans('cruds.flux.title') }}</span>
@@ -212,7 +212,7 @@
                                 class="menu-text">{{ trans('cruds.forestAd.title') }}</span>
                     </a>
                 @endcan
-                @can('domaine_ad_access')
+                @can('domain_access')
                     <a href="{{ route('admin.domains.index') }}"
                        class="ps-4 {{ request()->is('admin/domains*') ? 'active' : '' }}">
                         <i class="bi bi-list-columns"></i><span
@@ -510,6 +510,7 @@
             <div id="submenu9" class="collapse {{ (
             request()->is('admin/users*')||
             request()->is('admin/roles*')||
+            request()->is('admin/cartographers*')||
             request()->is('admin/config*')||
             request()->is('admin/audit-logs*')||
             request()->is('admin/history*')
@@ -525,6 +526,12 @@
                        class="ps-4 {{ request()->is('admin/roles*') ? 'active' : '' }}">
                         <i class="bi bi-people-fill"></i><span
                                 class="menu-text">{{ trans('cruds.role.title') }}</span>
+                    </a>
+                @endcan
+                @can('cartographer_access')
+                    <a href="{{ route('admin.cartographers.index') }}"
+                       class="ps-4 {{ request()->is('admin/cartographers*') ? 'active' : '' }}">
+                        <i class="bi bi-pin-map-fill"></i><span class="menu-text">Cartographes</span>
                     </a>
                 @endcan
                 @can('configure')

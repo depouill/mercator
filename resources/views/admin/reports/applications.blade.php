@@ -209,7 +209,7 @@
     @endif
 @endcan
 
-@can('flux_access')
+@can('application_flow_access')
     @if ($flows->count()>0)
         <br>
         <div class="card">

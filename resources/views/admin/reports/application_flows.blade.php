@@ -109,7 +109,7 @@
 
 <div class="report-scroll-area">
 
-    @can('flux_access')
+    @can('application_flow_access')
         @if($flows->count()>0)
             <div class="card">
                 <div class="card-header">
@@ -640,7 +640,7 @@ digraph  {
         DB{{ $database->id }} [label="{{ $database->name }}" shape=none labelloc="b"  width=1 height=1.1 image="/images/database.png" href="#DATABASE{{$database->id}}"]
     @endforeach
         @endcan
-        @can('flux_access')
+        @can('application_flow_access')
         @foreach($flows as $flow)
         @if ((($flow->database_source_id!=null)||($flow->module_source_id!=null)||($flow->service_source_id!=null)||($flow->application_source_id!=null))&&(($flow->database_dest_id!=null)||($flow->module_dest_id!=null)||($flow->service_dest_id!=null)||($flow->application_dest_id!=null)))
         @if ($flow->database_source_id!=null)

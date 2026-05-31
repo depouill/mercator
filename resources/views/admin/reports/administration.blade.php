@@ -129,7 +129,7 @@
         @endif
     @endcan
 
-    @can('domaine_ad_access')
+    @can('domain_access')
         @if ($domains->count()>0)
             <div class="card">
                 <div class="card-header">

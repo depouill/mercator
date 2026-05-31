@@ -20,7 +20,11 @@ class BuildingController extends Controller
 
     public function index()
     {
-        abort_if(Gate::denies('building_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $user = auth()->user();
+        $allowedIds = Gate::allows('building_access') ? null : \App\Models\Cartographer::allowedIdsFor($user, \App\Models\Building::class);
+        if ($allowedIds !== null && empty($allowedIds)) {
+            abort(Response::HTTP_FORBIDDEN, '403 Forbidden');
+        }
 
         $buildings = Building::with('site')
             ->when(request('search'), function ($q, $search) {
@@ -31,7 +35,8 @@ class BuildingController extends Controller
                 });
             })
             ->orderBy('name')
-            ->paginate(min(max((int) request('per_page', 50), 10), 500));
+            
+            ->when($allowedIds !== null, fn ($q) => $q->whereIn('id', $allowedIds))->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.buildings.index', compact('buildings'));
     }
@@ -123,7 +128,7 @@ class BuildingController extends Controller
 
     public function edit(Building $building)
     {
-        abort_if(Gate::denies('building_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', $building), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $sites = Site::all()->sortBy('name')->pluck('name', 'id');
         $buildings = Building::all()->sortBy('name')->pluck('name', 'id');
@@ -142,6 +147,8 @@ class BuildingController extends Controller
 
     public function update(UpdateBuildingRequest $request, Building $building)
     {
+        abort_if(Gate::denies('edit-object', $building), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $request['attributes'] = implode(' ', $request->get('attributes') !== null ? $request->get('attributes') : []);
 
         $newBuildingId = $request->input('building_id');
@@ -187,7 +194,7 @@ class BuildingController extends Controller
     
     public function show(Building $building)
     {
-        abort_if(Gate::denies('building_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('show-object', $building), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $building->load('site', 'roomBays', 'physicalServers', 'workstations', 'storageDevices', 'peripherals', 'phones', 'physicalSwitches');
 

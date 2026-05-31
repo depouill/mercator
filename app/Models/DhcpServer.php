@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\DhcpServer
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DhcpServer extends Model implements HasPrefix, HasIconContract
 {
     use Auditable, HasFactory, HasIcon, HasUniqueIdentifier, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'dhcp_servers';
 

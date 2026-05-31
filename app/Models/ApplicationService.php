@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\ApplicationService
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ApplicationService extends Model implements HasPrefix, HasIconContract
 {
     use Auditable, HasIcon, HasFactory, HasUniqueIdentifier, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'application_services';
 

@@ -10,6 +10,7 @@ use Gate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use App\Models\Cartographer;
 use App\Models\Permission;
 use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,10 +93,11 @@ class RolesController extends Controller
         $permissions = Permission::all()->sortBy('title')->pluck('title', 'id');
         $permissions_sorted = $this->getSortedPerms($permissions);
 
-        // Chargement des permissions du rôle
         $role->load('permissions');
+        $cartographers       = $role->cartographerEntries()->with('cartographiable')->orderBy('cartographiable_type')->get();
+        $cartographiableModels = Cartographer::cartographiableModelsList();
 
-        return view('admin.roles.edit', compact('permissions_sorted', 'role'));
+        return view('admin.roles.edit', compact('permissions_sorted', 'role', 'cartographers', 'cartographiableModels'));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
@@ -124,10 +126,11 @@ class RolesController extends Controller
 
         $permissions = Permission::all()->sortBy('title')->pluck('title', 'id');
         $permissions_sorted = $this->getSortedPerms($permissions);
-        // Chargement des permissions du rôle
         $role->load('permissions');
+        $cartographers       = $role->cartographerEntries()->with('cartographiable')->orderBy('cartographiable_type')->get();
+        $cartographiableModels = Cartographer::cartographiableModelsList();
 
-        return view('admin.roles.show', compact('permissions_sorted', 'role'));
+        return view('admin.roles.show', compact('permissions_sorted', 'role', 'cartographers', 'cartographiableModels'));
     }
 
     public function destroy(Role $role)

@@ -15,13 +15,13 @@
             {{ trans('global.explore') }}
         </a>
 
-        @can('flux_edit')
+        @can('application_flow_edit')
             <a class="btn btn-info" href="{{ route('admin.application-flows.edit', $flow->id) }}">
                 {{ trans('global.edit') }}
             </a>
         @endcan
 
-        @can('flux_delete')
+        @can('application_flow_delete')
             <form action="{{ route('admin.application-flows.destroy', $flow->id) }}" method="POST"
                   onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                 <input type="hidden" name="_method" value="DELETE">

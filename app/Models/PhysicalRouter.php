@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\PhysicalRouter
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PhysicalRouter extends Model implements HasPrefix
 {
     use Auditable, HasFactory, HasUniqueIdentifier, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'physical_routers';
 

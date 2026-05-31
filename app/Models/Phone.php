@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\Phone
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Phone extends Model implements HasPrefix
 {
     use Auditable, HasFactory, HasUniqueIdentifier, HasIcon, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'phones';
 

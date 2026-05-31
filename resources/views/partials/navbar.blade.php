@@ -33,7 +33,7 @@
                             <li><a class="dropdown-item" href="/admin/report/applications">
                                     <i class="bi bi-diagram-3-fill"></i>{{ trans('panel.menu.applications') }}</a>
                             </li>
-                            @can('flux_access')
+                            @can('application_flow_access')
                                 <li><a class="dropdown-item" href="/admin/report/application_flows">
                                         <i class="bi bi-diagram-3-fill"></i>{{ trans('panel.menu.application_flows') }}
                                     </a>

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -121,5 +122,15 @@ class User extends Authenticatable implements OAuthenticatable, HasIconContract
         return $this->roles()
             ->where(fn ($q) => $q->where('slug', $role)->orWhere('title', $role))
             ->exists();
+    }
+
+    public function cartographerEntries(): HasMany
+    {
+        return $this->hasMany(Cartographer::class, 'user_id');
+    }
+
+    public function isCartographerOf(\Illuminate\Database\Eloquent\Model $object): bool
+    {
+        return Cartographer::isAllowed($this, $object);
     }
 }

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    @can('flux_create')
+    @can('application_flow_create')
         <div style="margin-bottom: 10px;" class="row">
             <div class="col-lg-12">
                 <a id="btn-new" class="btn btn-success" href="{{ route('admin.application-flows.create') }}">
@@ -150,20 +150,20 @@
                                 @endif
                             </td>
                             <td nowrap>
-                                @can('flux_show')
+                                @can('application_flow_show')
                                     <a class="btn btn-xs btn-primary"
                                        href="{{ route('admin.application-flows.show', $flow->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
 
-                                @can('flux_edit')
+                                @can('application_flow_edit')
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.application-flows.edit', $flow->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
 
-                                @can('flux_delete')
+                                @can('application_flow_delete')
                                     <form action="{{ route('admin.application-flows.destroy', $flow->id) }}" method="POST"
                                           onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                           style="display: inline-block;">
@@ -193,7 +193,7 @@
             'id' => '#dataTable',
             'title' => trans("cruds.flux.title_singular"),
             'URL' => route('admin.application-flows.massDestroy'),
-            'canDelete' => auth()->user()->can('flux_delete') ? true : false,
+            'canDelete' => auth()->user()->can('application_flow_delete') ? true : false,
     'serverSidePagination' => true
 ));
     </script>

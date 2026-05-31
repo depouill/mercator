@@ -210,7 +210,7 @@ barChart: {
     url: "/admin/databases"
   },
   @endcan
-  @can('flux_access')
+  @can('application_flow_access')
   {
     label: "{!! trans('cruds.flux.title') !!}",
     data: [ 0, 0, 0, {!! $flows !!}, 0, 0, 0],
@@ -242,7 +242,7 @@ barChart: {
     url: "/admin/forest-ads"
   },
   @endcan
-  @can('domaine_ad_access')
+  @can('domain_access')
   {
     label: "{!! trans('cruds.domaine.title_short') !!}",
     data: [ 0, 0, 0, 0, {!!$domains!!}, 0, 0],

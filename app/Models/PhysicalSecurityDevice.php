@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\PhysicalSecurityDevice
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PhysicalSecurityDevice extends Model implements HasIconContract, HasPrefix
 {
     use Auditable, HasIcon, HasFactory, HasUniqueIdentifier, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'physical_security_devices';
 

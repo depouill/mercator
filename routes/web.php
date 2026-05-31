@@ -483,6 +483,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['web.prote
     Route::resource('/queries', QueryController::class);
     Route::delete('queries-modules-destroy', [QueryController::class, 'massDestroy'])->name('queries.massDestroy');
 
+    // Cartographers
+    Route::prefix('cartographers')->name('cartographers.')->group(function () {
+        Route::get('/',                    [Admin\CartographerController::class, 'index'])->name('index');
+        Route::get('/create',              [Admin\CartographerController::class, 'create'])->name('create');
+        Route::post('/',                   [Admin\CartographerController::class, 'store'])->name('store');
+        Route::get('/objects',             [Admin\CartographerController::class, 'getObjects'])->name('objects');
+        Route::get('/{cartographer}/edit', [Admin\CartographerController::class, 'edit'])->name('edit');
+        Route::put('/{cartographer}',      [Admin\CartographerController::class, 'update'])->name('update');
+        Route::post('/{cartographer}',     [Admin\CartographerController::class, 'destroy'])->name('destroy');
+    });
+
 });
 
 // Profile

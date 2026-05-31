@@ -354,6 +354,21 @@ return [
             'storage_device_helper'   => 'Stockages associés à ce plan de sauvegarde',
         ],
     ],
+    'cartographer' => [
+        'title'          => 'Cartographes',
+        'title_singular' => 'Cartographe',
+        'description'    => 'Accès ciblé en lecture et modification sur des objets spécifiques de la cartographie, sans droits de création ni de suppression.',
+        'fields' => [
+            'type'        => "Type d'objet",
+            'type_helper' => "Classe du modèle cartographié",
+            'object'          => 'Objet',
+            'object_helper'   => 'Identifiant de l\'objet cartographié',
+            'user'            => 'Utilisateur',
+            'user_helper'     => 'Utilisateur autorisé (facultatif si un rôle est renseigné)',
+            'role'            => 'Rôle',
+            'role_helper'     => 'Rôle autorisé (facultatif si un utilisateur est renseigné)',
+        ],
+    ],
     'certificate' => [
         'description' => "Un certificat électronique (aussi appelé certificat numérique ou certificat de clé publique) peut être vu comme une carte d'identité numérique. Il est utilisé principalement pour identifier et authentifier une personne physique ou morale, mais aussi pour chiffrer des échanges.",
         'fields' => [
