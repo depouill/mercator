@@ -70,16 +70,6 @@
                                     ($application->applicationBlock==null)
                                     )
                                 )
-                                /*
-                                ||
-                                ((auth()->user()->granularity==3)&&
-                                    (
-                                    ($application->vendor==null)||
-                                    ($application->product==null)||
-                                    ($application->version==null)
-                                    )
-                                )
-                                */
                             )
                             class="table-warning"
                         @endif
@@ -157,8 +147,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.application.title_singular"),
     'URL' => route('admin.applications.massDestroy'),
-    'canDelete' => auth()->user()->can('application_delete') ? true : false,
+    'canDelete' => (bool) auth()->user()->can('application_delete'),
     'serverSidePagination' => true
-));
+    ));
 </script>
 @endsection

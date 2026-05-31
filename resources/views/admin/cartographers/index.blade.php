@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-    {{ trans('cruds.cartographer.title') }}
+    {{ trans('cruds.cartographer.title') }} {{ trans('global.list') }}
 @endsection
 
 @section('content')
@@ -40,7 +40,7 @@
                     @php
                         $showRoute = $routes[$cartographer->cartographiable_type] ?? null;
                     @endphp
-                    <tr>
+                    <tr data-entry-id="{{ $cartographer->id }}">
                         <td></td>
 
                         {{-- Type --}}
@@ -123,8 +123,8 @@
 @include('partials.datatable', [
     'id'                  => '#dataTable',
     'title'               => trans('cruds.cartographer.title_singular'),
-    'URL'                 => '',
-    'canDelete'           => auth()->user()->can('cartographer_delete') ? true : false,
+    'URL'                 => route('admin.cartographers.massDestroy'),
+    'canDelete'           => (bool) auth()->user()->can('cartographer_delete'),
     'serverSidePagination' => false,
 ])
 </script>

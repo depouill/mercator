@@ -87,7 +87,74 @@
             </table>
         </div>
     </div>
-    <div class="form-group">
+    @php
+        $directEntries = $user->cartographerEntries->filter(fn($e) => $e->cartographiable !== null);
+        $allRoleEntries = $roleCartographers->filter(fn($e) => $e->cartographiable !== null);
+        $total = $directEntries->count() + $allRoleEntries->count();
+    @endphp
+
+    @if($total > 0)
+    <div class="card mt-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <span>
+                <i class="bi bi-pin-map-fill me-2"></i>{{ trans('cruds.cartographer.title') }}
+            </span>
+            <small class="text-muted">{{ $total }} objet(s)</small>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-bordered table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{{ trans('cruds.cartographer.fields.type') }}</th>
+                        <th>{{ trans('cruds.cartographer.fields.object') }}</th>
+                        <th>Via</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($directEntries->sortBy('cartographiable_type') as $entry)
+                    @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
+                    <tr>
+                        <td>{{ $models[$entry->cartographiable_type] ?? $entry->cartographiable_type }}</td>
+                        <td>
+                            @if($showRoute)
+                                <a href="{{ route($showRoute, $entry->cartographiable_id) }}">
+                                    {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                </a>
+                            @else
+                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                            @endif
+                        </td>
+                        <td><span class="badge bg-primary">direct</span></td>
+                    </tr>
+                    @endforeach
+
+                    @foreach($allRoleEntries->sortBy('cartographiable_type') as $entry)
+                    @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
+                    <tr>
+                        <td>{{ $models[$entry->cartographiable_type] ?? $entry->cartographiable_type }}</td>
+                        <td>
+                            @if($showRoute)
+                                <a href="{{ route($showRoute, $entry->cartographiable_id) }}">
+                                    {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                </a>
+                            @else
+                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                            @endif
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                {{ $entry->role->title ?? trans('cruds.cartographer.fields.role') }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
+    <div class="form-group mt-3">
         <a id="btn-cancel" class="btn btn-default" href="{{ route('admin.users.index') }}">
             {{ trans('global.back_to_list') }}
         </a>

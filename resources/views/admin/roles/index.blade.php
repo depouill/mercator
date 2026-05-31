@@ -30,12 +30,9 @@
                         <th>
                             {{ trans('cruds.role.fields.title') }}
                         </th>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            &nbsp;
-                        </th>
+                        <th title="{{ trans('cruds.user.title') }}">#</th>
+                        <th>{{ trans('cruds.cartographer.title') }}</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,8 +46,25 @@
                                 {{ $role->title ?? '' }}
                                 </a>
                             </td>
+                            <td>{{ $role->users_count }}</td>
                             <td>
-                                {{ $role->count ?? '' }}
+                                @foreach($role->cartographerEntries->sortBy('cartographiable_type') as $entry)
+                                    @if($entry->cartographiable)
+                                        @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
+                                        @if($showRoute)
+                                            <a href="{{ route($showRoute, $entry->cartographiable_id) }}"
+                                               class="badge bg-secondary text-decoration-none me-1 mb-1"
+                                               title="{{ $models[$entry->cartographiable_type] ?? '' }}">
+                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                            </a>
+                                        @else
+                                            <span class="badge bg-secondary me-1 mb-1"
+                                                  title="{{ $models[$entry->cartographiable_type] ?? '' }}">
+                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                            </span>
+                                        @endif
+                                    @endif
+                                @endforeach
                             </td>
                             <td nowrap>
                                 @can('role_show')

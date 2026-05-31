@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Cartographer;
 use App\Models\Role;
 use App\Models\User;
 use Gate;
@@ -17,9 +18,11 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::all()->sortBy('id');
+        $users  = User::with(['roles', 'cartographerEntries.cartographiable'])->get()->sortBy('id');
+        $routes = Cartographer::cartographiableRoutesMap();
+        $models = Cartographer::cartographiableModelsList();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'routes', 'models'));
     }
 
     public function create()
@@ -65,9 +68,18 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->load('roles');
+        $user->load(['roles', 'cartographerEntries.cartographiable']);
 
-        return view('admin.users.show', compact('user'));
+        // Entrées via les rôles de l'utilisateur
+        $roleIds = $user->roles->pluck('id');
+        $roleCartographers = Cartographer::whereIn('role_id', $roleIds)
+            ->with(['cartographiable', 'role'])
+            ->get();
+
+        $routes = Cartographer::cartographiableRoutesMap();
+        $models = Cartographer::cartographiableModelsList();
+
+        return view('admin.users.show', compact('user', 'roleCartographers', 'routes', 'models'));
     }
 
     public function destroy(User $user)

@@ -37,10 +37,10 @@
                             {{ trans('cruds.user.fields.email') }}
                         </th>
                         <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
+                            {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <th>
-                            {{ trans('cruds.user.fields.roles') }}
+                            {{ trans('cruds.cartographer.title') }}
                         </th>
                         <th>
                             &nbsp;
@@ -65,11 +65,26 @@
                                 {{ $user->email ?? '' }}
                             </td>
                             <td>
-                                {{ $user->email_verified_at ?? '' }}
+                                @foreach($user->roles as $key => $item)
+                                    <a href="{{ route('admin.roles.show',$item->id) }}">{{ $item->title }}</a>
+                                @endforeach
                             </td>
                             <td>
-                                @foreach($user->roles as $key => $item)
-                                    <span class="badge badge-info">{{ $item->title }}</span>
+                                @foreach($user->cartographerEntries as $entry)
+                                    @if($entry->cartographiable)
+                                        @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
+                                        @if($showRoute)
+                                            <a href="{{ route($showRoute, $entry->cartographiable_id) }}"
+                                               class="badge bg-secondary text-decoration-none me-1 mb-1"
+                                               title="{{ $models[$entry->cartographiable_type] ?? '' }}">
+                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                            </a>
+                                        @else
+                                            <span class="badge bg-secondary me-1 mb-1">
+                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
+                                            </span>
+                                        @endif
+                                    @endif
                                 @endforeach
                             </td>
                             <td nowrap>

@@ -51,14 +51,14 @@ class RolesController extends Controller
     {
         abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $roles = DB::table('roles')
-            ->leftJoin('role_user', 'role_user.role_id', '=', 'roles.id')
-            ->select('roles.id', 'roles.title', DB::raw('count(role_user.user_id) as count'))
-            ->groupBy('roles.id', 'roles.title')
-            ->whereNull('deleted_at')
+        $roles  = Role::withCount('users')
+            ->with('cartographerEntries.cartographiable')
+            ->orderBy('id')
             ->get();
+        $routes = Cartographer::cartographiableRoutesMap();
+        $models = Cartographer::cartographiableModelsList();
 
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index', compact('roles', 'routes', 'models'));
     }
 
     public function create()
