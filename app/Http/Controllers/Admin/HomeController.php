@@ -55,15 +55,15 @@ use App\Models\WifiTerminal;
 use App\Models\Workstation;
 use App\Models\Zone;
 use App\Models\ZoneAdmin;
-// ecosystem
-// information system
-// Applications
-// Administration
-// Logique
-// Physique
+use App\Models\Cartographer;
 
 class HomeController extends Controller
 {
+    private function q(string $class): \Illuminate\Database\Eloquent\Builder
+    {
+        return Cartographer::scopedQuery($class);
+    }
+
     /**
      * Show maturity level 1.
      */
@@ -123,169 +123,169 @@ class HomeController extends Controller
     {
         $levels = [
             // GDPR
-            'data_processing'  => DataProcessing::count(),
-            'security_controls' => SecurityControl::count(),
+            'data_processing'   => $this->q(DataProcessing::class)->count(),
+            'security_controls' => $this->q(SecurityControl::class)->count(),
 
             // Ecosystem
-            'entities'      => Entity::count(),
-            'entities_lvl1' => Entity::maturityLevel1()->count(),
+            'entities'      => $this->q(Entity::class)->count(),
+            'entities_lvl1' => $this->q(Entity::class)->maturityLevel1()->count(),
 
-            'relations'      => Relation::count(),
-            'relations_lvl1' => Relation::maturityLevel1()->count(),
-            'relations_lvl2' => Relation::maturityLevel2()->count(),
+            'relations'      => $this->q(Relation::class)->count(),
+            'relations_lvl1' => $this->q(Relation::class)->maturityLevel1()->count(),
+            'relations_lvl2' => $this->q(Relation::class)->maturityLevel2()->count(),
 
             // Information system
-            'macroProcessuses'      => MacroProcessus::count(),
-            'macroProcessuses_lvl2' => MacroProcessus::maturityLevel2()->count(),
-            'macroProcessuses_lvl3' => MacroProcessus::maturityLevel3()->count(),
+            'macroProcessuses'      => $this->q(MacroProcessus::class)->count(),
+            'macroProcessuses_lvl2' => $this->q(MacroProcessus::class)->maturityLevel2()->count(),
+            'macroProcessuses_lvl3' => $this->q(MacroProcessus::class)->maturityLevel3()->count(),
 
-            'processes'      => Process::count(),
-            'processes_lvl1' => Process::maturityLevel1()->count(),
-            'processes_lvl2' => Process::maturityLevel2()->count(),
+            'processes'      => $this->q(Process::class)->count(),
+            'processes_lvl1' => $this->q(Process::class)->maturityLevel1()->count(),
+            'processes_lvl2' => $this->q(Process::class)->maturityLevel2()->count(),
 
-            'activities'      => Activity::count(),
-            'activities_lvl2' => Activity::maturityLevel2()->count(),
+            'activities'      => $this->q(Activity::class)->count(),
+            'activities_lvl2' => $this->q(Activity::class)->maturityLevel2()->count(),
 
-            'operations'      => Operation::count(),
-            'operations_lvl1' => Operation::maturityLevel1()->count(),
-            'operations_lvl2' => Operation::maturityLevel2()->count(),
-            'operations_lvl3' => Operation::maturityLevel3()->count(),
+            'operations'      => $this->q(Operation::class)->count(),
+            'operations_lvl1' => $this->q(Operation::class)->maturityLevel1()->count(),
+            'operations_lvl2' => $this->q(Operation::class)->maturityLevel2()->count(),
+            'operations_lvl3' => $this->q(Operation::class)->maturityLevel3()->count(),
 
-            'tasks'      => Task::count(),
-            'tasks_lvl3' => Task::maturityLevel3()->count(),
+            'tasks'      => $this->q(Task::class)->count(),
+            'tasks_lvl3' => $this->q(Task::class)->maturityLevel3()->count(),
 
-            'actors'      => Actor::count(),
-            'actors_lvl2' => Actor::maturityLevel2()->count(),
+            'actors'      => $this->q(Actor::class)->count(),
+            'actors_lvl2' => $this->q(Actor::class)->maturityLevel2()->count(),
 
-            'informations'      => Information::count(),
-            'informations_lvl1' => Information::maturityLevel1()->count(),
-            'informations_lvl2' => Information::maturityLevel2()->count(),
+            'informations'      => $this->q(Information::class)->count(),
+            'informations_lvl1' => $this->q(Information::class)->maturityLevel1()->count(),
+            'informations_lvl2' => $this->q(Information::class)->maturityLevel2()->count(),
 
             // Applications
-            'applicationBlocks'      => ApplicationBlock::count(),
-            'applicationBlocks_lvl2' => ApplicationBlock::maturityLevel2()->count(),
+            'applicationBlocks'      => $this->q(ApplicationBlock::class)->count(),
+            'applicationBlocks_lvl2' => $this->q(ApplicationBlock::class)->maturityLevel2()->count(),
 
-            'applications'      => Application::count(),
-            'applications_lvl1' => Application::maturityLevel1()->count(),
-            'applications_lvl2' => Application::maturityLevel2()->count(),
-            'applications_lvl3' => Application::maturityLevel3()->count(),
+            'applications'      => $this->q(Application::class)->count(),
+            'applications_lvl1' => $this->q(Application::class)->maturityLevel1()->count(),
+            'applications_lvl2' => $this->q(Application::class)->maturityLevel2()->count(),
+            'applications_lvl3' => $this->q(Application::class)->maturityLevel3()->count(),
 
-            'applicationServices'      => ApplicationService::count(),
-            'applicationServices_lvl2' => ApplicationService::maturityLevel2()->count(),
+            'applicationServices'      => $this->q(ApplicationService::class)->count(),
+            'applicationServices_lvl2' => $this->q(ApplicationService::class)->maturityLevel2()->count(),
 
-            'applicationModules'      => ApplicationModule::count(),
-            'applicationModules_lvl2' => ApplicationModule::maturityLevel2()->count(),
+            'applicationModules'      => $this->q(ApplicationModule::class)->count(),
+            'applicationModules_lvl2' => $this->q(ApplicationModule::class)->maturityLevel2()->count(),
 
-            'databases'      => Database::count(),
-            'databases_lvl1' => Database::maturityLevel1()->count(),
-            'databases_lvl2' => Database::maturityLevel2()->count(),
+            'databases'      => $this->q(Database::class)->count(),
+            'databases_lvl1' => $this->q(Database::class)->maturityLevel1()->count(),
+            'databases_lvl2' => $this->q(Database::class)->maturityLevel2()->count(),
 
-            'flows'      => ApplicationFlow::count(),
-            'flows_lvl1' => ApplicationFlow::maturityLevel1()->count(),
+            'flows'      => $this->q(ApplicationFlow::class)->count(),
+            'flows_lvl1' => $this->q(ApplicationFlow::class)->maturityLevel1()->count(),
 
             // Administration
-            'zones_ad'      => ZoneAdmin::count(),
-            'zones_ad_lvl1' => ZoneAdmin::maturityLevel1()->count(),
+            'zones_ad'      => $this->q(ZoneAdmin::class)->count(),
+            'zones_ad_lvl1' => $this->q(ZoneAdmin::class)->maturityLevel1()->count(),
 
-            'annuaires'      => Annuaire::count(),
-            'annuaires_lvl1' => Annuaire::maturityLevel1()->count(),
+            'annuaires'      => $this->q(Annuaire::class)->count(),
+            'annuaires_lvl1' => $this->q(Annuaire::class)->maturityLevel1()->count(),
 
-            'forests'      => ForestAd::count(),
-            'forests_lvl1' => ForestAd::maturityLevel1()->count(),
+            'forests'      => $this->q(ForestAd::class)->count(),
+            'forests_lvl1' => $this->q(ForestAd::class)->maturityLevel1()->count(),
 
-            'domains'        => Domain::count(),
-            'domaines_lvl1'  => Domain::maturityLevel1()->count(),
+            'domains'       => $this->q(Domain::class)->count(),
+            'domaines_lvl1' => $this->q(Domain::class)->maturityLevel1()->count(),
 
             // Logique
-            'networks'      => Network::count(),
-            'networks_lvl1' => Network::maturityLevel1()->count(),
+            'networks'      => $this->q(Network::class)->count(),
+            'networks_lvl1' => $this->q(Network::class)->maturityLevel1()->count(),
 
-            'subnetworks'      => Subnetwork::count(),
-            'subnetworks_lvl1' => Subnetwork::maturityLevel1()->count(),
+            'subnetworks'      => $this->q(Subnetwork::class)->count(),
+            'subnetworks_lvl1' => $this->q(Subnetwork::class)->maturityLevel1()->count(),
 
-            'gateways'      => Gateway::count(),
-            'gateways_lvl1' => Gateway::maturityLevel1()->count(),
+            'gateways'      => $this->q(Gateway::class)->count(),
+            'gateways_lvl1' => $this->q(Gateway::class)->maturityLevel1()->count(),
 
-            'externalConnectedEntities'      => ExternalConnectedEntity::count(),
-            'externalConnectedEntities_lvl2' => ExternalConnectedEntity::maturityLevel2()->count(),
+            'externalConnectedEntities'      => $this->q(ExternalConnectedEntity::class)->count(),
+            'externalConnectedEntities_lvl2' => $this->q(ExternalConnectedEntity::class)->maturityLevel2()->count(),
 
-            'switches'      => NetworkSwitch::count(),
-            'switches_lvl1' => NetworkSwitch::maturityLevel1()->count(),
+            'switches'      => $this->q(NetworkSwitch::class)->count(),
+            'switches_lvl1' => $this->q(NetworkSwitch::class)->maturityLevel1()->count(),
 
-            'routers'      => Router::count(),
-            'routers_lvl1' => Router::maturityLevel1()->count(),
+            'routers'      => $this->q(Router::class)->count(),
+            'routers_lvl1' => $this->q(Router::class)->maturityLevel1()->count(),
 
-            'securityDevices'      => SecurityDevice::count(),
-            'securityDevices_lvl1' => SecurityDevice::maturityLevel1()->count(),
+            'securityDevices'      => $this->q(SecurityDevice::class)->count(),
+            'securityDevices_lvl1' => $this->q(SecurityDevice::class)->maturityLevel1()->count(),
 
-            'DHCPServers'      => DhcpServer::count(),
-            'DHCPServers_lvl2' => DhcpServer::maturityLevel2()->count(),
+            'DHCPServers'      => $this->q(DhcpServer::class)->count(),
+            'DHCPServers_lvl2' => $this->q(DhcpServer::class)->maturityLevel2()->count(),
 
-            'DNSServers'      => Dnsserver::count(),
-            'DNSServers_lvl2' => Dnsserver::maturityLevel2()->count(),
+            'DNSServers'      => $this->q(Dnsserver::class)->count(),
+            'DNSServers_lvl2' => $this->q(Dnsserver::class)->maturityLevel2()->count(),
 
-            'clusters'      => Cluster::count(),
-            'clusters_lvl1' => Cluster::maturityLevel1()->count(),
+            'clusters'      => $this->q(Cluster::class)->count(),
+            'clusters_lvl1' => $this->q(Cluster::class)->maturityLevel1()->count(),
 
-            'logicalServers'      => LogicalServer::count(),
-            'logicalServers_lvl1' => LogicalServer::maturityLevel1()->count(),
+            'logicalServers'      => $this->q(LogicalServer::class)->count(),
+            'logicalServers_lvl1' => $this->q(LogicalServer::class)->maturityLevel1()->count(),
 
-            'containers'      => Container::count(),
-            'containers_lvl1' => Container::maturityLevel1()->count(),
+            'containers'      => $this->q(Container::class)->count(),
+            'containers_lvl1' => $this->q(Container::class)->maturityLevel1()->count(),
 
-            'certificates'      => Certificate::count(),
-            'certificates_lvl2' => Certificate::maturityLevel2()->count(),
+            'certificates'      => $this->q(Certificate::class)->count(),
+            'certificates_lvl2' => $this->q(Certificate::class)->maturityLevel2()->count(),
 
             // Physical
-            'sites'      => Site::count(),
-            'sites_lvl1' => Site::maturityLevel1()->count(),
+            'sites'      => $this->q(Site::class)->count(),
+            'sites_lvl1' => $this->q(Site::class)->maturityLevel1()->count(),
 
-            'buildings'      => Building::count(),
-            'buildings_lvl1' => Building::maturityLevel1()->count(),
+            'buildings'      => $this->q(Building::class)->count(),
+            'buildings_lvl1' => $this->q(Building::class)->maturityLevel1()->count(),
 
-            'bays'      => Bay::count(),
-            'bays_lvl1' => Bay::maturityLevel1()->count(),
+            'bays'      => $this->q(Bay::class)->count(),
+            'bays_lvl1' => $this->q(Bay::class)->maturityLevel1()->count(),
 
-            'zones' => Zone::count(),
+            'zones' => $this->q(Zone::class)->count(),
 
-            'physicalServers'      => PhysicalServer::count(),
-            'physicalServers_lvl1' => PhysicalServer::maturityLevel1()->count(),
+            'physicalServers'      => $this->q(PhysicalServer::class)->count(),
+            'physicalServers_lvl1' => $this->q(PhysicalServer::class)->maturityLevel1()->count(),
 
-            'workstations'      => Workstation::count(),
-            'workstations_lvl1' => Workstation::maturityLevel1()->count(),
+            'workstations'      => $this->q(Workstation::class)->count(),
+            'workstations_lvl1' => $this->q(Workstation::class)->maturityLevel1()->count(),
 
-            'storageDevices'      => StorageDevice::count(),
-            'storageDevices_lvl1' => StorageDevice::maturityLevel1()->count(),
+            'storageDevices'      => $this->q(StorageDevice::class)->count(),
+            'storageDevices_lvl1' => $this->q(StorageDevice::class)->maturityLevel1()->count(),
 
-            'peripherals'      => Peripheral::count(),
-            'peripherals_lvl1' => Peripheral::maturityLevel1()->count(),
+            'peripherals'      => $this->q(Peripheral::class)->count(),
+            'peripherals_lvl1' => $this->q(Peripheral::class)->maturityLevel1()->count(),
 
-            'phones'      => Phone::count(),
-            'phones_lvl1' => Phone::maturityLevel1()->count(),
+            'phones'      => $this->q(Phone::class)->count(),
+            'phones_lvl1' => $this->q(Phone::class)->maturityLevel1()->count(),
 
-            'physicalSwitchs'      => PhysicalSwitch::count(),
-            'physicalSwitchs_lvl1' => PhysicalSwitch::maturityLevel1()->count(),
+            'physicalSwitchs'      => $this->q(PhysicalSwitch::class)->count(),
+            'physicalSwitchs_lvl1' => $this->q(PhysicalSwitch::class)->maturityLevel1()->count(),
 
-            'physicalRouters'      => PhysicalRouter::count(),
-            'physicalRouters_lvl1' => PhysicalRouter::maturityLevel1()->count(),
+            'physicalRouters'      => $this->q(PhysicalRouter::class)->count(),
+            'physicalRouters_lvl1' => $this->q(PhysicalRouter::class)->maturityLevel1()->count(),
 
-            'wifiTerminals'      => WifiTerminal::count(),
-            'wifiTerminals_lvl1' => WifiTerminal::maturityLevel1()->count(),
+            'wifiTerminals'      => $this->q(WifiTerminal::class)->count(),
+            'wifiTerminals_lvl1' => $this->q(WifiTerminal::class)->maturityLevel1()->count(),
 
-            'physicalSecurityDevices'      => PhysicalSecurityDevice::count(),
-            'physicalSecurityDevices_lvl1' => PhysicalSecurityDevice::maturityLevel1()->count(),
+            'physicalSecurityDevices'      => $this->q(PhysicalSecurityDevice::class)->count(),
+            'physicalSecurityDevices_lvl1' => $this->q(PhysicalSecurityDevice::class)->maturityLevel1()->count(),
 
-            'wans'      => ($wan_count = Wan::count()),
+            'wans'      => ($wan_count = $this->q(Wan::class)->count()),
             'wans_lvl1' => $wan_count,
 
-            'mans'      => ($man_count = Man::count()),
+            'mans'      => ($man_count = $this->q(Man::class)->count()),
             'mans_lvl1' => $man_count,
 
-            'lans'      => Lan::count(),
-            'lans_lvl1' => Lan::maturityLevel1()->count(),
+            'lans'      => $this->q(Lan::class)->count(),
+            'lans_lvl1' => $this->q(Lan::class)->maturityLevel1()->count(),
 
-            'vlans'      => Vlan::count(),
-            'vlans_lvl1' => Vlan::maturityLevel1()->count(),
+            'vlans'      => $this->q(Vlan::class)->count(),
+            'vlans_lvl1' => $this->q(Vlan::class)->maturityLevel1()->count(),
         ];
 
         // Maturity Level 1

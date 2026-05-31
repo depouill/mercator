@@ -9,11 +9,11 @@
         <a class="btn btn-default" href="{{ route('admin.users.index') }}">
             {{ trans('global.back_to_list') }}
         </a>
-        @can('user_edit')
+        @canEdit($user)
             <a class="btn btn-info" href="{{ route('admin.users.edit', $user->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('user_delete')
             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"

@@ -67,15 +67,11 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.domains.show', $domain->id) }}">
-                                    {{ $domain->name ?? '' }}
-                                </a>
+                                <x-show-link :model="$domain" />
                             </td>
                             <td>
                                 @foreach($domain->forestAds as $forestAd)
-                                    <a href="{{ route('admin.forest-ads.show', $forestAd->id) }}">
-                                        {{ $forestAd->name }}
-                                    </a>{{ !$loop->last ? ',' : '' }}
+                                    <x-show-link :model="$forestAd" />{{ !$loop->last ? ',' : '' }}
                                 @endforeach
                             </td>
                             <td>
@@ -98,12 +94,12 @@
                                     </a>
                                 @endcan
 
-                                @can('domain_edit')
+                                @canEdit($domain)
                                     <a class="btn btn-xs btn-info"
                                        href="{{ route('admin.domains.edit', $domain->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('domain_delete')
                                     <form action="{{ route('admin.domains.destroy', $domain->id) }}"

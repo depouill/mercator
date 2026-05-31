@@ -10,9 +10,9 @@
 <div class="form-group">
     <div class="form-group">
         <a class="btn btn-default" href="{{ route('admin.roles.index') }}">{{ trans('global.back_to_list') }}</a>
-        @if(auth()->user()->can('role_edit'))
+        @canEdit($role)
             <a class="btn btn-info" href="{{ route('admin.roles.edit', $role->id) }}">{{ trans('global.edit') }}</a>
-        @endif
+        @endcanEdit
         @can('role_delete')
             <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST"
                   onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

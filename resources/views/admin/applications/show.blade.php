@@ -10,14 +10,18 @@
             <a class="btn btn-default" href="{{ route('admin.applications.index') }}">
                 {{ trans('global.back_to_list') }}
             </a>
+
+            @can('explore_access')
             <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$application->getUID()}}">
                 {{ trans('global.explore') }}
             </a>
-            @if(auth()->user()->can('application_edit'))
+
+            @endcan
+            @canEdit($application)
                 <a class="btn btn-info" href="{{ route('admin.applications.edit', $application->id) }}">
                     {{ trans('global.edit') }}
                 </a>
-            @endif
+            @endcanEdit
 
             @can('application_create')
                 <a class="btn btn-warning" href="{{ route('admin.applications.clone', $application->id) }}">

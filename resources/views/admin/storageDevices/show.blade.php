@@ -10,15 +10,21 @@
         {{ trans('global.back_to_list') }}
     </a>
 
+
+    @can('explore_access')
+
     <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$storageDevice->getUID()}}">
         {{ trans('global.explore') }}
     </a>
 
-    @can('storage_device_edit')
+
+    @endcan
+
+    @canEdit($storageDevice)
         <a class="btn btn-info" href="{{ route('admin.storage-devices.edit', $storageDevice->id) }}">
             {{ trans('global.edit') }}
         </a>
-    @endcan
+    @endcanEdit
 
     @can('storage_device_delete')
         <form action="{{ route('admin.storage-devices.destroy', $storageDevice->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

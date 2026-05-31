@@ -84,9 +84,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.application-flows.show', $flow->id) }}">
-                                    {{ $flow->name ?? '' }}
-                                </a>
+                                <x-show-link :model="$flow" />
                             </td>
                             <td>
                                 {{ $flow->nature }}
@@ -157,11 +155,11 @@
                                     </a>
                                 @endcan
 
-                                @can('application_flow_edit')
+                                @canEdit($flow)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.application-flows.edit', $flow->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('application_flow_delete')
                                     <form action="{{ route('admin.application-flows.destroy', $flow->id) }}" method="POST"

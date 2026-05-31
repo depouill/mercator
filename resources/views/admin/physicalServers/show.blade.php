@@ -10,15 +10,21 @@
             {{ trans('global.back_to_list') }}
         </a>
 
+
+        @can('explore_access')
+
         <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$physicalServer->getUID()}}">
             {{ trans('global.explore') }}
         </a>
 
-        @can('physical_server_edit')
+
+        @endcan
+
+        @canEdit($physicalServer)
             <a class="btn btn-info" href="{{ route('admin.physical-servers.edit', $physicalServer->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('physical_server_create')
             <a class="btn btn-warning" href="{{ route('admin.physical-servers.clone', $physicalServer->id) }}">

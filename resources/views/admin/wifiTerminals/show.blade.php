@@ -11,15 +11,21 @@
         {{ trans('global.back_to_list') }}
     </a>
 
+
+    @can('explore_access')
+
     <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$wifiTerminal->getUID()}}">
         {{ trans('global.explore') }}
     </a>
 
-    @can('wifi_terminal_edit')
+
+    @endcan
+
+    @canEdit($wifiTerminal)
         <a class="btn btn-info" href="{{ route('admin.wifi-terminals.edit', $wifiTerminal->id) }}">
             {{ trans('global.edit') }}
         </a>
-    @endcan
+    @endcanEdit
 
     @can('vlan_create')
         <a class="btn btn-warning" href="{{ route('admin.wifi-terminals.clone', $wifiTerminal->id) }}">

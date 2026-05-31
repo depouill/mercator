@@ -58,9 +58,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.application-blocks.show', $applicationBlock->id) }}">
-                                {{ $applicationBlock->name ?? '' }}
-                                </a>
+                                <x-show-link :model="$applicationBlock" />
                             </td>
                             <td>
                                 {!! $applicationBlock->description ?? '' !!}
@@ -83,11 +81,11 @@
                                     </a>
                                 @endcan
 
-                                @can('application_block_edit')
+                                @canEdit($applicationBlock)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.application-blocks.edit', $applicationBlock->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('application_block_delete')
                                     <form action="{{ route('admin.application-blocks.destroy', $applicationBlock->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

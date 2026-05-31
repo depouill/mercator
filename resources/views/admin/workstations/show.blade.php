@@ -12,15 +12,21 @@
             {{ trans('global.back_to_list') }}
         </a>
 
+
+        @can('explore_access')
+
         <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$workstation->getUID()}}">
             {{ trans('global.explore') }}
         </a>
 
-        @can('workstation_edit')
+
+        @endcan
+
+        @canEdit($workstation)
             <a class="btn btn-info" href="{{ route('admin.workstations.edit', $workstation->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('workstation_create')
             <a class="btn btn-warning" href="{{ route('admin.workstations.clone', $workstation->id) }}">

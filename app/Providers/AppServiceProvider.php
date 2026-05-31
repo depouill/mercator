@@ -86,7 +86,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::directive('canAccess', function (string $expression) {
-            return "<?php if(\\App\\Models\\Cartographer::canAccessAny([{$expression}])): ?>";
+            return "<?php if(\\App\\Models\\Cartographer::canAccess({$expression})): ?>";
         });
         Blade::directive('endcanAccess', function () {
             return "<?php endif; ?>";

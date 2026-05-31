@@ -10,15 +10,21 @@
             {{ trans('global.back_to_list') }}
         </a>
 
+
+        @can('explore_access')
+
         <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$subnetwork->getUID()}}">
             {{ trans('global.explore') }}
         </a>
 
-        @can('subnetwork_edit')
+
+        @endcan
+
+        @canEdit($subnetwork)
             <a class="btn btn-info" href="{{ route('admin.subnetworks.edit', $subnetwork->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('subnetwork_delete')
             <form action="{{ route('admin.subnetworks.destroy', $subnetwork->id) }}" method="POST"

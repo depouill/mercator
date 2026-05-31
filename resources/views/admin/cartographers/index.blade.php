@@ -63,11 +63,7 @@
                         {{-- Utilisateur --}}
                         <td>
                             @if($cartographer->user)
-                                @can('user_show')
-                                    <a href="{{ route('admin.users.show', $cartographer->user_id) }}">{{ $cartographer->user->name }}</a>
-                                @else
-                                    {{ $cartographer->user->name }}
-                                @endcan
+                                <x-show-link :model="$cartographer->user" />
                             @else
                                 -
                             @endif
@@ -76,11 +72,7 @@
                         {{-- Rôle --}}
                         <td>
                             @if($cartographer->role)
-                                @can('role_show')
-                                    <a href="{{ route('admin.roles.show', $cartographer->role_id) }}">{{ $cartographer->role->title }}</a>
-                                @else
-                                    {{ $cartographer->role->title }}
-                                @endcan
+                                <x-show-link :model="$cartographer->role" :label="$cartographer->role->title ?? ''" />
                             @else
                                 -
                             @endif
@@ -88,12 +80,12 @@
 
                         {{-- Actions --}}
                         <td nowrap>
-                            @can('cartographer_edit')
+                            @canEdit($cartographer)
                             <a class="btn btn-xs btn-info"
                                href="{{ route('admin.cartographers.edit', $cartographer->id) }}">
                                 {{ trans('global.edit') }}
                             </a>
-                            @endcan
+                            @endcanEdit
                             @can('cartographer_delete')
                             <form action="{{ route('admin.cartographers.destroy', $cartographer->id) }}" method="POST"
                                   onsubmit="return confirm('{{ trans('global.areYouSure') }}');"

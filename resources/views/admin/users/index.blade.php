@@ -54,9 +54,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.users.show', $user->id) }}">
-                                    {{ $user->login ?? '' }}
-                                </a>
+                                <x-show-link :model="$user" :label="$user->login ?? ''" />
                             </td>
                             <td>
                                 {{ $user->name ?? '' }}
@@ -66,7 +64,7 @@
                             </td>
                             <td>
                                 @foreach($user->roles as $key => $item)
-                                    <a href="{{ route('admin.roles.show',$item->id) }}">{{ $item->title }}</a>
+                                    <x-show-link :model="$item" :label="$item->title ?? ''" />
                                 @endforeach
                             </td>
                             <td>
@@ -94,11 +92,11 @@
                                     </a>
                                 @endcan
 
-                                @can('user_edit')
+                                @canEdit($user)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.users.edit', $user->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('user_delete')
                                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"

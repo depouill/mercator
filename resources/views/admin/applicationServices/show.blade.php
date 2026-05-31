@@ -10,15 +10,21 @@
         {{ trans('global.back_to_list') }}
     </a>
 
+
+    @can('explore_access')
+
     <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$applicationService->getUID()}}">
         {{ trans('global.explore') }}
     </a>
 
-    @can('application_service_edit')
+
+    @endcan
+
+    @canEdit($applicationService)
         <a class="btn btn-info" href="{{ route('admin.application-services.edit', $applicationService->id) }}">
             {{ trans('global.edit') }}
         </a>
-    @endcan
+    @endcanEdit
 
     @can('application_service_delete')
         <form action="{{ route('admin.application-services.destroy', $applicationService->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

@@ -100,7 +100,7 @@ class DataProcessingController extends Controller
 
     public function edit(DataProcessing $dataProcessing)
     {
-        abort_if(Gate::denies('data_processing_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', \$dataProcessing), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $processes = Process::select(['id', 'name'])->orderBy('name')->get();
         $informations = Information::select(['id', 'name'])->orderBy('name')->get();
@@ -149,6 +149,8 @@ class DataProcessingController extends Controller
 
     public function update(UpdateDataProcessingRequest $request, DataProcessing $dataProcessing)
     {
+        abort_if(Gate::denies('edit-object', $dataProcessing), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $dataProcessing->legal_basis = implode(', ', $request->legal_bases !== null ? $request->legal_bases : []);
 
         // Update

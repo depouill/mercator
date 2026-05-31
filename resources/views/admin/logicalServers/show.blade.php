@@ -10,15 +10,21 @@
             {{ trans('global.back_to_list') }}
         </a>
 
+
+        @can('explore_access')
+
         <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$logicalServer->getUID()}}">
             {{ trans('global.explore') }}
         </a>
 
-        @can('logical_server_edit')
+
+        @endcan
+
+        @canEdit($logicalServer)
             <a class="btn btn-info" href="{{ route('admin.logical-servers.edit', $logicalServer->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('logical_server_delete')
             <form action="{{ route('admin.logical-servers.destroy', $logicalServer->id) }}" method="POST"

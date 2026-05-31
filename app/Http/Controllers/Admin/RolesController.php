@@ -87,7 +87,7 @@ class RolesController extends Controller
 
     public function edit(Role $role)
     {
-        abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', $role), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         // Chargement de toutes les permissions et triage
         $permissions = Permission::all()->sortBy('title')->pluck('title', 'id');
@@ -102,7 +102,7 @@ class RolesController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        abort_if(Gate::denies('role_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', $role), Response::HTTP_FORBIDDEN, '403 Forbidden');
         // Update DB
 
         $role->update($request->all());

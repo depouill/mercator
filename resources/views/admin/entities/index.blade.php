@@ -63,9 +63,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.entities.show', $entity->id) }}">
-                                {{ $entity->name ?? '' }}
-                                </a>
+                                <x-show-link :model="$entity" />
                             </td>
                             <td>
                                 {{ $entity->entity_type }}
@@ -91,11 +89,11 @@
                                     </a>
                                 @endcan
 
-                                @can('entity_edit')
+                                @canEdit($entity)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.entities.edit', $entity->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('entity_delete')
                                     <form action="{{ route('admin.entities.destroy', $entity->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

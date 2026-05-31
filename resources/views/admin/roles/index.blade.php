@@ -42,9 +42,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.roles.show', $role->id) }}">
-                                {{ $role->title ?? '' }}
-                                </a>
+                                <x-show-link :model="$role" :label="$role->title ?? ''" />
                             </td>
                             <td>{{ $role->users_count }}</td>
                             <td>
@@ -73,11 +71,11 @@
                                     </a>
                                 @endcan
 
-                                @can('role_edit')
+                                @canEdit($role)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.roles.edit', $role->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('role_delete')
                                     <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

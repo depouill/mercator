@@ -10,11 +10,11 @@
             {{ trans('global.back_to_list') }}
         </a>
 
-        @can('data_processing_edit')
+        @canEdit($dataProcessing)
             <a class="btn btn-info" href="{{ route('admin.data-processings.edit', $dataProcessing->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('data_processing_delete')
             <form action="{{ route('admin.data-processings.destroy', $dataProcessing->id) }}" method="POST"

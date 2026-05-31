@@ -57,7 +57,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.links.show', $physicalLink->id) }}">{{ $physicalLink->type }}</a>
+                                <x-show-link :model="$physicalLink" :label="$physicalLink->type ?? ''" />
                             </td>
                             <td>
                                 <a href="{{ route('admin.links.show', $physicalLink->id) }}">
@@ -181,11 +181,11 @@
                                     </a>
                                 @endcan
 
-                                @can('physical_link_edit')
+                                @canEdit($physicalLink)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.links.edit', $physicalLink->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('physical_link_delete')
                                     <form action="{{ route('admin.links.destroy', $physicalLink->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

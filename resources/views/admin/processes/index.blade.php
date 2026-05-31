@@ -75,9 +75,7 @@
 
                             </td>
                             <td>
-                                <a href="{{ route('admin.processes.show', $process->id) }}">
-                                {{ $process->name ?? '' }}
-                                </a>
+                                <x-show-link :model="$process" />
                             </td>
                             <td>
                                 {!! $process->description ?? '' !!}
@@ -120,11 +118,11 @@
                                     </a>
                                 @endcan
 
-                                @can('process_edit')
+                                @canEdit($process)
                                     <a class="btn btn-xs btn-info" href="{{ route('admin.processes.edit', $process->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
-                                @endcan
+                                @endcanEdit
 
                                 @can('process_delete')
                                     <form action="{{ route('admin.processes.destroy', $process->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">

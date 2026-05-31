@@ -61,7 +61,9 @@
         </div>
 
         {{-- Application --}}
-        @include('admin.roles.partials._section_header', ['permission' => $permissions_sorted['application'], 'label' => trans('cruds.menu.application.title_short')])
+        <div class="card-header">
+            <label class="form-check-label"><b>{{ trans('cruds.application.title_short') }}</b></label>
+        </div>
         <div class="card-body"><div class="row">
             @include('admin.roles.partials._group', ['permission' => $permissions_sorted['application_block'],   'label' => trans('cruds.applicationBlock.title')])
             @include('admin.roles.partials._group', ['permission' => $permissions_sorted['application'],         'label' => trans('cruds.application.title')])

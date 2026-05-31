@@ -10,16 +10,22 @@
             {{ trans('global.back_to_list') }}
         </a>
 
+
+        @can('explore_access')
+
         <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$externalConnectedEntity->getUID()}}">
             {{ trans('global.explore') }}
         </a>
 
-        @can('entity_edit')
+
+        @endcan
+
+        @canEdit($externalConnectedEntity)
             <a class="btn btn-info"
                href="{{ route('admin.external-connected-entities.edit', $externalConnectedEntity->id) }}">
                 {{ trans('global.edit') }}
             </a>
-        @endcan
+        @endcanEdit
 
         @can('entity_delete')
             <form action="{{ route('admin.external-connected-entities.destroy', $externalConnectedEntity->id) }}"

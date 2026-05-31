@@ -46,7 +46,7 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
-        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', $user), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $roles = Role::all()->sortBy('title')->pluck('title', 'id');
 
@@ -57,6 +57,8 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        abort_if(Gate::denies('edit-object', $user), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $user->update($request->all());
 
         $user->roles()->sync($request->input('roles', []));
