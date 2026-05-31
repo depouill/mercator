@@ -35,14 +35,14 @@ class ApplicationFlowController extends APIController
 
     public function show(ApplicationFlow $flow)
     {
-        abort_if(Gate::denies('application_flow_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('show-object', $flow), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return new JsonResource($flow);
     }
 
     public function update(UpdateApplicationFlowRequest $request, ApplicationFlow $flow)
     {
-        abort_if(Gate::denies('application_flow_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('edit-object', $flow), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $flow->update($request->all());
 

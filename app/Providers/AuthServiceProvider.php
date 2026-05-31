@@ -26,20 +26,40 @@ class AuthServiceProvider extends ServiceProvider
 
         // 🧠 Hook global appelé AVANT toutes les autres règles Gate
         Gate::before(function ($user, string $ability) {
-            // Si pas d'utilisateur (guest), on ne fait rien
-            if (!$user) {
+            if (! $user) {
                 return null;
             }
 
-            // Récupère la liste des permissions mise en session au login
-            $permissions = session('auth_permissions', []);
-
-            // Si la permission demandée est dans la liste → autorisé direct
-            if (in_array($ability, $permissions, true)) {
+            // 1. Session web (chemin rapide — set at login)
+            if (in_array($ability, session('auth_permissions', []), true)) {
                 return true;
             }
 
-            // Sinon, on laisse les autres Gate::define() (ou policies) faire leur travail
+            // 2. Contexte API : pas de session web → fallback base de données
+            if (! session()->has('auth_permissions')) {
+
+                // 2a. Permissions de rôle depuis la DB (cache par requête sur $user)
+                if (! isset($user->_dbPermissionsCache)) {
+                    $user->_dbPermissionsCache = $user->roles()
+                        ->with('permissions')
+                        ->get()
+                        ->flatMap->permissions
+                        ->pluck('title')
+                        ->all();
+                }
+                if (in_array($ability, $user->_dbPermissionsCache, true)) {
+                    return true;
+                }
+
+                // 2b. Pour les droits _access : autoriser si l'utilisateur est cartographe de ce type
+                if (str_ends_with($ability, '_access')) {
+                    $class = 'App\\Models\\' . Str::studly(substr($ability, 0, -7));
+                    if (class_exists($class) && Cartographer::hasAnyFor($user, $class)) {
+                        return true;
+                    }
+                }
+            }
+
             return null;
         });
 

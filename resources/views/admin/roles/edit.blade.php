@@ -163,7 +163,6 @@
                 @include('admin.roles.partials._group', ['permission' => $permissions_sorted['role'],      'label' => trans('cruds.role.title')])
                 @include('admin.roles.partials._group', ['permission' => $permissions_sorted['cartographer'],      'label' => trans('cruds.cartographer.title')])
                 @include('admin.roles.partials._group', ['permission' => $permissions_sorted['document'],  'label' => trans('cruds.configuration.documents.title')])
-                @include('admin.roles.partials._group', ['permission' => $permissions_sorted['module'],    'label' => trans('cruds.module.title'),    'indices' => [0]])
                 @include('admin.roles.partials._group', ['permission' => $permissions_sorted['audit_log'], 'label' => trans('cruds.auditLog.title'),  'indices' => [0, 1]])
             </div>
         </div>
