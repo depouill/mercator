@@ -50,7 +50,6 @@
         </td>
     </tr>
     <tr>
-    @canAccess(App\Models\Site::class)
         <th>
             {{ trans('cruds.building.fields.site') }}
         </th>
@@ -65,11 +64,9 @@
                 @endcanShow
             @endif
         </td>
-    @endcanAccess
         <th>
             {{ trans('cruds.building.fields.parent') }}
         </th>
-        @canAccess(App\Models\Building::class)
         <td colspan="4">
             @if ($building->building!=null)
                 @canShow($building->building)
@@ -81,9 +78,7 @@
                 @endcanShow
             @endif
         </td>
-    @endcanAccess
     </tr>
-    @canAccess(App\Models\Building::class)
     <tr>
         <th>
             {{ trans('cruds.building.fields.children') }}
@@ -103,8 +98,6 @@
             @endforeach
         </td>
     </tr>
-    @endcanAccess
-    @canAccess(App\Models\Bay::class)
     <tr>
         <th>
             {{ trans('cruds.building.fields.bays') }}
@@ -124,6 +117,5 @@
             @endforeach
         </td>
     </tr>
-    @endcanAccess
     </tbody>
 </table>

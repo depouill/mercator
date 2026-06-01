@@ -109,7 +109,11 @@
                     </th>
                     <td width="30%">
                         @if ($wifiTerminal->site!==null)
-                            <a href="{{ route('admin.sites.show', $wifiTerminal->site_id) }}">{{ $wifiTerminal->site->name }}</a>
+                            @canShow($wifiTerminal->site)
+                                <a href="{{ route('admin.sites.show', $wifiTerminal->site_id) }}">{{ $wifiTerminal->site->name }}</a>
+                            @elsecanShow
+                                {{ $wifiTerminal->site->name }}
+                            @endcanShow
                         @endif
                     </td>
                     <th width="10%">
@@ -117,7 +121,11 @@
                     </th>
                     <td width="40%">
                         @if ($wifiTerminal->building!==null)
-                            <a href="{{ route('admin.buildings.show', $wifiTerminal->building_id) }}">{{ $wifiTerminal->building->name }}</a>
+                            @canShow($wifiTerminal->building)
+                                <a href="{{ route('admin.buildings.show', $wifiTerminal->building_id) }}">{{ $wifiTerminal->building->name }}</a>
+                            @elsecanShow
+                                {{ $wifiTerminal->building->name }}
+                            @endcanShow
                         @endif
                     </td>
                 </tr>

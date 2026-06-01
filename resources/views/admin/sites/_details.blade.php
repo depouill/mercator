@@ -46,12 +46,12 @@
                         <a href="{{ route('admin.buildings.show', $building->id) }}">
                         {{ $building->name ?? '' }}
                         </a>
-                        @if (!$loop->last())
+                        @if (!$loop->last)
                         ,
                         @endif
                     @elsecanShow
                         {{ $building->name ?? '' }}
-                        @if (!$loop->last())
+                        @if (!$loop->last)
                         ,
                         @endif
                     @endcanShow

@@ -69,9 +69,13 @@
                     </th>
                     <td width="40%">
                         @if ($externalConnectedEntity->entity!=null)
-                            <a href="{{ route('admin.entities.show', $externalConnectedEntity->entity->id) }}">
+                            @canShow($externalConnectedEntity->entity)
+                                <a href="{{ route('admin.entities.show', $externalConnectedEntity->entity->id) }}">
+                                    {{ $externalConnectedEntity->entity->name }}
+                                </a>
+                            @elsecanShow
                                 {{ $externalConnectedEntity->entity->name }}
-                            </a>
+                            @endcanShow
                         @endif
                     </td>
                     <th width="10%">
@@ -79,9 +83,13 @@
                     </th>
                     <td width="40%">
                         @if ($externalConnectedEntity->network!=null)
-                            <a href="{{ route('admin.networks.show', $externalConnectedEntity->network->id) }}">
+                            @canShow($externalConnectedEntity->network)
+                                <a href="{{ route('admin.networks.show', $externalConnectedEntity->network->id) }}">
+                                    {{ $externalConnectedEntity->network->name }}
+                                </a>
+                            @elsecanShow
                                 {{ $externalConnectedEntity->network->name }}
-                            </a>
+                            @endcanShow
                         @endif
                     </td>
                 </tr>
@@ -97,7 +105,11 @@
                     </th>
                     <td width="40%">
                         @foreach($externalConnectedEntity->subnetworks as $subnetwork)
-                            <a href="{{ route('admin.subnetworks.show', $subnetwork->id) }}">{{ $subnetwork->name }} {{ $subnetwork->address!==null ? ('(' . $subnetwork->address . ')') : "" }}</a>
+                            @canShow($subnetwork)
+                                <a href="{{ route('admin.subnetworks.show', $subnetwork->id) }}">{{ $subnetwork->name }} {{ $subnetwork->address!==null ? ('(' . $subnetwork->address . ')') : "" }}</a>
+                            @elsecanShow
+                                {{ $subnetwork->name }} {{ $subnetwork->address!==null ? ('(' . $subnetwork->address . ')') : "" }}
+                            @endcanShow
                             @if(!$loop->last)
                                 ,
                             @endif

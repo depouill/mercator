@@ -11,9 +11,13 @@
             </th>
             <td>
             @if($withLink ?? false)
-                <a href="{{ route('admin.macro-processuses.show', $macroProcessus->id) }}">
+                @canShow($macroProcessus)
+                    <a href="{{ route('admin.macro-processuses.show', $macroProcessus->id) }}">
+                        {{ $macroProcessus->name }}
+                    </a>
+                @elsecanShow
                     {{ $macroProcessus->name }}
-                </a>
+                @endcanShow
             @else
                 {{ $macroProcessus->name }}
             @endif

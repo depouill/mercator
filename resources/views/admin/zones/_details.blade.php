@@ -45,7 +45,11 @@
         <th>{{ trans('cruds.zone.fields.child_zones') }}</th>
         <td colspan="2">
             @foreach($zone->childZones as $childZone)
-                <a href="{{ route('admin.zones.show', $childZone->id) }}">{{ $childZone->name }}</a>{{ !$loop->last ? ', ' : '' }}
+                @canShow($childZone)
+                    <a href="{{ route('admin.zones.show', $childZone->id) }}">{{ $childZone->name }}</a>
+                @elsecanShow
+                    {{ $childZone->name }}
+                @endcanShow{{ !$loop->last ? ', ' : '' }}
             @endforeach
         </td>
     </tr>

@@ -201,7 +201,7 @@
         </th>
         <td colspan='3'>
             @foreach($dataProcessing->processes as $process)
-                <a href="{{ route('admin.processes.show', $process->id) }}">{{ $process->name }}</a>
+                @canShow($process)<a href="{{ route('admin.processes.show', $process->id) }}">{{ $process->name }}</a>@elsecanShow{{ $process->name }}@endcanShow
                 @if (!$loop->last)
                     ,
                 @endif
@@ -215,7 +215,7 @@
         </th>
         <td colspan='3'>
             @foreach($dataProcessing->applications as $application)
-                <a href="{{ route('admin.applications.show', $application->id) }}">{{ $application->name }}</a>
+                @canShow($application)<a href="{{ route('admin.applications.show', $application->id) }}">{{ $application->name }}</a>@elsecanShow{{ $application->name }}@endcanShow
                 @if (!$loop->last)
                     ,
                 @endif
@@ -229,7 +229,7 @@
         </th>
         <td colspan='3'>
             @foreach($dataProcessing->informations as $information)
-                <a href="{{ route('admin.information.show', $information->id) }}">{{ $information->name }}</a>
+                @canShow($information)<a href="{{ route('admin.information.show', $information->id) }}">{{ $information->name }}</a>@elsecanShow{{ $information->name }}@endcanShow
                 @if (!$loop->last)
                     ,
                 @endif

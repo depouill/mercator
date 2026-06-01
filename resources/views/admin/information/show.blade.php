@@ -148,7 +148,7 @@
                     </th>
                     <td width="40%">
                         @foreach($information->parents as $parent)
-                            <a href="{{ route('admin.information.show', $parent->id) }}">{{$parent->name}}</a>
+                            @canShow($parent)<a href="{{ route('admin.information.show', $parent->id) }}">{{$parent->name}}</a>@elsecanShow{{$parent->name}}@endcanShow
                             @if(!$loop->last), @endif
                         @endforeach
                     </td>
@@ -157,7 +157,7 @@
                     </th>
                     <td width="40%">
                         @foreach($information->children as $child)
-                            <a href="{{ route('admin.information.show', $child->id) }}">{{$child->name}}</a>
+                            @canShow($child)<a href="{{ route('admin.information.show', $child->id) }}">{{$child->name}}</a>@elsecanShow{{$child->name}}@endcanShow
                             @if(!$loop->last), @endif
                         @endforeach
                     </td>
@@ -168,9 +168,13 @@
                     </th>
                     <td colspan="3">
                         @foreach($information->processes as $process)
-                            <a href="{{ route('admin.processes.show', $process->id) }}">
-                            {{ $process->name }}
-                            </a>
+                            @canShow($process)
+                                <a href="{{ route('admin.processes.show', $process->id) }}">
+                                    {{ $process->name }}
+                                </a>
+                            @elsecanShow
+                                {{ $process->name }}
+                            @endcanShow
                             @if (!$loop->last)
                             ,
                             @endif

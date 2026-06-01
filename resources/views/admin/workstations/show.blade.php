@@ -68,17 +68,25 @@
                       <th width="10%">{{ trans('cruds.workstation.fields.entity') }}</th>
                       <td width="15%">
                         @if ($workstation->entity!=null)
+                        @canShow($workstation->entity)
                         <a href="{{ route('admin.entities.show', $workstation->entity->id) }}">
                             {{ $workstation->entity->name ?? '' }}
                         </a>
+                        @elsecanShow
+                        {{ $workstation->entity->name ?? '' }}
+                        @endcanShow
                         @endif
                       </td>
                       <th width="10%">{{ trans('cruds.workstation.fields.domain') }}</th>
                       <td width="15%">
                         @if ($workstation->domain!=null)
+                        @canShow($workstation->domain)
                         <a href="{{ route('admin.domains.show', $workstation->domain_id) }}">
                             {{ $workstation->domain->name ?? '' }}
                         </a>
+                        @elsecanShow
+                        {{ $workstation->domain->name ?? '' }}
+                        @endcanShow
                         @endif
                       </td>
                       <th width="10%">{{ trans('cruds.workstation.fields.user') }}</th>
@@ -110,9 +118,13 @@
                         <th width="10%">{{ trans('cruds.workstation.fields.applications') }}</th>
                         <td>
                             @foreach($workstation->applications as $application)
-                                <a href="{{ route('admin.applications.show', $application->id) }}">
+                                @canShow($application)
+                                    <a href="{{ route('admin.applications.show', $application->id) }}">
+                                        {{ $application->name }}
+                                    </a>
+                                @elsecanShow
                                     {{ $application->name }}
-                                </a>
+                                @endcanShow
                                 @if(!$loop->last)
                                 ,
                                 @endif
@@ -138,9 +150,13 @@
                         <th width="10%">{{ trans('cruds.workstation.fields.network') }}</th>
                         <td width="15%">
                             @if ($workstation->network!=null)
+                            @canShow($workstation->network)
                             <a href="{{ route('admin.networks.show', $workstation->network_id) }}">
                                 {{ $workstation->network->name ?? '' }}
                             </a>
+                            @elsecanShow
+                            {{ $workstation->network->name ?? '' }}
+                            @endcanShow
                             @endif
                         </td>
                         <th width="10%">{{ trans('cruds.workstation.fields.address_ip') }}</th>
@@ -169,17 +185,25 @@
                         <th>{{ trans('cruds.workstation.fields.site') }}</th>
                         <td>
                         @if ($workstation->site != null)
+                        @canShow($workstation->site)
                         <a href="{{ route('admin.sites.show', $workstation->site_id) }}">
-                        {{ $workstation->site->name ?? '' }}
+                            {{ $workstation->site->name ?? '' }}
                         </a>
+                        @elsecanShow
+                        {{ $workstation->site->name ?? '' }}
+                        @endcanShow
                         @endif
                         </td>
                         <th width="10%">{{ trans('cruds.workstation.fields.building') }}</th>
                         <td width="40%">
                         @if ($workstation->building != null)
+                        @canShow($workstation->building)
                         <a href="{{ route('admin.buildings.show', $workstation->building_id) }}">
                             {{ $workstation->building->name ?? '' }}
                         </a>
+                        @elsecanShow
+                        {{ $workstation->building->name ?? '' }}
+                        @endcanShow
                         @endif
                         </td>
                     </tr>

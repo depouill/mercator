@@ -113,9 +113,13 @@
                     </th>
                     <td>
                         @foreach($physicalServer->applications as $application)
-                            <a href="{{ route('admin.applications.show', $application->id) }}">
+                            @canShow($application)
+                                <a href="{{ route('admin.applications.show', $application->id) }}">
+                                    {{ $application->name }}
+                                </a>
+                            @elsecanShow
                                 {{ $application->name }}
-                            </a>
+                            @endcanShow
                             @if(!$loop->last)
                                 ,
                             @endif
@@ -175,9 +179,13 @@
                     </th>
                     <td>
                         @foreach($physicalServer->clusters as $cluster)
-                            <a href="{{ route('admin.clusters.show', $cluster->id) }}">
+                            @canShow($cluster)
+                                <a href="{{ route('admin.clusters.show', $cluster->id) }}">
+                                    {{ $cluster->name }}
+                                </a>
+                            @elsecanShow
                                 {{ $cluster->name }}
-                            </a>
+                            @endcanShow
                             @if(!$loop->last)
                                 ,
                             @endif
@@ -188,9 +196,13 @@
                     </th>
                     <td colspan="3">
                         @foreach($physicalServer->logicalServers as $logicalServer)
-                            <a href="{{ route('admin.logical-servers.show', $logicalServer->id) }}">
+                            @canShow($logicalServer)
+                                <a href="{{ route('admin.logical-servers.show', $logicalServer->id) }}">
+                                    {!! $logicalServer->name !!}
+                                </a>
+                            @elsecanShow
                                 {!! $logicalServer->name !!}
-                            </a>
+                            @endcanShow
                             @if (!$loop->last)
                                 ,
                             @endif
@@ -214,9 +226,13 @@
                     </th>
                     <td width="22%">
                         @if ($physicalServer->site!=null)
-                            <a href="{{ route('admin.sites.show', $physicalServer->site->id) }}">
+                            @canShow($physicalServer->site)
+                                <a href="{{ route('admin.sites.show', $physicalServer->site->id) }}">
+                                    {{ $physicalServer->site->name ?? '' }}
+                                </a>
+                            @elsecanShow
                                 {{ $physicalServer->site->name ?? '' }}
-                            </a>
+                            @endcanShow
                         @endif
                     </td>
                     <th width="10%">
@@ -224,9 +240,13 @@
                     </th>
                     <td width="22%">
                         @if ($physicalServer->building!=null)
-                            <a href="{{ route('admin.buildings.show', $physicalServer->building->id) }}">
+                            @canShow($physicalServer->building)
+                                <a href="{{ route('admin.buildings.show', $physicalServer->building->id) }}">
+                                    {{ $physicalServer->building->name ?? '' }}
+                                </a>
+                            @elsecanShow
                                 {{ $physicalServer->building->name ?? '' }}
-                            </a>
+                            @endcanShow
                         @endif
                     </td>
                     <th width="10%">
@@ -234,9 +254,13 @@
                     </th>
                     <td width="22%">
                         @if ($physicalServer->bay!=null)
-                            <a href="{{ route('admin.bays.show', $physicalServer->bay->id) }}">
+                            @canShow($physicalServer->bay)
+                                <a href="{{ route('admin.bays.show', $physicalServer->bay->id) }}">
+                                    {{ $physicalServer->bay->name ?? '' }}
+                                </a>
+                            @elsecanShow
                                 {{ $physicalServer->bay->name ?? '' }}
-                            </a>
+                            @endcanShow
                         @endif
                     </td>
                 </tr>
