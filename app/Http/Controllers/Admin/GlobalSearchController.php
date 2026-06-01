@@ -83,7 +83,7 @@ class GlobalSearchController extends Controller
                 continue;
 
             $escaped = $this->escapeLike($term);
-            $results = Cartographer::scopedQuery($modelClass)
+            $results = Cartographer::scopedQueryByClass($modelClass)
                 ->where(function ($q) use ($fields, $escaped) {
                     foreach ($fields as $field) {
                         $q->orWhere($field, 'LIKE', '%'.$escaped.'%');
@@ -105,7 +105,7 @@ class GlobalSearchController extends Controller
                     'name'           => trans($translation),
                     'fields'         => $fields,
                     'fields_formated' => $formattedFields,
-                    'url'            => '/admin/'.Str::plural(Str::snake($model, '-')).'/'.$result->id,
+                    'url'            => '/admin/'.Str::plural(Str::snake($model, '-')).'/'.$result->getKey(),
                 ];
             }
         }

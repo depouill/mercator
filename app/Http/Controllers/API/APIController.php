@@ -27,7 +27,7 @@ abstract class APIController extends Controller
      */
     protected function newQuery(): Builder
     {
-        return Cartographer::scopedQuery($this->modelClass);
+        return Cartographer::scopedQueryByClass($this->modelClass);
     }
 
     protected function newModelInstance(): Model

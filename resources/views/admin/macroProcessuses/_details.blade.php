@@ -86,21 +86,27 @@
                 {{ $macroProcessus->owner }}
             </td>
         </tr>
+        @canAccess(App\Models\Process::class)
         <tr>
             <th>
                 {{ trans('cruds.macroProcessus.fields.processes') }}
             </th>
             <td>
                 @foreach($macroProcessus->processes as $process)
-                    <a href="{{ route('admin.processes.show', $process->id) }}">
+                    @canShow($process)
+                        <a href="{{ route('admin.processes.show', $process->id) }}">
+                            {{ $process->name }}
+                        </a>
+                    @elsecanShow
                         {{ $process->name }}
-                    </a>
+                    @endcanShow
                     @if(!$loop->last)
                     ,
                     @endif
                 @endforeach
             </td>
         </tr>
+        @endcanAccess
     </tbody>
 </table>
 

@@ -73,7 +73,7 @@
                         <tr data-entry-id="{{ $log->id }}">
                             <td></td>
                             <td>
-                                <x-show-link :model="$log" :label="$log->id" />
+                                <a href="{{ route('admin.audit-logs.show', $log->id) }}">{{ $log->id }}</a>
                             </td>
                             <td>{{ $log->description }}</td>
                             <td>{{ Str::afterLast($log->subject_type, '\\') }}</td>

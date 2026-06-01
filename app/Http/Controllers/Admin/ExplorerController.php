@@ -99,7 +99,7 @@ class ExplorerController extends Controller
 
         return response()->stream(function () {
             $this->edges = [];
-            $this->subnetworks = Cartographer::scopedQuery(Subnetwork::class)->select(['id', 'name', 'address', 'subnetwork_id', 'network_id', 'vlan_id', 'gateway_id'])->get();
+            $this->subnetworks = Cartographer::scopedQuery(Subnetwork::query())->select(['id', 'name', 'address', 'subnetwork_id', 'network_id', 'vlan_id', 'gateway_id'])->get();
 
             $first      = true;
             $count      = 0;
@@ -191,7 +191,7 @@ class ExplorerController extends Controller
     {
         $this->nodes = [];
         $this->edges = [];
-        $this->subnetworks = Cartographer::scopedQuery(Subnetwork::class)->select(['id', 'name', 'address', 'subnetwork_id', 'network_id', 'vlan_id', 'gateway_id'])->get();
+        $this->subnetworks = Cartographer::scopedQuery(Subnetwork::query())->select(['id', 'name', 'address', 'subnetwork_id', 'network_id', 'vlan_id', 'gateway_id'])->get();
 
         $this->buildPhysicalView();
         $this->buildLogicalView();
@@ -233,7 +233,7 @@ class ExplorerController extends Controller
 
     private function buildSites(): void
     {
-        $sites = Cartographer::scopedQuery(Site::class)
+        $sites = Cartographer::scopedQuery(Site::query())
             ->select('id', 'name', 'icon_id')
             ->get();
 
@@ -251,7 +251,7 @@ class ExplorerController extends Controller
 
     private function buildBuildings(): void
     {
-        $buildings = Cartographer::scopedQuery(Building::class)
+        $buildings = Cartographer::scopedQuery(Building::query())
             ->select('id', 'name', 'building_id', 'site_id', 'icon_id', 'attributes')
             ->get();
 
@@ -283,7 +283,7 @@ class ExplorerController extends Controller
 
     private function buildBays(): void
     {
-        $bays = Cartographer::scopedQuery(Bay::class)
+        $bays = Cartographer::scopedQuery(Bay::query())
             ->select('id', 'name', 'room_id')
             ->get();
 
@@ -306,7 +306,7 @@ class ExplorerController extends Controller
 
     private function buildSecurityZones(): void
     {
-        $zones = Cartographer::scopedQuery(Zone::class)
+        $zones = Cartographer::scopedQuery(Zone::query())
             ->select('id', 'name', 'attributes')
             ->get();
 
@@ -350,7 +350,7 @@ class ExplorerController extends Controller
 
     private function buildPhysicalServers(): void
     {
-        $servers = Cartographer::scopedQuery(PhysicalServer::class)
+        $servers = Cartographer::scopedQuery(PhysicalServer::query())
             ->select('id', 'name', 'icon_id', 'bay_id')
             ->get();
 
@@ -375,7 +375,7 @@ class ExplorerController extends Controller
 
     private function buildWorkstations(): void
     {
-        $this->workstations = Cartographer::scopedQuery(Workstation::class)
+        $this->workstations = Cartographer::scopedQuery(Workstation::query())
             ->select('id', 'name', 'icon_id', 'address_ip', 'building_id', 'site_id')
             ->get();
 
@@ -409,7 +409,7 @@ class ExplorerController extends Controller
 
     private function buildPhones(): void
     {
-        $phones = Cartographer::scopedQuery(Phone::class)
+        $phones = Cartographer::scopedQuery(Phone::query())
             ->select('id', 'name', 'address_ip', 'building_id', 'site_id')
             ->get();
 
@@ -437,7 +437,7 @@ class ExplorerController extends Controller
     }
 
     private function buildPeripherals(): void {
-        $this->peripherals = Cartographer::scopedQuery(Peripheral::class)
+        $this->peripherals = Cartographer::scopedQuery(Peripheral::query())
             ->select('id', 'name', 'icon_id', 'address_ip', 'bay_id', 'site_id', 'building_id', 'provider_id')
             ->get();
 
@@ -492,7 +492,7 @@ class ExplorerController extends Controller
     }
     private function buildStorageDevices(): void {
         // Storage devices
-        $storageDevices = Cartographer::scopedQuery(StorageDevice::class)
+        $storageDevices = Cartographer::scopedQuery(StorageDevice::query())
             ->select('id', 'name', 'bay_id', 'address_ip')
             ->get();
 
@@ -522,7 +522,7 @@ class ExplorerController extends Controller
 
     private function buildPhysicalSwitches(): void
     {
-        $switches = Cartographer::scopedQuery(PhysicalSwitch::class)
+        $switches = Cartographer::scopedQuery(PhysicalSwitch::query())
             ->select('id', 'name', 'icon_id', 'bay_id', 'building_id', 'site_id')
             ->get();
 
@@ -549,7 +549,7 @@ class ExplorerController extends Controller
 
     private function buildPhysicalRouters(): void
     {
-        $routers = Cartographer::scopedQuery(PhysicalRouter::class)
+        $routers = Cartographer::scopedQuery(PhysicalRouter::query())
             ->select('id', 'name', 'bay_id', 'building_id', 'site_id')
             ->get();
 
@@ -573,7 +573,7 @@ class ExplorerController extends Controller
     }
 
     private function buildWifiTerminals(): void {
-        $wifiTerminals = Cartographer::scopedQuery(WifiTerminal::class)
+        $wifiTerminals = Cartographer::scopedQuery(WifiTerminal::query())
             ->select('id', 'name', 'address_ip', 'site_id', 'building_id')
             ->get();
 
@@ -603,7 +603,7 @@ class ExplorerController extends Controller
 
     private function buildPhysicalSecurityDevices(): void
     {
-        $devices = Cartographer::scopedQuery(PhysicalSecurityDevice::class)
+        $devices = Cartographer::scopedQuery(PhysicalSecurityDevice::query())
             ->select('id', 'name', 'icon_id', 'address_ip', 'bay_id', 'site_id', 'building_id', 'attributes')
             ->get();
 
@@ -634,7 +634,7 @@ class ExplorerController extends Controller
 
     private function buildWANs(): void
     {
-        $wans = Cartographer::scopedQuery(Wan::class)
+        $wans = Cartographer::scopedQuery(Wan::query())
             ->select('id', 'name')
             ->get();
 
@@ -653,7 +653,7 @@ class ExplorerController extends Controller
 
     private function buildMAN(): void
     {
-        $mans = Cartographer::scopedQuery(Man::class)
+        $mans = Cartographer::scopedQuery(Man::query())
             ->select('id', 'name', 'parent_man_id')
             ->get();
 
@@ -692,7 +692,7 @@ class ExplorerController extends Controller
 
     private function buildLAN(): void
     {
-        $lans = Cartographer::scopedQuery(Lan::class)
+        $lans = Cartographer::scopedQuery(Lan::query())
             ->select('id', 'name')
             ->get();
 
@@ -714,7 +714,7 @@ class ExplorerController extends Controller
 
     private function buildVLAN(): void
     {
-        $vlans = Cartographer::scopedQuery(Vlan::class)
+        $vlans = Cartographer::scopedQuery(Vlan::query())
             ->select('id', 'name')
             ->get();
 
@@ -732,7 +732,7 @@ class ExplorerController extends Controller
 
     private function buildPhysicalLinks(): void
     {
-        $links = Cartographer::scopedQuery(PhysicalLink::class)->get();
+        $links = Cartographer::scopedQuery(PhysicalLink::query())->get();
         
         foreach ($links as $link) {
             $src = $link->sourceId();
@@ -768,7 +768,7 @@ class ExplorerController extends Controller
     }
 
     private function buildNetworks(): void {
-        $networks = Cartographer::scopedQuery(Network::class)
+        $networks = Cartographer::scopedQuery(Network::query())
             ->select('id', 'name')
             ->get();
 
@@ -829,7 +829,7 @@ class ExplorerController extends Controller
 
     private function buildNetworkSwitches(): void
     {
-        $switches = Cartographer::scopedQuery(NetworkSwitch::class)
+        $switches = Cartographer::scopedQuery(NetworkSwitch::query())
             ->select('id', 'name', 'ip')
             ->get();
 
@@ -857,7 +857,7 @@ class ExplorerController extends Controller
 
     private function buildGateways(): void
     {
-        $gateways = Cartographer::scopedQuery(Gateway::class)
+        $gateways = Cartographer::scopedQuery(Gateway::query())
             ->select('id', 'name', 'ip')
             ->get();
 
@@ -875,7 +875,7 @@ class ExplorerController extends Controller
 
     private function buildExternalConnectedEntities(): void
     {
-        $entities = Cartographer::scopedQuery(ExternalConnectedEntity::class)
+        $entities = Cartographer::scopedQuery(ExternalConnectedEntity::query())
             ->select('id', 'name', 'network_id', 'entity_id')
             ->get();
 
@@ -905,7 +905,7 @@ class ExplorerController extends Controller
     }
     private function buildContainers(): void
     {
-        $containers = Cartographer::scopedQuery(Container::class)
+        $containers = Cartographer::scopedQuery(Container::query())
             ->select('id', 'name', 'icon_id')
             ->get();
 
@@ -952,7 +952,7 @@ class ExplorerController extends Controller
 
     private function buildClusters(): void {
         // Clusters
-        $clusters = Cartographer::scopedQuery(Cluster::class)
+        $clusters = Cartographer::scopedQuery(Cluster::query())
             ->select('id', 'name', 'icon_id', 'address_ip', 'attributes')
             ->get();
         foreach ($clusters as $cluster) {
@@ -996,7 +996,7 @@ class ExplorerController extends Controller
 
     private function buildLogicalServers(): void
     {
-        $this->logicalServers = Cartographer::scopedQuery(LogicalServer::class)
+        $this->logicalServers = Cartographer::scopedQuery(LogicalServer::query())
             ->select('id', 'name', 'icon_id', 'address_ip', 'domain_id', 'attributes')
             ->get();
 
@@ -1033,7 +1033,7 @@ class ExplorerController extends Controller
 
     private function buildBackups(): void
     {
-        $backups = Cartographer::scopedQuery(Backup::class)
+        $backups = Cartographer::scopedQuery(Backup::query())
             ->select('id', 'name', 'attributes')
             ->get();
 
@@ -1071,7 +1071,7 @@ class ExplorerController extends Controller
 
     private function buildLogicalSecurityDevices(): void
     {
-        $securityDevices = Cartographer::scopedQuery(SecurityDevice::class)
+        $securityDevices = Cartographer::scopedQuery(SecurityDevice::query())
             ->select('id', 'name', 'attributes', 'icon_id','address_ip')
             ->get();
 
@@ -1105,7 +1105,7 @@ class ExplorerController extends Controller
 
     private function buildRouters(): void
     {
-        $routers = Cartographer::scopedQuery(Router::class)
+        $routers = Cartographer::scopedQuery(Router::query())
             ->select('id', 'name', 'ip_addresses')
             ->get();
 
@@ -1138,7 +1138,7 @@ class ExplorerController extends Controller
 
     private function buildCertificates(): void
     {
-        $certificates = Cartographer::scopedQuery(Certificate::class)
+        $certificates = Cartographer::scopedQuery(Certificate::query())
             ->select('id', 'name')
             ->get();
 
@@ -1164,7 +1164,7 @@ class ExplorerController extends Controller
 
     private function buildLogicalFlows(): void
     {
-        $flows = Cartographer::scopedQuery(LogicalFlow::class)->get();
+        $flows = Cartographer::scopedQuery(LogicalFlow::query())->get();
 
         foreach ($flows as $flow) {
             // \Log::Debug('flow: '.$flow->name);
@@ -1243,7 +1243,7 @@ class ExplorerController extends Controller
 
     private function buildApplicationFlows() : void {
         // Fluxes
-        $flows = Cartographer::scopedQuery(ApplicationFlow::class)->get();
+        $flows = Cartographer::scopedQuery(ApplicationFlow::query())->get();
         foreach ($flows as $flow) {
             if ($flow->application_source_id !== null) {
                 $src_id = $this->formatId(Application::$prefix, $flow->application_source_id);
@@ -1275,7 +1275,7 @@ class ExplorerController extends Controller
 
     private function buildApplicationBlocks(): void
     {
-        $blocks = Cartographer::scopedQuery(ApplicationBlock::class)
+        $blocks = Cartographer::scopedQuery(ApplicationBlock::query())
             ->select('id', 'name')
             ->get();
 
@@ -1292,7 +1292,7 @@ class ExplorerController extends Controller
 
     private function buildApplications(): void
     {
-        $applications = Cartographer::scopedQuery(Application::class)
+        $applications = Cartographer::scopedQuery(Application::query())
             ->select('id', 'name', 'icon_id', 'application_block_id', 'attributes')
             ->get();
 
@@ -1326,7 +1326,7 @@ class ExplorerController extends Controller
 
     private function buildApplicationServices(): void
     {
-        $services = Cartographer::scopedQuery(ApplicationService::class)
+        $services = Cartographer::scopedQuery(ApplicationService::query())
             ->select('id', 'name')
             ->get();
 
@@ -1348,7 +1348,7 @@ class ExplorerController extends Controller
 
     private function buildApplicationModules(): void
     {
-        $modules = Cartographer::scopedQuery(ApplicationModule::class)
+        $modules = Cartographer::scopedQuery(ApplicationModule::query())
             ->select('id', 'name')
             ->get();
 
@@ -1370,7 +1370,7 @@ class ExplorerController extends Controller
 
     private function buildDatabases(): void
     {
-        $databases = Cartographer::scopedQuery(Database::class)
+        $databases = Cartographer::scopedQuery(Database::query())
             ->select('id', 'name', 'icon_id')
             ->get();
 
@@ -1409,7 +1409,7 @@ class ExplorerController extends Controller
 
     private function buildZoneAdmins(): void
     {
-        $zones = Cartographer::scopedQuery(ZoneAdmin::class)
+        $zones = Cartographer::scopedQuery(ZoneAdmin::query())
             ->select('id', 'name')
             ->get();
 
@@ -1426,7 +1426,7 @@ class ExplorerController extends Controller
 
     private function buildAnnuaires(): void
     {
-        $annuaires = Cartographer::scopedQuery(Annuaire::class)
+        $annuaires = Cartographer::scopedQuery(Annuaire::query())
             ->select('id', 'name', 'zone_admin_id')
             ->get();
 
@@ -1451,7 +1451,7 @@ class ExplorerController extends Controller
 
     private function buildForests(): void
     {
-        $forests = Cartographer::scopedQuery(ForestAd::class)
+        $forests = Cartographer::scopedQuery(ForestAd::query())
             ->select('id', 'name', 'zone_admin_id')
             ->get();
 
@@ -1475,7 +1475,7 @@ class ExplorerController extends Controller
 
     private function buildDomains(): void
     {
-        $domains = Cartographer::scopedQuery(Domain::class)
+        $domains = Cartographer::scopedQuery(Domain::query())
             ->select('id', 'name')
             ->get();
 
@@ -1496,7 +1496,7 @@ class ExplorerController extends Controller
 
     private function buildAdminUsers(): void
     {
-        $adminUsers = Cartographer::scopedQuery(AdminUser::class)
+        $adminUsers = Cartographer::scopedQuery(AdminUser::query())
             ->select('id', 'user_id', 'icon_id', 'domain_id')
             ->get();
 
@@ -1539,7 +1539,7 @@ class ExplorerController extends Controller
 
     private function buildInformation(): void
     {
-        $information = Cartographer::scopedQuery(Information::class)
+        $information = Cartographer::scopedQuery(Information::query())
             ->select('id', 'name')
             ->get();
 
@@ -1573,7 +1573,7 @@ class ExplorerController extends Controller
 
     private function buildProcesses(): void
     {
-        $processes = Cartographer::scopedQuery(Process::class)
+        $processes = Cartographer::scopedQuery(Process::query())
             ->select('id', 'name', 'icon_id', 'macroprocess_id')
             ->get();
 
@@ -1599,7 +1599,7 @@ class ExplorerController extends Controller
 
     private function buildMacroProcesses(): void
     {
-        $macroProcesses = Cartographer::scopedQuery(MacroProcessus::class)
+        $macroProcesses = Cartographer::scopedQuery(MacroProcessus::query())
             ->select('id', 'name')
             ->get();
 
@@ -1616,7 +1616,7 @@ class ExplorerController extends Controller
 
     private function buildActivities(): void
     {
-        $activities = Cartographer::scopedQuery(Activity::class)
+        $activities = Cartographer::scopedQuery(Activity::query())
             ->select('id', 'name')
             ->get();
 
@@ -1641,7 +1641,7 @@ class ExplorerController extends Controller
 
     private function buildOperations(): void
     {
-        $operations = Cartographer::scopedQuery(Operation::class)
+        $operations = Cartographer::scopedQuery(Operation::query())
             ->select('id', 'name')
             ->get();
 
@@ -1662,7 +1662,7 @@ class ExplorerController extends Controller
 
     private function buildTasks(): void
     {
-        $tasks = Cartographer::scopedQuery(Task::class)
+        $tasks = Cartographer::scopedQuery(Task::query())
             ->select('id', 'name')
             ->get();
 
@@ -1683,7 +1683,7 @@ class ExplorerController extends Controller
 
     private function buildActors(): void
     {
-        $actors = Cartographer::scopedQuery(Actor::class)
+        $actors = Cartographer::scopedQuery(Actor::query())
             ->select('id', 'name')
             ->get();
 
@@ -1711,7 +1711,7 @@ class ExplorerController extends Controller
 
     private function buildEntities(): void
     {
-        $entities = Cartographer::scopedQuery(Entity::class)
+        $entities = Cartographer::scopedQuery(Entity::query())
             ->select('id', 'name', 'icon_id', 'parent_entity_id', 'attributes')
             ->get();
 
@@ -1746,7 +1746,7 @@ class ExplorerController extends Controller
 
     private function buildRelations(): void
     {
-        $relations = Cartographer::scopedQuery(Relation::class)
+        $relations = Cartographer::scopedQuery(Relation::query())
             ->select('id', 'name', 'source_id', 'destination_id', 'attributes')
             ->get();
 

@@ -74,6 +74,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('canShow', function (string $expression) {
             return "<?php if(Gate::allows('show-object', {$expression})): ?>";
         });
+        Blade::directive('elsecanShow', function () {
+            return "<?php else: ?>";
+        });
         Blade::directive('endcanShow', function () {
             return "<?php endif; ?>";
         });
@@ -96,6 +99,13 @@ class AppServiceProvider extends ServiceProvider
             return "<?php if(\\App\\Models\\Cartographer::canAccessAny([{$expression}])): ?>";
         });
         Blade::directive('endcanAccessAny', function () {
+            return "<?php endif; ?>";
+        });
+
+        Blade::directive('canAccessAll', function (string $expression) {
+            return "<?php if(\\App\\Models\\Cartographer::canAccessAll([{$expression}])): ?>";
+        });
+        Blade::directive('endcanAccessAll', function () {
             return "<?php endif; ?>";
         });
 

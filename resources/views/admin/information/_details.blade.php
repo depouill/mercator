@@ -11,9 +11,13 @@
             </th>
             <td>
             @if ($withLink)
-            <a href="{{ route('admin.information.show', $information->id) }}">{{ $information->name }}</a>
+                @canShow($information)
+                    <a href="{{ route('admin.information.show', $information->id) }}">{{ $information->name }}</a>
+                @elsecanShow
+                    {{ $information->name }}
+                @endcanShow
             @else
-            {{ $information->name }}
+                {{ $information->name }}
             @endif
             </td>
         </tr>

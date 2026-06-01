@@ -11,7 +11,11 @@
             </th>
             <td>
             @if($withLink)
+                @canShow($task)
                 <a href="{{ route('admin.tasks.show', $task) }}">{{ $task->name }}</a>
+                @elsecanShow
+                {{ $task->name }}
+                @endcanShow
             @else
                 {{ $task->name }}
             @endif
@@ -25,21 +29,27 @@
                 {!! $task->description !!}
             </td>
         </tr>
+        @canAccess(App\Models\Operation::class)
         <tr>
             <th>
                 {{ trans('cruds.task.fields.operations') }}
             </th>
             <td>
                 @foreach($task->operations as $operation)
+                    @canShow($operation)
                     <a href="{{ route('admin.operations.show', $operation->id) }}">
                     {{ $operation->name }}
                     </a>
+                    @elsecanShow
+                        {{ $operation->name }}
+                    @endcanShow
                     @if (!$loop->last)
                     ,
                     @endif
                 @endforeach
             </td>
         </tr>
+        @endcanAccess
         @if($task->graphs()->count()>0)
         <tr>
             <th>

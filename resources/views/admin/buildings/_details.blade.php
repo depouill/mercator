@@ -10,7 +10,11 @@
         </th>
         <td width="20%">
         @if($withLink)
+        @canShow($building)
         <a href="{{ route('admin.buildings.show', $building->id) }}">{{ $building->name }}</a>
+        @elsecanShow
+        {{ $building->name }}
+        @endcanShow
         @else
         {{ $building->name }}
         @endif
@@ -46,57 +50,80 @@
         </td>
     </tr>
     <tr>
+    @canAccess(App\Models\Site::class)
         <th>
             {{ trans('cruds.building.fields.site') }}
         </th>
         <td>
             @if ($building->site!=null)
-                <a href="{{ route('admin.sites.show', $building->site->id) }}">
+                @canShow($building->site)
+                    <a href="{{ route('admin.sites.show', $building->site->id) }}">
+                        {{ $building->site->name ?? '' }}
+                    </a>
+                @elsecanShow
                     {{ $building->site->name ?? '' }}
-                </a>
+                @endcanShow
             @endif
         </td>
+    @endcanAccess
         <th>
             {{ trans('cruds.building.fields.parent') }}
         </th>
+        @canAccess(App\Models\Building::class)
         <td colspan="4">
             @if ($building->building!=null)
-                <a href="{{ route('admin.buildings.show', $building->building->id) }}">
+                @canShow($building->building)
+                    <a href="{{ route('admin.buildings.show', $building->building->id) }}">
+                        {{ $building->building->name ?? '' }}
+                    </a>
+                @elsecanShow
                     {{ $building->building->name ?? '' }}
-                </a>
+                @endcanShow
             @endif
         </td>
+    @endcanAccess
     </tr>
+    @canAccess(App\Models\Building::class)
     <tr>
         <th>
             {{ trans('cruds.building.fields.children') }}
         </th>
         <td colspan="6">
             @foreach($building->buildings as $b)
-                <a href="{{ route('admin.buildings.show', $b->id) }}">
+                @canShow($b)
+                    <a href="{{ route('admin.buildings.show', $b->id) }}">
+                        {{ $b->name ?? '' }}
+                    </a>
+                @elsecanShow
                     {{ $b->name ?? '' }}
-                </a>
+                @endcanShow
                 @if (!$loop->last)
                     ,
                 @endif
             @endforeach
         </td>
     </tr>
+    @endcanAccess
+    @canAccess(App\Models\Bay::class)
     <tr>
         <th>
             {{ trans('cruds.building.fields.bays') }}
         </th>
         <td colspan="6">
             @foreach($building->roomBays as $bay)
-                <a href="{{ route('admin.bays.show', $bay->id) }}">
+                @canShow($bay)
+                    <a href="{{ route('admin.bays.show', $bay->id) }}">
+                        {{ $bay->name ?? '' }}
+                    </a>
+                @elsecanShow
                     {{ $bay->name ?? '' }}
-                </a>
+                @endcanShow
                 @if ($building->roomBays->last()!=$bay)
                     ,
                 @endif
             @endforeach
         </td>
     </tr>
-
+    @endcanAccess
     </tbody>
 </table>

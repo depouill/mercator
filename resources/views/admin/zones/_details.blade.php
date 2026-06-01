@@ -8,7 +8,11 @@
         <th width="10%">{{ trans('cruds.zone.fields.name') }}</th>
         <td width="20%">
         @if($withLink)
+        @canShow($zone)
         <a href="{{ route('admin.zones.show', $zone->id) }}">{{ $zone->name }}</a>
+        @elsecanShow
+        {{ $zone->name }}
+        @endcanShow
         @else
         {{ $zone->name }}
         @endif
@@ -26,11 +30,16 @@
         <th>{{ trans('cruds.zone.fields.description') }}</th>
         <td colspan="5">{!! $zone->description !!}</td>
     </tr>
+    @canAccess(App\Models\Zone::class)
     <tr>
         <th>{{ trans('cruds.zone.fields.parent_zones') }}</th>
         <td colspan="2">
             @foreach($zone->parentZones as $parentZone)
-                <a href="{{ route('admin.zones.show', $parentZone->id) }}">{{ $parentZone->name }}</a>{{ !$loop->last ? ', ' : '' }}
+                @canShow($parentZone)
+                <a href="{{ route('admin.zones.show', $parentZone->id) }}">{{ $parentZone->name }}</a>
+                @elsecanShow
+                {{ $parentZone->name }}
+                @endcanShow{{ !$loop->last ? ', ' : '' }}
             @endforeach
         </td>
         <th>{{ trans('cruds.zone.fields.child_zones') }}</th>
@@ -40,21 +49,34 @@
             @endforeach
         </td>
     </tr>
+    @endcanAccess
+    @canAccess(App\Models\Building::class)
     <tr>
         <th>{{ trans('cruds.zone.fields.buildings') }}</th>
         <td colspan="5">
             @foreach($zone->buildings as $building)
-                <a href="{{ route('admin.buildings.show', $building->id) }}">{{ $building->name }}</a>{{ !$loop->last ? ', ' : '' }}
+                @canShow($building)
+                <a href="{{ route('admin.buildings.show', $building->id) }}">{{ $building->name }}</a>
+                @elsecanShow
+                {{ $building->name }}
+                @endcanShow{{ !$loop->last ? ', ' : '' }}
             @endforeach
         </td>
     </tr>
+    @endcanAccess
+    @canAccess(App\Models\AdminUser::class)
     <tr>
         <th>{{ trans('cruds.zone.fields.admin_users') }}</th>
         <td colspan="5">
             @foreach($zone->adminUsers as $adminUser)
-                <a href="{{ route('admin.admin-users.show', $adminUser->id) }}">{{ $adminUser->user_id }}</a>{{ !$loop->last ? ', ' : '' }}
+                @canShow($adminUser)
+                <a href="{{ route('admin.admin-users.show', $adminUser->id) }}">{{ $adminUser->user_id }}</a>
+                @elsecanShow
+                {{ $adminUser->user_id }}
+                @endcanShow{{ !$loop->last ? ', ' : '' }}
             @endforeach
         </td>
     </tr>
+    @endcanAccess
     </tbody>
 </table>

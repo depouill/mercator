@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 
-class UpdatePhysicalLinkRequest extends FormRequest
+class UpdatePhysicalLinkRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

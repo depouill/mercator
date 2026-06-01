@@ -43,6 +43,16 @@ class Cartographer extends Model
         return false;
     }
 
+    public static function canAccessAll(array $classes): bool
+    {
+        foreach ($classes as $class) {
+            if (!static::canAccess($class)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function cartographiable(): MorphTo
     {
         return $this->morphTo();
@@ -174,6 +184,12 @@ class Cartographer extends Model
 
     // ─── Détection contexte API (pas de session web initialisée) ─────────────
 
+    /** @var array<int, list<int>> */
+    private static array $roleIdsCache = [];
+
+    /** @var array<int, array<string, list<int>>> */
+    private static array $cartographerCache = [];
+
     private static function hasWebSession(): bool
     {
         return session()->has('cartographer_permissions_at');
@@ -183,22 +199,23 @@ class Cartographer extends Model
 
     private static function getRoleIds(User $user): array
     {
-        if (! isset($user->_roleIdsCache)) {
-            $user->_roleIdsCache = $user->roles()->pluck('id')->toArray();
+        $key = (int) $user->getKey();
+        if (! array_key_exists($key, self::$roleIdsCache)) {
+            self::$roleIdsCache[$key] = $user->roles()->pluck('id')->toArray();
         }
-        return $user->_roleIdsCache;
+        return self::$roleIdsCache[$key];
     }
 
     /**
-     * Charge (et met en cache sur $user) toutes les entrées cartographe
-     * depuis la base, groupées par type de modèle.
-     * Utilisé uniquement en contexte API (pas de session).
+     * Charge (et met en cache) toutes les entrées cartographe depuis la base,
+     * groupées par type de modèle. Utilisé uniquement en contexte API (pas de session).
      */
     private static function loadCartographerCache(User $user): array
     {
-        if (! isset($user->_cartographerCache)) {
-            $roleIds = static::getRoleIds($user);
-            $user->_cartographerCache = static::where(function ($q) use ($user, $roleIds) {
+        $key = (int) $user->getKey();
+        if (! array_key_exists($key, self::$cartographerCache)) {
+            $roleIds = self::getRoleIds($user);
+            self::$cartographerCache[$key] = static::where(function ($q) use ($user, $roleIds) {
                     $q->where('user_id', $user->id);
                     if (! empty($roleIds)) {
                         $q->orWhereIn('role_id', $roleIds);
@@ -209,7 +226,7 @@ class Cartographer extends Model
                 ->map(fn ($rows) => $rows->pluck('cartographiable_id')->unique()->values()->toArray())
                 ->toArray();
         }
-        return $user->_cartographerCache;
+        return self::$cartographerCache[$key];
     }
 
     // ─── API publique ──────────────────────────────────────────────────────────
@@ -220,13 +237,13 @@ class Cartographer extends Model
             return true;
         }
 
-        if (static::hasWebSession()) {
+        if (self::hasWebSession()) {
             $ids = session('cartographer_permissions.' . get_class($object), []);
             return in_array($object->getKey(), $ids);
         }
 
         // Contexte API : requête DB (cachée sur $user)
-        $cache = static::loadCartographerCache($user);
+        $cache = self::loadCartographerCache($user);
         $ids   = $cache[get_class($object)] ?? [];
         return in_array($object->getKey(), $ids);
     }
@@ -237,34 +254,58 @@ class Cartographer extends Model
             return [];
         }
 
-        if (static::hasWebSession()) {
+        if (self::hasWebSession()) {
             return session('cartographer_permissions.' . $modelClass, []);
         }
 
         // Contexte API : requête DB (cachée sur $user)
-        $cache = static::loadCartographerCache($user);
+        $cache = self::loadCartographerCache($user);
         return $cache[$modelClass] ?? [];
     }
 
-    public static function scopedQuery(string $class): \Illuminate\Database\Eloquent\Builder
+    /**
+     * Applique la restriction cartographe sur un builder déjà typé.
+     *
+     * @template T of \Illuminate\Database\Eloquent\Model
+     * @param \Illuminate\Database\Eloquent\Builder<T> $query
+     * @return \Illuminate\Database\Eloquent\Builder<T>
+     */
+    public static function scopedQuery(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        $user = auth()->user();
+        $class = get_class($query->getModel());
+        $user  = auth()->user();
 
         if (! $user) {
-            return $class::whereRaw('0 = 1');
+            return $query->whereRaw('0 = 1');
         }
 
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        // No assignments: fall back to role-based permission (grants full access).
         $permission = Str::snake(class_basename($class)) . '_access';
-
         if (Gate::allows($permission)) {
-            return $class::query();
+            return $query;
         }
 
-        $ids = static::allowedIdsFor($user, $class);
+        // Cartographer assignments take precedence: if any exist, restrict to them.
+        $ids = self::allowedIdsFor($user, $class);
+        if (! empty($ids)) {
+            $table = $query->getModel()->getTable();
+            return $query->whereIn("{$table}.id", $ids);
+        }
 
-        return $ids
-            ? $class::whereIn('id', $ids)
-            : $class::whereRaw('0 = 1');
+        return $query->whereRaw('0 = 1');
+    }
+
+    /**
+     * Variante pour les appelants avec un nom de classe dynamique (chaîne).
+     * Ne promet pas de type générique — utiliser scopedQuery(X::query()) si possible.
+     */
+    public static function scopedQueryByClass(string $class): \Illuminate\Database\Eloquent\Builder
+    {
+        return self::scopedQuery((new $class)->newQuery());
     }
 
     public static function hasAnyFor(User $user, string $modelClass): bool
@@ -273,12 +314,12 @@ class Cartographer extends Model
             return true;
         }
 
-        if (static::hasWebSession()) {
+        if (self::hasWebSession()) {
             return ! empty(session('cartographer_permissions.' . $modelClass, []));
         }
 
         // Contexte API
-        $cache = static::loadCartographerCache($user);
+        $cache = self::loadCartographerCache($user);
         return ! empty($cache[$modelClass] ?? []);
     }
 

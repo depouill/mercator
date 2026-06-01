@@ -36,7 +36,8 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             // 2. Contexte API : pas de session web → fallback base de données
-            if (! session()->has('auth_permissions')) {
+            // La présence de cartographer_permissions_at indique un contexte web (loadSessionFor appelé)
+            if (! session()->has('auth_permissions') && ! session()->has('cartographer_permissions_at')) {
 
                 // 2a. Permissions de rôle depuis la DB (cache par requête sur $user)
                 if (! isset($user->_dbPermissionsCache)) {

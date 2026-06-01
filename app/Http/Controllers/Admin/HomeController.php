@@ -59,11 +59,6 @@ use App\Models\Cartographer;
 
 class HomeController extends Controller
 {
-    private function q(string $class): \Illuminate\Database\Eloquent\Builder
-    {
-        return Cartographer::scopedQuery($class);
-    }
-
     /**
      * Show maturity level 1.
      */
@@ -123,169 +118,169 @@ class HomeController extends Controller
     {
         $levels = [
             // GDPR
-            'data_processing'   => $this->q(DataProcessing::class)->count(),
-            'security_controls' => $this->q(SecurityControl::class)->count(),
+            'data_processing'   => Cartographer::scopedQuery(DataProcessing::query())->count(),
+            'security_controls' => Cartographer::scopedQuery(SecurityControl::query())->count(),
 
             // Ecosystem
-            'entities'      => $this->q(Entity::class)->count(),
-            'entities_lvl1' => $this->q(Entity::class)->maturityLevel1()->count(),
+            'entities'      => Cartographer::scopedQuery(Entity::query())->count(),
+            'entities_lvl1' => Cartographer::scopedQuery(Entity::maturityLevel1())->count(),
 
-            'relations'      => $this->q(Relation::class)->count(),
-            'relations_lvl1' => $this->q(Relation::class)->maturityLevel1()->count(),
-            'relations_lvl2' => $this->q(Relation::class)->maturityLevel2()->count(),
+            'relations'      => Cartographer::scopedQuery(Relation::query())->count(),
+            'relations_lvl1' => Cartographer::scopedQuery(Relation::maturityLevel1())->count(),
+            'relations_lvl2' => Cartographer::scopedQuery(Relation::maturityLevel2())->count(),
 
             // Information system
-            'macroProcessuses'      => $this->q(MacroProcessus::class)->count(),
-            'macroProcessuses_lvl2' => $this->q(MacroProcessus::class)->maturityLevel2()->count(),
-            'macroProcessuses_lvl3' => $this->q(MacroProcessus::class)->maturityLevel3()->count(),
+            'macroProcessuses'      => Cartographer::scopedQuery(MacroProcessus::query())->count(),
+            'macroProcessuses_lvl2' => Cartographer::scopedQuery(MacroProcessus::maturityLevel2())->count(),
+            'macroProcessuses_lvl3' => Cartographer::scopedQuery(MacroProcessus::maturityLevel3())->count(),
 
-            'processes'      => $this->q(Process::class)->count(),
-            'processes_lvl1' => $this->q(Process::class)->maturityLevel1()->count(),
-            'processes_lvl2' => $this->q(Process::class)->maturityLevel2()->count(),
+            'processes'      => Cartographer::scopedQuery(Process::query())->count(),
+            'processes_lvl1' => Cartographer::scopedQuery(Process::maturityLevel1())->count(),
+            'processes_lvl2' => Cartographer::scopedQuery(Process::maturityLevel2())->count(),
 
-            'activities'      => $this->q(Activity::class)->count(),
-            'activities_lvl2' => $this->q(Activity::class)->maturityLevel2()->count(),
+            'activities'      => Cartographer::scopedQuery(Activity::query())->count(),
+            'activities_lvl2' => Cartographer::scopedQuery(Activity::maturityLevel2())->count(),
 
-            'operations'      => $this->q(Operation::class)->count(),
-            'operations_lvl1' => $this->q(Operation::class)->maturityLevel1()->count(),
-            'operations_lvl2' => $this->q(Operation::class)->maturityLevel2()->count(),
-            'operations_lvl3' => $this->q(Operation::class)->maturityLevel3()->count(),
+            'operations'      => Cartographer::scopedQuery(Operation::query())->count(),
+            'operations_lvl1' => Cartographer::scopedQuery(Operation::maturityLevel1())->count(),
+            'operations_lvl2' => Cartographer::scopedQuery(Operation::maturityLevel2())->count(),
+            'operations_lvl3' => Cartographer::scopedQuery(Operation::maturityLevel3())->count(),
 
-            'tasks'      => $this->q(Task::class)->count(),
-            'tasks_lvl3' => $this->q(Task::class)->maturityLevel3()->count(),
+            'tasks'      => Cartographer::scopedQuery(Task::query())->count(),
+            'tasks_lvl3' => Cartographer::scopedQuery(Task::maturityLevel3())->count(),
 
-            'actors'      => $this->q(Actor::class)->count(),
-            'actors_lvl2' => $this->q(Actor::class)->maturityLevel2()->count(),
+            'actors'      => Cartographer::scopedQuery(Actor::query())->count(),
+            'actors_lvl2' => Cartographer::scopedQuery(Actor::maturityLevel2())->count(),
 
-            'informations'      => $this->q(Information::class)->count(),
-            'informations_lvl1' => $this->q(Information::class)->maturityLevel1()->count(),
-            'informations_lvl2' => $this->q(Information::class)->maturityLevel2()->count(),
+            'informations'      => Cartographer::scopedQuery(Information::query())->count(),
+            'informations_lvl1' => Cartographer::scopedQuery(Information::maturityLevel1())->count(),
+            'informations_lvl2' => Cartographer::scopedQuery(Information::maturityLevel2())->count(),
 
             // Applications
-            'applicationBlocks'      => $this->q(ApplicationBlock::class)->count(),
-            'applicationBlocks_lvl2' => $this->q(ApplicationBlock::class)->maturityLevel2()->count(),
+            'applicationBlocks'      => Cartographer::scopedQuery(ApplicationBlock::query())->count(),
+            'applicationBlocks_lvl2' => Cartographer::scopedQuery(ApplicationBlock::maturityLevel2())->count(),
 
-            'applications'      => $this->q(Application::class)->count(),
-            'applications_lvl1' => $this->q(Application::class)->maturityLevel1()->count(),
-            'applications_lvl2' => $this->q(Application::class)->maturityLevel2()->count(),
-            'applications_lvl3' => $this->q(Application::class)->maturityLevel3()->count(),
+            'applications'      => Cartographer::scopedQuery(Application::query())->count(),
+            'applications_lvl1' => Cartographer::scopedQuery(Application::maturityLevel1())->count(),
+            'applications_lvl2' => Cartographer::scopedQuery(Application::maturityLevel2())->count(),
+            'applications_lvl3' => Cartographer::scopedQuery(Application::maturityLevel3())->count(),
 
-            'applicationServices'      => $this->q(ApplicationService::class)->count(),
-            'applicationServices_lvl2' => $this->q(ApplicationService::class)->maturityLevel2()->count(),
+            'applicationServices'      => Cartographer::scopedQuery(ApplicationService::query())->count(),
+            'applicationServices_lvl2' => Cartographer::scopedQuery(ApplicationService::maturityLevel2())->count(),
 
-            'applicationModules'      => $this->q(ApplicationModule::class)->count(),
-            'applicationModules_lvl2' => $this->q(ApplicationModule::class)->maturityLevel2()->count(),
+            'applicationModules'      => Cartographer::scopedQuery(ApplicationModule::query())->count(),
+            'applicationModules_lvl2' => Cartographer::scopedQuery(ApplicationModule::maturityLevel2())->count(),
 
-            'databases'      => $this->q(Database::class)->count(),
-            'databases_lvl1' => $this->q(Database::class)->maturityLevel1()->count(),
-            'databases_lvl2' => $this->q(Database::class)->maturityLevel2()->count(),
+            'databases'      => Cartographer::scopedQuery(Database::query())->count(),
+            'databases_lvl1' => Cartographer::scopedQuery(Database::maturityLevel1())->count(),
+            'databases_lvl2' => Cartographer::scopedQuery(Database::maturityLevel2())->count(),
 
-            'flows'      => $this->q(ApplicationFlow::class)->count(),
-            'flows_lvl1' => $this->q(ApplicationFlow::class)->maturityLevel1()->count(),
+            'flows'      => Cartographer::scopedQuery(ApplicationFlow::query())->count(),
+            'flows_lvl1' => Cartographer::scopedQuery(ApplicationFlow::maturityLevel1())->count(),
 
             // Administration
-            'zones_ad'      => $this->q(ZoneAdmin::class)->count(),
-            'zones_ad_lvl1' => $this->q(ZoneAdmin::class)->maturityLevel1()->count(),
+            'zones_ad'      => Cartographer::scopedQuery(ZoneAdmin::query())->count(),
+            'zones_ad_lvl1' => Cartographer::scopedQuery(ZoneAdmin::maturityLevel1())->count(),
 
-            'annuaires'      => $this->q(Annuaire::class)->count(),
-            'annuaires_lvl1' => $this->q(Annuaire::class)->maturityLevel1()->count(),
+            'annuaires'      => Cartographer::scopedQuery(Annuaire::query())->count(),
+            'annuaires_lvl1' => Cartographer::scopedQuery(Annuaire::maturityLevel1())->count(),
 
-            'forests'      => $this->q(ForestAd::class)->count(),
-            'forests_lvl1' => $this->q(ForestAd::class)->maturityLevel1()->count(),
+            'forests'      => Cartographer::scopedQuery(ForestAd::query())->count(),
+            'forests_lvl1' => Cartographer::scopedQuery(ForestAd::maturityLevel1())->count(),
 
-            'domains'       => $this->q(Domain::class)->count(),
-            'domaines_lvl1' => $this->q(Domain::class)->maturityLevel1()->count(),
+            'domains'       => Cartographer::scopedQuery(Domain::query())->count(),
+            'domaines_lvl1' => Cartographer::scopedQuery(Domain::maturityLevel1())->count(),
 
             // Logique
-            'networks'      => $this->q(Network::class)->count(),
-            'networks_lvl1' => $this->q(Network::class)->maturityLevel1()->count(),
+            'networks'      => Cartographer::scopedQuery(Network::query())->count(),
+            'networks_lvl1' => Cartographer::scopedQuery(Network::maturityLevel1())->count(),
 
-            'subnetworks'      => $this->q(Subnetwork::class)->count(),
-            'subnetworks_lvl1' => $this->q(Subnetwork::class)->maturityLevel1()->count(),
+            'subnetworks'      => Cartographer::scopedQuery(Subnetwork::query())->count(),
+            'subnetworks_lvl1' => Cartographer::scopedQuery(Subnetwork::maturityLevel1())->count(),
 
-            'gateways'      => $this->q(Gateway::class)->count(),
-            'gateways_lvl1' => $this->q(Gateway::class)->maturityLevel1()->count(),
+            'gateways'      => Cartographer::scopedQuery(Gateway::query())->count(),
+            'gateways_lvl1' => Cartographer::scopedQuery(Gateway::maturityLevel1())->count(),
 
-            'externalConnectedEntities'      => $this->q(ExternalConnectedEntity::class)->count(),
-            'externalConnectedEntities_lvl2' => $this->q(ExternalConnectedEntity::class)->maturityLevel2()->count(),
+            'externalConnectedEntities'      => Cartographer::scopedQuery(ExternalConnectedEntity::query())->count(),
+            'externalConnectedEntities_lvl2' => Cartographer::scopedQuery(ExternalConnectedEntity::maturityLevel2())->count(),
 
-            'switches'      => $this->q(NetworkSwitch::class)->count(),
-            'switches_lvl1' => $this->q(NetworkSwitch::class)->maturityLevel1()->count(),
+            'switches'      => Cartographer::scopedQuery(NetworkSwitch::query())->count(),
+            'switches_lvl1' => Cartographer::scopedQuery(NetworkSwitch::maturityLevel1())->count(),
 
-            'routers'      => $this->q(Router::class)->count(),
-            'routers_lvl1' => $this->q(Router::class)->maturityLevel1()->count(),
+            'routers'      => Cartographer::scopedQuery(Router::query())->count(),
+            'routers_lvl1' => Cartographer::scopedQuery(Router::maturityLevel1())->count(),
 
-            'securityDevices'      => $this->q(SecurityDevice::class)->count(),
-            'securityDevices_lvl1' => $this->q(SecurityDevice::class)->maturityLevel1()->count(),
+            'securityDevices'      => Cartographer::scopedQuery(SecurityDevice::query())->count(),
+            'securityDevices_lvl1' => Cartographer::scopedQuery(SecurityDevice::maturityLevel1())->count(),
 
-            'DHCPServers'      => $this->q(DhcpServer::class)->count(),
-            'DHCPServers_lvl2' => $this->q(DhcpServer::class)->maturityLevel2()->count(),
+            'DHCPServers'      => Cartographer::scopedQuery(DhcpServer::query())->count(),
+            'DHCPServers_lvl2' => Cartographer::scopedQuery(DhcpServer::maturityLevel2())->count(),
 
-            'DNSServers'      => $this->q(Dnsserver::class)->count(),
-            'DNSServers_lvl2' => $this->q(Dnsserver::class)->maturityLevel2()->count(),
+            'DNSServers'      => Cartographer::scopedQuery(Dnsserver::query())->count(),
+            'DNSServers_lvl2' => Cartographer::scopedQuery(Dnsserver::maturityLevel2())->count(),
 
-            'clusters'      => $this->q(Cluster::class)->count(),
-            'clusters_lvl1' => $this->q(Cluster::class)->maturityLevel1()->count(),
+            'clusters'      => Cartographer::scopedQuery(Cluster::query())->count(),
+            'clusters_lvl1' => Cartographer::scopedQuery(Cluster::maturityLevel1())->count(),
 
-            'logicalServers'      => $this->q(LogicalServer::class)->count(),
-            'logicalServers_lvl1' => $this->q(LogicalServer::class)->maturityLevel1()->count(),
+            'logicalServers'      => Cartographer::scopedQuery(LogicalServer::query())->count(),
+            'logicalServers_lvl1' => Cartographer::scopedQuery(LogicalServer::maturityLevel1())->count(),
 
-            'containers'      => $this->q(Container::class)->count(),
-            'containers_lvl1' => $this->q(Container::class)->maturityLevel1()->count(),
+            'containers'      => Cartographer::scopedQuery(Container::query())->count(),
+            'containers_lvl1' => Cartographer::scopedQuery(Container::maturityLevel1())->count(),
 
-            'certificates'      => $this->q(Certificate::class)->count(),
-            'certificates_lvl2' => $this->q(Certificate::class)->maturityLevel2()->count(),
+            'certificates'      => Cartographer::scopedQuery(Certificate::query())->count(),
+            'certificates_lvl2' => Cartographer::scopedQuery(Certificate::maturityLevel2())->count(),
 
             // Physical
-            'sites'      => $this->q(Site::class)->count(),
-            'sites_lvl1' => $this->q(Site::class)->maturityLevel1()->count(),
+            'sites'      => Cartographer::scopedQuery(Site::query())->count(),
+            'sites_lvl1' => Cartographer::scopedQuery(Site::maturityLevel1())->count(),
 
-            'buildings'      => $this->q(Building::class)->count(),
-            'buildings_lvl1' => $this->q(Building::class)->maturityLevel1()->count(),
+            'buildings'      => Cartographer::scopedQuery(Building::query())->count(),
+            'buildings_lvl1' => Cartographer::scopedQuery(Building::maturityLevel1())->count(),
 
-            'bays'      => $this->q(Bay::class)->count(),
-            'bays_lvl1' => $this->q(Bay::class)->maturityLevel1()->count(),
+            'bays'      => Cartographer::scopedQuery(Bay::query())->count(),
+            'bays_lvl1' => Cartographer::scopedQuery(Bay::maturityLevel1())->count(),
 
-            'zones' => $this->q(Zone::class)->count(),
+            'zones' => Cartographer::scopedQuery(Zone::query())->count(),
 
-            'physicalServers'      => $this->q(PhysicalServer::class)->count(),
-            'physicalServers_lvl1' => $this->q(PhysicalServer::class)->maturityLevel1()->count(),
+            'physicalServers'      => Cartographer::scopedQuery(PhysicalServer::query())->count(),
+            'physicalServers_lvl1' => Cartographer::scopedQuery(PhysicalServer::maturityLevel1())->count(),
 
-            'workstations'      => $this->q(Workstation::class)->count(),
-            'workstations_lvl1' => $this->q(Workstation::class)->maturityLevel1()->count(),
+            'workstations'      => Cartographer::scopedQuery(Workstation::query())->count(),
+            'workstations_lvl1' => Cartographer::scopedQuery(Workstation::maturityLevel1())->count(),
 
-            'storageDevices'      => $this->q(StorageDevice::class)->count(),
-            'storageDevices_lvl1' => $this->q(StorageDevice::class)->maturityLevel1()->count(),
+            'storageDevices'      => Cartographer::scopedQuery(StorageDevice::query())->count(),
+            'storageDevices_lvl1' => Cartographer::scopedQuery(StorageDevice::maturityLevel1())->count(),
 
-            'peripherals'      => $this->q(Peripheral::class)->count(),
-            'peripherals_lvl1' => $this->q(Peripheral::class)->maturityLevel1()->count(),
+            'peripherals'      => Cartographer::scopedQuery(Peripheral::query())->count(),
+            'peripherals_lvl1' => Cartographer::scopedQuery(Peripheral::maturityLevel1())->count(),
 
-            'phones'      => $this->q(Phone::class)->count(),
-            'phones_lvl1' => $this->q(Phone::class)->maturityLevel1()->count(),
+            'phones'      => Cartographer::scopedQuery(Phone::query())->count(),
+            'phones_lvl1' => Cartographer::scopedQuery(Phone::maturityLevel1())->count(),
 
-            'physicalSwitchs'      => $this->q(PhysicalSwitch::class)->count(),
-            'physicalSwitchs_lvl1' => $this->q(PhysicalSwitch::class)->maturityLevel1()->count(),
+            'physicalSwitchs'      => Cartographer::scopedQuery(PhysicalSwitch::query())->count(),
+            'physicalSwitchs_lvl1' => Cartographer::scopedQuery(PhysicalSwitch::maturityLevel1())->count(),
 
-            'physicalRouters'      => $this->q(PhysicalRouter::class)->count(),
-            'physicalRouters_lvl1' => $this->q(PhysicalRouter::class)->maturityLevel1()->count(),
+            'physicalRouters'      => Cartographer::scopedQuery(PhysicalRouter::query())->count(),
+            'physicalRouters_lvl1' => Cartographer::scopedQuery(PhysicalRouter::maturityLevel1())->count(),
 
-            'wifiTerminals'      => $this->q(WifiTerminal::class)->count(),
-            'wifiTerminals_lvl1' => $this->q(WifiTerminal::class)->maturityLevel1()->count(),
+            'wifiTerminals'      => Cartographer::scopedQuery(WifiTerminal::query())->count(),
+            'wifiTerminals_lvl1' => Cartographer::scopedQuery(WifiTerminal::maturityLevel1())->count(),
 
-            'physicalSecurityDevices'      => $this->q(PhysicalSecurityDevice::class)->count(),
-            'physicalSecurityDevices_lvl1' => $this->q(PhysicalSecurityDevice::class)->maturityLevel1()->count(),
+            'physicalSecurityDevices'      => Cartographer::scopedQuery(PhysicalSecurityDevice::query())->count(),
+            'physicalSecurityDevices_lvl1' => Cartographer::scopedQuery(PhysicalSecurityDevice::maturityLevel1())->count(),
 
-            'wans'      => ($wan_count = $this->q(Wan::class)->count()),
+            'wans'      => ($wan_count = Cartographer::scopedQuery(Wan::query())->count()),
             'wans_lvl1' => $wan_count,
 
-            'mans'      => ($man_count = $this->q(Man::class)->count()),
+            'mans'      => ($man_count = Cartographer::scopedQuery(Man::query())->count()),
             'mans_lvl1' => $man_count,
 
-            'lans'      => $this->q(Lan::class)->count(),
-            'lans_lvl1' => $this->q(Lan::class)->maturityLevel1()->count(),
+            'lans'      => Cartographer::scopedQuery(Lan::query())->count(),
+            'lans_lvl1' => Cartographer::scopedQuery(Lan::maturityLevel1())->count(),
 
-            'vlans'      => $this->q(Vlan::class)->count(),
-            'vlans_lvl1' => $this->q(Vlan::class)->maturityLevel1()->count(),
+            'vlans'      => Cartographer::scopedQuery(Vlan::query())->count(),
+            'vlans_lvl1' => Cartographer::scopedQuery(Vlan::maturityLevel1())->count(),
         ];
 
         // Maturity Level 1
