@@ -42,10 +42,12 @@ class Role extends Model
     {
         static::saved(function () {
             Cache::forget('permissions_roles_map');
+            Cache::put('roles_last_update', now()->timestamp);
         });
 
         static::deleted(function () {
             Cache::forget('permissions_roles_map');
+            Cache::put('roles_last_update', now()->timestamp);
         });
     }
     public static function getRoleByTitle(string $title): ?Role

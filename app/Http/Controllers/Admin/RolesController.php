@@ -79,8 +79,8 @@ class RolesController extends Controller
         $role = Role::query()->create($request->all());
         $role->permissions()->sync($request->input('permissions', []));
 
-        // Clean role permissions cache
         Cache::forget('permissions_roles_map');
+        Cache::put('roles_last_update', now()->timestamp);
 
         return redirect()->route('admin.roles.index');
     }
@@ -108,15 +108,9 @@ class RolesController extends Controller
         $role->update($request->all());
         $role->permissions()->sync($request->input('permissions', []));
 
-        // Clean role permissions cache
         Cache::forget('permissions_roles_map');
+        Cache::put('roles_last_update', now()->timestamp);
 
-        // Update utilisateur courrant
-        $user = auth()->user();
-        $user->refresh();
-        auth()->setUser($user);
-
-        // Return
         return redirect()->route('admin.roles.index');
     }
 

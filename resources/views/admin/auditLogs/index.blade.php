@@ -87,9 +87,13 @@
                             @endif
                             </td>
                             <td>
-                                <a href="{{ route('admin.users.show', $log->user_id) }}">
+                                @can('user_show')
+                                    <a href="{{ route('admin.users.show', $log->user_id) }}">
+                                        {{ $log->name }}
+                                    </a>
+                                @else
                                     {{ $log->name }}
-                                </a>
+                                @endcan
                             </td>
                             <td>{{ $log->host }}</td>
                             <td>{{ $log->created_at }}</td>

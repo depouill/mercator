@@ -87,10 +87,8 @@
                                 {{ $logicalFlow->interface }}
                             </td>
                             <td>
-                                @if ($logicalFlow->router_id !== null)
-                                    <a href="{{ route('admin.routers.show', $logicalFlow->router_id) }}">
-                                        {{ $logicalFlow->router->name }}
-                                    </a>
+                                @if ($logicalFlow->router !== null)
+                                    <x-show-link :model="$logicalFlow->router" />
                                 @endif
                             </td>
                             <td>

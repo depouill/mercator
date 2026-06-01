@@ -100,44 +100,30 @@
                             </td>
                             <td>
                                 @if ($flow->applicationSource!=null)
-                                    <a href="{{ route('admin.applications.show', $flow->application_source_id) }}">
-                                        {{ $flow->applicationSource->name }}
-                                        @endif
-                                        @if ($flow->serviceSource!=null)
-                                            <a href="{{ route('admin.application-services.show', $flow->service_source_id) }}">
-                                                {{ $flow->serviceSource->name }}
-                                            </a>
-                                        @endif
-                                        @if ($flow->moduleSource!=null)
-                                            <a href="{{ route('admin.application-modules.show', $flow->module_source_id) }}">
-                                                {{ $flow->moduleSource->name }}
-                                            </a>
-                                        @endif
-                                        @if ($flow->databaseSource!=null)
-                                            <a href="{{ route('admin.databases.show', $flow->database_source_id) }}">
-                                                {{ $flow->databaseSource->name }}
-                                            </a>
+                                    <x-show-link :model="$flow->applicationSource" />
+                                @endif
+                                @if ($flow->serviceSource!=null)
+                                    <x-show-link :model="$flow->serviceSource" />
+                                @endif
+                                @if ($flow->moduleSource!=null)
+                                    <x-show-link :model="$flow->moduleSource" />
+                                @endif
+                                @if ($flow->databaseSource!=null)
+                                    <x-show-link :model="$flow->databaseSource" />
                                 @endif
                             </td>
                             <td>
                                 @if ($flow->applicationDest!=null)
-                                    <a href="{{ route('admin.applications.show', $flow->application_dest_id) }}">
-                                        {{ $flow->applicationDest->name }}
-                                        @endif
-                                        @if ($flow->serviceDest!=null)
-                                            <a href="{{ route('admin.application-services.show', $flow->service_dest_id) }}">
-                                                {{ $flow->serviceDest->name }}
-                                            </a>
-                                        @endif
-                                        @if ($flow->moduleDest!=null)
-                                            <a href="{{ route('admin.application-modules.show', $flow->module_dest_id) }}">
-                                                {{ $flow->moduleDest->name }}
-                                            </a>
-                                        @endif
-                                        @if ($flow->databaseDest!=null)
-                                            <a href="{{ route('admin.databases.show', $flow->database_dest_id) }}">
-                                                {{ $flow->databaseDest->name }}
-                                            </a>
+                                    <x-show-link :model="$flow->applicationDest" />
+                                @endif
+                                @if ($flow->serviceDest!=null)
+                                    <x-show-link :model="$flow->serviceDest" />
+                                @endif
+                                @if ($flow->moduleDest!=null)
+                                    <x-show-link :model="$flow->moduleDest" />
+                                @endif
+                                @if ($flow->databaseDest!=null)
+                                    <x-show-link :model="$flow->databaseDest" />
                                 @endif
                             </td>
                             <td>

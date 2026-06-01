@@ -10,6 +10,7 @@ use App\Models\Cartographer;
 use App\Models\Role;
 use App\Models\User;
 use Gate;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
@@ -38,8 +39,8 @@ class UsersController extends Controller
     {
         $user = User::create($request->all());
 
-        // Save roles
         $user->roles()->sync($request->input('roles', []));
+        Cache::put('roles_last_update', now()->timestamp);
 
         return redirect()->route('admin.users.index');
     }
@@ -62,6 +63,7 @@ class UsersController extends Controller
         $user->update($request->all());
 
         $user->roles()->sync($request->input('roles', []));
+        Cache::put('roles_last_update', now()->timestamp);
 
         return redirect()->route('admin.users.index');
     }

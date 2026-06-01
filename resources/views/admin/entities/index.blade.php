@@ -76,10 +76,7 @@
                             </td>
                             <td>
                                 @foreach ($entity->destinationRelations as $relation)
-                                    <a href="/admin/relations/{{ $relation->id }}">{{ $relation->name }}</a>
-                                    @if (!$loop->last)
-                                    ,
-                                    @endif
+                                    <x-show-link :model="$relation" />@if(!$loop->last), @endif
                                 @endforeach
                             </td>
                             <td nowrap>

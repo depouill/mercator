@@ -64,11 +64,8 @@
                                 {!! $applicationBlock->description ?? '' !!}
                             </td>
                             <td>
-                                @foreach($applicationBlock->applications as $key => $application)
-                                    <span class="label label-info"><a href="/admin/applications/{{ $application->id }}/edit">{{ $application->name }}</a></span>
-                                    @if (!$loop->last)
-                                    ,
-                                    @endif
+                                @foreach($applicationBlock->applications as $application)
+                                    <x-show-link :model="$application" />@if(!$loop->last), @endif
                                 @endforeach
                             </td>
                             <td>
