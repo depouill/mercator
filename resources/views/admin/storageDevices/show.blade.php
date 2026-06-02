@@ -10,14 +10,10 @@
         {{ trans('global.back_to_list') }}
     </a>
 
-
     @can('explore_access')
-
     <a class="btn btn-success" href="{{ route('admin.report.explore') }}?node={{$storageDevice->getUID()}}">
         {{ trans('global.explore') }}
     </a>
-
-
     @endcan
 
     @canEdit($storageDevice)
@@ -68,7 +64,12 @@
                                 <td>{{ $backup->name }}</td>
                                 <td>
                                     @foreach($backup->logicalServers as $server)
-                                        @canShow($server)<a href="{{ route('admin.logical-servers.show', $server->id) }}">{{ $server->name }}</a>@elsecanShow{{ $server->name }}@endcanShow@if(!$loop->last), @endif
+                                        @canShow($server)
+                                            <a href="{{ route('admin.logical-servers.show', $server->id) }}">{{ $server->name }}</a>
+                                        @elsecanShow
+                                            {{ $server->name }}
+                                        @endcanShow
+                                        @if (!$loop->last), @endif
                                     @endforeach
                                 </td>
                                 <td>{{ $backup->backup_frequency ? trans("cruds.backup.frequencies.{$backup->backup_frequency}") : '' }}</td>
