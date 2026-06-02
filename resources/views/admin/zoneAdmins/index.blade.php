@@ -111,7 +111,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $zoneAdmins])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -121,7 +123,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.zoneAdmin.title_singular"),
             'URL' => route('admin.zone-admins.massDestroy'),
-            'canDelete' => auth()->user()->can('zone_admin_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('zone_admin_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

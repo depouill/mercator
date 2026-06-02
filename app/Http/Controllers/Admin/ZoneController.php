@@ -18,7 +18,16 @@ class ZoneController extends Controller
     {
         abort_if(Gate::denies('zone_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $zones = Zone::with('parentZones', 'childZones')->orderBy('name')->get();
+        $zones = Zone::with('parentZones', 'childZones')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Zone::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.zones.index', compact('zones'));
     }

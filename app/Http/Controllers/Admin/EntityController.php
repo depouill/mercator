@@ -25,7 +25,15 @@ class EntityController extends Controller
         $entities = Entity::query()
             ->with('processes')
         // $entities = Entity::with('processes', 'applications', 'databases')
-            ->orderBy('name')->get();
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Entity::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.entities.index', compact('entities'));
     }

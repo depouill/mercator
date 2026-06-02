@@ -22,7 +22,16 @@ class WorkstationController extends Controller
     {
         abort_if(Gate::denies('workstation_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $workstations = Workstation::with('site', 'building')->orderBy('name')->get();
+        $workstations = Workstation::with('site', 'building')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Workstation::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.workstations.index', compact('workstations'));
     }

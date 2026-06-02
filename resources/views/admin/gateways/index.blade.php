@@ -103,7 +103,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $gateways])
+</div>
     </div>
 @endsection
 
@@ -114,7 +116,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.gateway.title_singular"),
             'URL' => route('admin.gateways.massDestroy'),
-            'canDelete' => auth()->user()->can('gateway_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('gateway_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

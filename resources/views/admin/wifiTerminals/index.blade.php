@@ -116,7 +116,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $wifiTerminals])
+</div>
     </div>
 @endsection
 
@@ -127,7 +129,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.wifiTerminal.title_singular"),
             'URL' => route('admin.wifi-terminals.massDestroy'),
-            'canDelete' => auth()->user()->can('wifi_terminal_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('wifi_terminal_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

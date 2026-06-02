@@ -149,7 +149,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $subnetworks])
+</div>
     </div>
 @endsection
 
@@ -160,7 +162,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.subnetwork.title_singular"),
             'URL' => route('admin.subnetworks.massDestroy'),
-            'canDelete' => auth()->user()->can('subnetwork_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('subnetwork_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

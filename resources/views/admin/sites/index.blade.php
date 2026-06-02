@@ -99,7 +99,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $sites])
+</div>
     </div>
 @endsection
 
@@ -109,7 +111,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.site.title_singular"),
             'URL' => route('admin.sites.massDestroy'),
-            'canDelete' => auth()->user()->can('site_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('site_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

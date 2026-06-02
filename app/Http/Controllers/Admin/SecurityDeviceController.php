@@ -24,7 +24,16 @@ class SecurityDeviceController extends Controller
     {
         abort_if(Gate::denies('security_device_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $securityDevices = SecurityDevice::all()->sortBy('name');
+        $securityDevices = SecurityDevice::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (SecurityDevice::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.securityDevices.index', compact('securityDevices'));
     }

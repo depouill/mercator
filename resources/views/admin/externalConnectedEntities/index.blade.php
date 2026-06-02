@@ -151,7 +151,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $externalConnectedEntities])
+</div>
     </div>
 @endsection
 
@@ -162,7 +164,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.externalConnectedEntity.title_singular"),
             'URL' => route('admin.external-connected-entities.massDestroy'),
-            'canDelete' => auth()->user()->can('external_connected_entity_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('external_connected_entity_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

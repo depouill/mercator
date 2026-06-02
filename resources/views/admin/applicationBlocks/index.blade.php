@@ -102,7 +102,9 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    
+    @include('partials.pagination-footer', ['paginator' => $applicationBlocks])
+</div>
 </div>
 @endsection
 @section('scripts')
@@ -112,7 +114,8 @@
     'id' => '#dataTable',
     'title' => trans("cruds.applicationBlock.title_singular"),
     'URL' => route('admin.application-blocks.massDestroy'),
-    'canDelete' => auth()->user()->can('application_block_delete') ? true : false
+    'canDelete' => auth()->user()->can('application_block_delete') ? true : false,
+    'serverSidePagination' => true
 ));
 </script>
 @endsection

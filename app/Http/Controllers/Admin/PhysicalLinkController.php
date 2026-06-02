@@ -32,7 +32,16 @@ class PhysicalLinkController extends Controller
         abort_if(Gate::denies('physical_link_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         // TODO: optimise loading of related objects
-        $physicalLinks = PhysicalLink::all();
+        $physicalLinks = PhysicalLink::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (PhysicalLink::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('id')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.links.index',
             compact('physicalLinks'));

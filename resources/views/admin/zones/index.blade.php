@@ -94,7 +94,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $zones])
+</div>
     </div>
 @endsection
 
@@ -106,6 +108,7 @@
             'title'     => trans('cruds.zone.title_singular'),
             'URL'       => route('admin.zones.massDestroy'),
             'canDelete' => auth()->user()->can('zone_delete') ? true : false,
+            'serverSidePagination' => true,
         ])
     </script>
 @endsection

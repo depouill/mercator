@@ -181,7 +181,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $flows])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -191,7 +193,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.flux.title_singular"),
             'URL' => route('admin.application-flows.massDestroy'),
-            'canDelete' => auth()->user()->can('flux_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('flux_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

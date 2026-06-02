@@ -24,7 +24,16 @@ class ProcessController extends Controller
     {
         abort_if(Gate::denies('process_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $processes = Process::with('operations', 'activities', 'information', 'macroProcess')->orderBy('name')->get();
+        $processes = Process::with('operations', 'activities', 'information', 'macroProcess')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Process::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.processes.index', compact('processes'));
     }

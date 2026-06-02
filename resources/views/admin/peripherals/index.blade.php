@@ -136,7 +136,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $peripherals])
+</div>
     </div>
 @endsection
 
@@ -147,7 +149,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.peripheral.title_singular"),
             'URL' => route('admin.peripherals.massDestroy'),
-            'canDelete' => auth()->user()->can('peripheral_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('peripheral_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

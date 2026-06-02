@@ -25,8 +25,16 @@ class BayController extends Controller
     {
         abort_if(Gate::denies('bay_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // $bays = Bay::all()->sortBy('name');
-        $bays = Bay::query()->with('room')->orderBy('name')->get();
+        $bays = Bay::query()->with('room')
+            ->when(request('search'), function ($q, $search) {
+                $q->where(function ($q) use ($search) {
+                    foreach (Bay::$searchable as $field) {
+                        $q->orWhere($field, 'like', "%{$search}%");
+                    }
+                });
+            })
+            ->orderBy('name')
+            ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.bays.index', compact('bays'));
     }

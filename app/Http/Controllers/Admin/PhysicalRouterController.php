@@ -22,7 +22,16 @@ class PhysicalRouterController extends Controller
     {
         abort_if(Gate::denies('physical_router_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $physicalRouters = PhysicalRouter::all();
+        $physicalRouters = PhysicalRouter::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (PhysicalRouter::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.physicalRouters.index', compact('physicalRouters'));
     }

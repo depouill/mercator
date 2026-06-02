@@ -124,7 +124,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $securityDevices])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -134,7 +136,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.securityDevice.title_singular"),
             'URL' => route('admin.security-devices.massDestroy'),
-            'canDelete' => auth()->user()->can('security_device_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('security_device_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

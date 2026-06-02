@@ -21,8 +21,16 @@ class SubnetworkController extends Controller
 
         $subnetworks = Subnetwork::query()
             ->with('network','vlan')
-            ->orderBy('name')
-            ->get();
+            
+        ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Subnetwork::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.subnetworks.index', compact('subnetworks'));
     }

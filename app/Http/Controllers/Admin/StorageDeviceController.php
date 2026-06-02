@@ -22,7 +22,16 @@ class StorageDeviceController extends Controller
     {
         abort_if(Gate::denies('storage_device_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $storageDevices = StorageDevice::all()->sortBy('name');
+        $storageDevices = StorageDevice::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (StorageDevice::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.storageDevices.index', compact('storageDevices'));
     }

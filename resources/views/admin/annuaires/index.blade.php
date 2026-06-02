@@ -104,7 +104,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $annuaires])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -114,7 +116,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.annuaire.title_singular"),
             'URL' => route('admin.annuaires.massDestroy'),
-            'canDelete' => auth()->user()->can('annuaire_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('annuaire_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

@@ -128,7 +128,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $logicalServers])
+</div>
     </div>
 @endsection
 
@@ -139,7 +141,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.logicalServer.title_singular"),
             'URL' => route('admin.logical-servers.massDestroy'),
-            'canDelete' => auth()->user()->can('logical_server_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('logical_server_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

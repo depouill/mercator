@@ -115,7 +115,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
+        @include('partials.pagination-footer', ['paginator' => $forestAds])
+</div>
     </div>
 @endsection
 @section('scripts')
@@ -125,7 +127,8 @@
             'id' => '#dataTable',
             'title' => trans("cruds.forestAd.title_singular"),
             'URL' => route('admin.forest-ads.massDestroy'),
-            'canDelete' => auth()->user()->can('forest_ad_delete') ? true : false
-        ));
+            'canDelete' => auth()->user()->can('forest_ad_delete') ? true : false,
+    'serverSidePagination' => true
+));
     </script>
 @endsection

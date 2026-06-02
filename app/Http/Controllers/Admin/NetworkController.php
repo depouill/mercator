@@ -17,7 +17,16 @@ class NetworkController extends Controller
     {
         abort_if(Gate::denies('network_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $networks = Network::all()->sortBy('name');
+        $networks = Network::query()
+            ->when(request('search'), function ($q, $search) {
+            $q->where(function ($q) use ($search) {
+                foreach (Network::$searchable as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        })
+        ->orderBy('name')
+        ->paginate(min(max((int) request('per_page', 50), 10), 500));
 
         return view('admin.networks.index', compact('networks'));
     }
