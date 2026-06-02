@@ -176,7 +176,12 @@
                                 <td>{{ $backup->name }}</td>
                                 <td>
                                     @foreach($backup->storageDevices as $device)
-                                        @canShow($device)<a href="{{ route('admin.storage-devices.show', $device->id) }}">{{ $device->name }}</a>@elsecanShow{{ $device->name }}@endcanShow@if(!$loop->last), @endif
+                                        @canShow($device)
+                                            <a href="{{ route('admin.storage-devices.show', $device->id) }}">{{ $device->name }}</a>
+                                        @elsecanShow
+                                            {{ $device->name }}
+                                        @endcanShow
+                                        @if(!$loop->last), @endif
                                     @endforeach
                                 </td>
                                 <td>{{ $backup->backup_frequency ? trans("cruds.backup.frequencies.{$backup->backup_frequency}") : '' }}</td>
