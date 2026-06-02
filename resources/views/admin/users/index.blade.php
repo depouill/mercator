@@ -62,29 +62,35 @@
                             <td>
                                 {{ $user->email ?? '' }}
                             </td>
-                            <td>
-                                @foreach($user->roles as $key => $item)
-                                    <x-show-link :model="$item" :label="$item->title ?? ''" />
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach($user->cartographerEntries as $entry)
-                                    @if($entry->cartographiable)
-                                        @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
-                                        @if($showRoute)
-                                            <a href="{{ route($showRoute, $entry->cartographiable_id) }}"
-                                               class="badge bg-secondary text-decoration-none me-1 mb-1"
-                                               title="{{ $models[$entry->cartographiable_type] ?? '' }}">
-                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
-                                            </a>
-                                        @else
-                                            <span class="badge bg-secondary me-1 mb-1">
-                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
-                                            </span>
-                                        @endif
-                                    @endif
-                                @endforeach
-                            </td>
+                            <td>@php
+                              $cells = [];
+                              foreach($user->roles as $item) {
+                                  $component = new \App\View\Components\ShowLink($item, $item->title ?? '');
+                                  if ($component->url) {
+                                      $cells[] = '<a href="'.e($component->url).'">'.e($component->label).'</a>';
+                                  } else {
+                                      $cells[] = e($component->label);
+                                  }
+                              }
+                              echo implode(', ', $cells);
+                            @endphp</td>
+                            <td>@php
+                                  $cells = [];
+                                  foreach($user->cartographerEntries as $entry) {
+                                      if (!$entry->cartographiable) continue;
+                                      $showRoute = $routes[$entry->cartographiable_type] ?? null;
+                                      $label = $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')';
+                                      if ($showRoute) {
+                                          $href = route($showRoute, $entry->cartographiable_id);
+                                          $title = e($models[$entry->cartographiable_type] ?? '');
+                                          $cells[] = '<a href="'.e($href).'" class="badge bg-primary text-decoration-none me-1 mb-1"
+                              title="'.$title.'">'.e($label).'</a>';
+                                      } else {
+                                          $cells[] = '<span class="badge bg-secondary me-1 mb-1">'.e($label).'</span>';
+                                      }
+                                  }
+                                  echo implode(' ', $cells);
+                              @endphp</td>
                             <td nowrap>
                                 @can('user_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.users.show', $user->id) }}">

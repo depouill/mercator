@@ -87,6 +87,8 @@
             </table>
         </div>
     </div>
+
+
     @php
         $directEntries = $user->cartographerEntries->filter(fn($e) => $e->cartographiable !== null);
         $allRoleEntries = $roleCartographers->filter(fn($e) => $e->cartographiable !== null);
@@ -101,9 +103,12 @@
             </span>
             <small class="text-muted">{{ $total }} objet(s)</small>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-sm table-bordered table-hover mb-0">
-                <thead class="table-light">
+
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-bordered table-striped table-hover datatable">
+                    <thead>
                     <tr>
                         <th>{{ trans('cruds.cartographer.fields.type') }}</th>
                         <th>{{ trans('cruds.cartographer.fields.object') }}</th>
@@ -142,9 +147,11 @@
                             @endif
                         </td>
                         <td>
+                            <a href="{{ route('admin.roles.show', $entry->role) }}">
                             <span class="badge bg-secondary">
                                 {{ $entry->role->title ?? trans('cruds.cartographer.fields.role') }}
                             </span>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
@@ -153,10 +160,11 @@
         </div>
     </div>
     @endif
+</div>
 
-    <div class="form-group mt-3">
-        <a id="btn-cancel" class="btn btn-default" href="{{ route('admin.users.index') }}">
-            {{ trans('global.back_to_list') }}
-        </a>
-    </div>
+<div class="form-group">
+    <a id="btn-cancel" class="btn btn-default" href="{{ route('admin.users.index') }}">
+        {{ trans('global.back_to_list') }}
+    </a>
+</div>
 @endsection

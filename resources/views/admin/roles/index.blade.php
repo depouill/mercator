@@ -45,25 +45,23 @@
                                 <x-show-link :model="$role" :label="$role->title ?? ''" />
                             </td>
                             <td>{{ $role->users_count }}</td>
-                            <td>
-                                @foreach($role->cartographerEntries->sortBy('cartographiable_type') as $entry)
-                                    @if($entry->cartographiable)
-                                        @php($showRoute = $routes[$entry->cartographiable_type] ?? null)
-                                        @if($showRoute)
-                                            <a href="{{ route($showRoute, $entry->cartographiable_id) }}"
-                                               class="badge bg-secondary text-decoration-none me-1 mb-1"
-                                               title="{{ $models[$entry->cartographiable_type] ?? '' }}">
-                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
-                                            </a>
-                                        @else
-                                            <span class="badge bg-secondary me-1 mb-1"
-                                                  title="{{ $models[$entry->cartographiable_type] ?? '' }}">
-                                                {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
-                                            </span>
-                                        @endif
-                                    @endif
-                                @endforeach
-                            </td>
+<td>@php
+      $cells = [];
+      foreach($role->cartographerEntries->sortBy('cartographiable_type') as $entry) {
+          if (!$entry->cartographiable) continue;
+          $showRoute = $routes[$entry->cartographiable_type] ?? null;
+          $label = $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')';
+          $title = e($models[$entry->cartographiable_type] ?? '');
+          if ($showRoute) {
+              $href = route($showRoute, $entry->cartographiable_id);
+              $cells[] = '<a href="'.e($href).'" class="badge bg-primary text-decoration-none"
+  title="'.$title.'">'.e($label).'</a>';
+          } else {
+              $cells[] = '<span class="badge bg-secondary me-1 mb-1" title="'.$title.'">'.e($label).'</span>';
+          }
+      }
+      echo implode(' ', $cells);
+  @endphp</td>
                             <td nowrap>
                                 @can('role_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.roles.show', $role->id) }}">
