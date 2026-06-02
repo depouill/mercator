@@ -1,5 +1,5 @@
-{{- $defaultSecretName := printf "%s-%s" (include "chart.fullname" .) "postgresql"-}}
-  {{- $postgresSecretName := .Values.secret.managed | ternary $defaultSecretName .Values.postgresql.auth.existingSecret-}}
+{{- $defaultSecretName := printf "%s-%s" (include "chart.fullname" .) "postgresql" -}}
+{{- $postgresSecretName := .Values.secret.managed | ternary $defaultSecretName .Values.postgresql.auth.existingSecret -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
