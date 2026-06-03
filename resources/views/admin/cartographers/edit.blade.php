@@ -101,13 +101,25 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 (function () {
-    // Validation : au moins un de user ou rôle
+    // Exclusivité mutuelle user / rôle
+    $('#user_id').on('change', function () {
+        if ($(this).val()) {
+            $('#role_id').val(null).trigger('change');
+        }
+    });
+    $('#role_id').on('change', function () {
+        if ($(this).val()) {
+            $('#user_id').val(null).trigger('change');
+        }
+    });
+
+    // Validation : exactement un de user ou rôle
     $('form').on('submit', function (e) {
         var user = $('#user_id').val();
         var role = $('#role_id').val();
         if (!user && !role) {
             e.preventDefault();
-            alert('Veuillez sélectionner au moins un utilisateur ou un rôle.');
+            alert('{{ trans('cruds.cartographer.errors.user_or_role_required') }}');
         }
     });
 

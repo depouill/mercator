@@ -364,10 +364,14 @@ return [
             'object'          => 'Objet',
             'object_helper'   => 'Identifiant de l\'objet cartographié',
             'user'            => 'Utilisateur',
-            'user_helper'     => 'Utilisateur autorisé (facultatif si un rôle est renseigné)',
+            'user_helper'     => 'Utilisateur autorisé (exclusif avec le rôle)',
             'role'            => 'Rôle',
-            'role_helper'     => 'Rôle autorisé (facultatif si un utilisateur est renseigné)',
+            'role_helper'     => 'Rôle autorisé (exclusif avec l\'utilisateur)',
             'last_updated'    => 'Dernière modification',
+        ],
+        'errors' => [
+            'user_or_role_required'   => 'Veuillez sélectionner un utilisateur ou un rôle.',
+            'user_and_role_exclusive' => 'Un utilisateur et un rôle ne peuvent pas être sélectionnés simultanément.',
         ],
     ],
     'certificate' => [

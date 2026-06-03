@@ -360,10 +360,14 @@ return [
             'object'          => 'Object',
             'object_helper'   => 'Identifier of the cartographied object',
             'user'                     => 'User',
-            'user_helper'              => 'Authorised user (optional if a role is set)',
+            'user_helper'              => 'Authorised user (exclusive with role)',
             'role'                     => 'Role',
-            'role_helper'              => 'Authorised role (optional if a user is set)',
+            'role_helper'              => 'Authorised role (exclusive with user)',
             'last_updated'             => 'Last modified',
+        ],
+        'errors' => [
+            'user_or_role_required'   => 'Please select a user or a role.',
+            'user_and_role_exclusive' => 'A user and a role cannot be selected at the same time.',
         ],
     ],
     'certificate' => [

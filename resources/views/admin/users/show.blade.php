@@ -131,8 +131,8 @@
                                 {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
                             @endif
                         </td>
-                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td><span class="badge bg-primary">direct</span></td>
+                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td>
                             @can('audit_log_show')
                                 <a class="btn btn-xs btn-secondary"
@@ -157,7 +157,6 @@
                                 {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
                             @endif
                         </td>
-                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td>
                             <a href="{{ route('admin.roles.show', $entry->role) }}">
                             <span class="badge bg-secondary">
@@ -165,6 +164,7 @@
                             </span>
                             </a>
                         </td>
+                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td>
                             @can('audit_log_show')
                                 <a class="btn btn-xs btn-secondary"

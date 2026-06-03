@@ -53,7 +53,11 @@ class CartographerController extends Controller
         ]);
 
         if (empty($validated['user_id']) && empty($validated['role_id'])) {
-            return back()->withErrors(['user_id' => 'Un utilisateur ou un rôle est requis.'])->withInput();
+            return back()->withErrors(['user_id' => trans('cruds.cartographer.errors.user_or_role_required')])->withInput();
+        }
+
+        if (! empty($validated['user_id']) && ! empty($validated['role_id'])) {
+            return back()->withErrors(['user_id' => trans('cruds.cartographer.errors.user_and_role_exclusive')])->withInput();
         }
 
         Cartographer::firstOrCreate(array_filter([
@@ -87,7 +91,11 @@ class CartographerController extends Controller
         ]);
 
         if (empty($validated['user_id']) && empty($validated['role_id'])) {
-            return back()->withErrors(['user_id' => 'Un utilisateur ou un rôle est requis.'])->withInput();
+            return back()->withErrors(['user_id' => trans('cruds.cartographer.errors.user_or_role_required')])->withInput();
+        }
+
+        if (! empty($validated['user_id']) && ! empty($validated['role_id'])) {
+            return back()->withErrors(['user_id' => trans('cruds.cartographer.errors.user_and_role_exclusive')])->withInput();
         }
 
         $cartographer->update([
