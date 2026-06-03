@@ -113,6 +113,8 @@
                         <th>{{ trans('cruds.cartographer.fields.type') }}</th>
                         <th>{{ trans('cruds.cartographer.fields.object') }}</th>
                         <th>Via</th>
+                        <th>{{ trans('cruds.cartographer.fields.last_updated') }}</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,7 +131,16 @@
                                 {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
                             @endif
                         </td>
+                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td><span class="badge bg-primary">direct</span></td>
+                        <td>
+                            @can('audit_log_show')
+                                <a class="btn btn-xs btn-secondary"
+                                   href="{{ route('admin.audit-logs.history', ['type' => $entry->cartographiable_type, 'id' => $entry->cartographiable_id]) }}">
+                                    {{ trans('global.history') }}
+                                </a>
+                            @endcan
+                        </td>
                     </tr>
                     @endforeach
 
@@ -146,12 +157,21 @@
                                 {{ $entry->cartographiable->name ?? '(id:'.$entry->cartographiable_id.')' }}
                             @endif
                         </td>
+                        <td>{{ $entry->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}</td>
                         <td>
                             <a href="{{ route('admin.roles.show', $entry->role) }}">
                             <span class="badge bg-secondary">
                                 {{ $entry->role->title ?? trans('cruds.cartographer.fields.role') }}
                             </span>
                             </a>
+                        </td>
+                        <td>
+                            @can('audit_log_show')
+                                <a class="btn btn-xs btn-secondary"
+                                   href="{{ route('admin.audit-logs.history', ['type' => $entry->cartographiable_type, 'id' => $entry->cartographiable_id]) }}">
+                                    {{ trans('global.history') }}
+                                </a>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach

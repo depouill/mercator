@@ -32,6 +32,7 @@
                         <th>{{ trans('cruds.cartographer.fields.object') }}</th>
                         <th>{{ trans('cruds.cartographer.fields.user') }}</th>
                         <th>{{ trans('cruds.cartographer.fields.role') }}</th>
+                        <th>{{ trans('cruds.cartographer.fields.last_updated') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -76,6 +77,17 @@
                             @else
                                 -
                             @endif
+                        </td>
+
+                        {{-- Dernière modification de l'objet --}}
+                        <td>
+                            @can('audit_log_show')
+                            @if($cartographer->cartographiable)
+                            <a href="{{ route('admin.audit-logs.history', ['type' => $cartographer->cartographiable_type, 'id' => $cartographer->cartographiable_id]) }}">
+                            {{ $cartographer->cartographiable?->updated_at?->format(trans('global.timestamp')) ?? '-' }}
+                            </a>
+                            @endif
+                            @endcan
                         </td>
 
                         {{-- Actions --}}

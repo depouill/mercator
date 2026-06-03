@@ -363,6 +363,7 @@ return [
             'user_helper'              => 'Authorised user (optional if a role is set)',
             'role'                     => 'Role',
             'role_helper'              => 'Authorised role (optional if a user is set)',
+            'last_updated'             => 'Last modified',
         ],
     ],
     'certificate' => [
@@ -1815,5 +1816,30 @@ return [
         'title' => 'Administration areas',
         'title_short' => 'Zones',
         'title_singular' => 'Administration area',
+    ],
+    'notifications' => [
+        'tab_title'             => 'Cartography',
+
+        'section_reminders'     => 'Cartographer reminders',
+        'reminders_enabled'     => 'Enable reminders',
+        'reminder_from'         => 'Sender',
+        'reminder_subject'      => 'Reminder subject',
+        'reminder_body'         => 'Reminder body',
+        'reminder_months'       => 'No update since (months)',
+        'reminder_every_days'   => 'Send a reminder every (days)',
+        'btn_test_reminder'     => 'Test reminder',
+        'last_reminder_sent'    => 'Last reminder sent',
+
+        'section_modification'  => 'Modification notifications',
+        'modification_enabled'  => 'Enable modification notifications',
+        'modification_to'       => 'Recipient',
+        'modification_subject'  => 'Notification subject',
+        'modification_body'     => 'Notification body',
+        'btn_test_modification' => 'Test notification',
+
+        'test_success'          => 'Test email sent successfully.',
+        'test_error'            => 'Failed to send: :error',
+        'test_hint'             => 'Save before testing to use the current values.',
+        'save_success'          => 'Notification settings saved.',
     ],
 ];

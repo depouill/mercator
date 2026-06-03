@@ -68,6 +68,7 @@ class Cartographer extends Model
         return $this->belongsTo(Role::class);
     }
 
+    /** @return array<class-string<\Illuminate\Database\Eloquent\Model>, string> */
     public static function cartographiableRoutesMap(): array
     {
         return [
@@ -125,6 +126,7 @@ class Cartographer extends Model
         ];
     }
 
+    /** @return array<class-string<\Illuminate\Database\Eloquent\Model>, string> */
     public static function cartographiableModelsList(): array
     {
         return [

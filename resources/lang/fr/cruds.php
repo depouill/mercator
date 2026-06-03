@@ -367,6 +367,7 @@ return [
             'user_helper'     => 'Utilisateur autorisé (facultatif si un rôle est renseigné)',
             'role'            => 'Rôle',
             'role_helper'     => 'Rôle autorisé (facultatif si un utilisateur est renseigné)',
+            'last_updated'    => 'Dernière modification',
         ],
     ],
     'certificate' => [
@@ -1854,5 +1855,30 @@ return [
         'title' => "Zones d'administration",
         'title_short' => 'Zones',
         'title_singular' => "Zone d'administration",
+    ],
+    'notifications' => [
+        'tab_title'             => 'Cartographie',
+
+        'section_reminders'     => 'Rappels cartographes',
+        'reminders_enabled'     => 'Activer les rappels',
+        'reminder_from'         => 'Expéditeur',
+        'reminder_subject'      => 'Sujet du rappel',
+        'reminder_body'         => 'Corps du rappel',
+        'reminder_months'       => 'Pas de mise à jour depuis (mois)',
+        'reminder_every_days'   => 'Envoyer un rappel tous les (jours)',
+        'btn_test_reminder'     => 'Tester le rappel',
+        'last_reminder_sent'    => 'Dernier envoi des rappels',
+
+        'section_modification'  => 'Notifications de modification',
+        'modification_enabled'  => 'Activer les notifications de modification',
+        'modification_to'       => 'Destinataire',
+        'modification_subject'  => 'Sujet de la notification',
+        'modification_body'     => 'Corps de la notification',
+        'btn_test_modification' => 'Tester la notification',
+
+        'test_success'          => 'Email de test envoyé avec succès.',
+        'test_error'            => 'Échec de l\'envoi : :error',
+        'test_hint'             => 'Enregistrez avant de tester pour utiliser les valeurs actuelles.',
+        'save_success'          => 'Paramètres de notification enregistrés.',
     ],
 ];
