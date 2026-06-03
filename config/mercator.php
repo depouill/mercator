@@ -58,6 +58,6 @@ Si tu penses avoir reçu ce message par erreur, contacte ton administrateur.</em
   <p>L\'objet <strong>:objet</strong> a été modifié :history par :user.</p>
 </body>
 </html>',
-    'reminder_last_sent' => '2026-06-03 09:06',
+    'reminder_last_sent' => '2026-06-03 10:53',
   ),
 );
