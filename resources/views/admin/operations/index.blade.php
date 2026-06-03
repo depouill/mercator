@@ -52,7 +52,8 @@
                 </thead>
                 <tbody>
                     @foreach($operations as $key => $operation)
-                        <tr data-entry-id="{{ $operation->id }}">
+                        <tr data-entry-id="{{ $operation->id }}"
+                         @if ($operation->description===null) class="table-warning" @endif >
                             <td>
 
                             </td>
