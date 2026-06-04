@@ -50,13 +50,9 @@
                         {{-- Dernière modification + lien historique --}}
                         <td>
                             @if($object && $updatedAt)
-                                @can('audit_log_access')
-                                    <a href="{{ route('admin.audit-logs.history', ['type' => $cartographer->cartographiable_type, 'id' => $object->getKey()]) }}">
-                                        {{ $updatedAt->format(trans('global.timestamp')) }}
-                                    </a>
-                                @else
+                                <a href="{{ route('admin.audit-logs.history', ['type' => $cartographer->cartographiable_type, 'id' => $object->getKey()]) }}">
                                     {{ $updatedAt->format(trans('global.timestamp')) }}
-                                @endcan
+                                </a>
                             @else
                                 -
                             @endif

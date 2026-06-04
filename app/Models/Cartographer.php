@@ -327,13 +327,23 @@ class Cartographer extends Model
 
     public static function loadSessionFor(User $user): void
     {
+        $roleIds = $user->roles()->pluck('id')->toArray();
+
+        $hasAssignments = static::where(function ($q) use ($user, $roleIds) {
+            $q->where('user_id', $user->id);
+            if (! empty($roleIds)) {
+                $q->orWhereIn('role_id', $roleIds);
+            }
+        })->exists();
+
         if ($user->isAdmin()) {
-            session(['cartographer_permissions' => []]);
-            session(['cartographer_permissions_at' => now()->timestamp]);
+            session([
+                'cartographer_permissions'    => [],
+                'cartographer_permissions_at' => now()->timestamp,
+                'is_cartographer'             => $hasAssignments,
+            ]);
             return;
         }
-
-        $roleIds = $user->roles()->pluck('id')->toArray();
 
         $permissions = static::where(function ($q) use ($user, $roleIds) {
                 $q->where('user_id', $user->id);
@@ -349,6 +359,7 @@ class Cartographer extends Model
         session([
             'cartographer_permissions'    => $permissions,
             'cartographer_permissions_at' => now()->timestamp,
+            'is_cartographer'             => $hasAssignments,
         ]);
     }
 }
