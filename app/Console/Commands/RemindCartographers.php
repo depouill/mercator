@@ -2,14 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\CartographerReminderMail;
 use App\Models\Cartographer;
 use App\Models\User;
+use App\Services\MailerService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class RemindCartographers extends Command
 {
@@ -111,7 +110,7 @@ class RemindCartographers extends Command
                 $body,
             );
 
-            Mail::to($user->email)->send(new CartographerReminderMail($mailBody, $subject, $from));
+            $this->getLaravel()->make(MailerService::class)->send($from, $user->email, $subject, $mailBody);
 
             Log::info("[mercator:remind-cartographers] Reminder sent to {$user->email} ({$count} objects)");
             $sent++;

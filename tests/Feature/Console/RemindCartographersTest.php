@@ -3,12 +3,12 @@
 use App\Models\Application;
 use App\Models\Cartographer;
 use App\Models\User;
+use App\Services\MailerService;
 use Database\Seeders\PermissionRoleTableSeeder;
 use Database\Seeders\PermissionsTableSeeder;
 use Database\Seeders\RolesTableSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
@@ -31,26 +31,30 @@ beforeEach(function (): void {
 });
 
 it('exits without sending mail when reminders are disabled', function (): void {
-    Mail::fake();
     Config::set('mercator.cartography.reminders_enabled', false);
 
-    $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldNotReceive('send');
+    $this->app->instance(MailerService::class, $mailer);
 
-    Mail::assertNothingSent();
+    $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
 });
 
 it('exits without sending mail when last send is too recent', function (): void {
-    Mail::fake();
     Config::set('mercator.cartography.reminder_last_sent', now()->subDays(5)->toDateString());
     Config::set('mercator.cartography.reminder_every_days', 30);
 
-    $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldNotReceive('send');
+    $this->app->instance(MailerService::class, $mailer);
 
-    Mail::assertNothingSent();
+    $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
 });
 
 it('sends no mail when all objects are recent', function (): void {
-    Mail::fake();
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldNotReceive('send');
+    $this->app->instance(MailerService::class, $mailer);
 
     $user = User::factory()->create();
     $app  = Application::factory()->create(['updated_at' => now()->subMonths(1)]);
@@ -62,12 +66,12 @@ it('sends no mail when all objects are recent', function (): void {
     ]);
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
-
-    Mail::assertNothingSent();
 });
 
 it('sends one mail per cartographer with outdated objects', function (): void {
-    Mail::fake();
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldReceive('send')->once();
+    $this->app->instance(MailerService::class, $mailer);
 
     $user = User::factory()->create(['email' => 'carto@example.com']);
     $app  = Application::factory()->create(['updated_at' => now()->subMonths(7)]);
@@ -79,12 +83,19 @@ it('sends one mail per cartographer with outdated objects', function (): void {
     ]);
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
-
-    Mail::assertSentCount(1);
 });
 
 it('substitutes placeholders in the mail body', function (): void {
-    Mail::fake();
+    $captured = [];
+
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldReceive('send')
+        ->once()
+        ->withArgs(function (string $from, string $to, string $subject, string $body) use (&$captured) {
+            $captured = compact('from', 'to', 'subject', 'body');
+            return true;
+        });
+    $this->app->instance(MailerService::class, $mailer);
 
     $user = User::factory()->create(['name' => 'Alice Dupont', 'email' => 'alice@example.com']);
     $app  = Application::factory()->create(['updated_at' => now()->subMonths(7)]);
@@ -97,17 +108,15 @@ it('substitutes placeholders in the mail body', function (): void {
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
 
-    Mail::assertSentCount(1);
-
-    $sent = Mail::sent(\Illuminate\Mail\Mailable::class)->first();
-
-    // The body is built via Mail::html() — we verify via the output line instead
-    // by checking the sent count and that no literal placeholder remains.
-    expect($sent)->not->toBeNull();
+    expect($captured['body'])->toContain('Alice Dupont');
+    expect($captured['body'])->not->toContain(':name');
+    expect($captured['body'])->not->toContain(':count');
 });
 
 it('sends one mail per distinct cartographer when multiple cartographers exist', function (): void {
-    Mail::fake();
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldReceive('send')->twice();
+    $this->app->instance(MailerService::class, $mailer);
 
     $userA = User::factory()->create(['email' => 'a@example.com']);
     $userB = User::factory()->create(['email' => 'b@example.com']);
@@ -128,13 +137,12 @@ it('sends one mail per distinct cartographer when multiple cartographers exist',
     ]);
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
-
-    // One mail per distinct cartographer, no duplicates.
-    Mail::assertSentCount(2);
 });
 
 it('groups all outdated objects for the same cartographer into a single mail', function (): void {
-    Mail::fake();
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldReceive('send')->once();
+    $this->app->instance(MailerService::class, $mailer);
 
     $user = User::factory()->create(['email' => 'carto@example.com']);
 
@@ -150,13 +158,12 @@ it('groups all outdated objects for the same cartographer into a single mail', f
     }
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
-
-    // Both objects belong to the same user → one mail, not two.
-    Mail::assertSentCount(1);
 });
 
 it('updates reminder_last_sent after sending', function (): void {
-    Mail::fake();
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldReceive('send')->once();
+    $this->app->instance(MailerService::class, $mailer);
 
     $user = User::factory()->create();
     $app  = Application::factory()->create(['updated_at' => now()->subMonths(7)]);
@@ -174,9 +181,12 @@ it('updates reminder_last_sent after sending', function (): void {
 });
 
 it('does not update reminder_last_sent when reminders are disabled', function (): void {
-    Mail::fake();
     Config::set('mercator.cartography.reminders_enabled', false);
     Config::set('mercator.cartography.reminder_last_sent', null);
+
+    $mailer = Mockery::mock(MailerService::class);
+    $mailer->shouldNotReceive('send');
+    $this->app->instance(MailerService::class, $mailer);
 
     $this->artisan('mercator:remind-cartographers')->assertExitCode(0);
 

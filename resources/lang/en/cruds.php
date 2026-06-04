@@ -353,6 +353,11 @@ return [
     'cartographer' => [
         'title'          => 'Cartographers',
         'title_singular' => 'Cartographer',
+        'my_objects' => [
+            'title'   => 'My mapped objects',
+            'empty'   => 'You are not a cartographer of any object.',
+            'deleted' => 'deleted object',
+        ],
         'description'    => 'Targeted read and edit access on specific cartography objects, without create or delete rights.',
         'fields' => [
             'type'        => 'Object type',

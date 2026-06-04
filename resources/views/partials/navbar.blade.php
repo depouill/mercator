@@ -89,6 +89,11 @@
                                     <i class="bi bi-person-fill-lock"></i>{{ trans('panel.menu.password') }}</a>
                             </li>
                         @endcan
+                        @if(!empty(session('cartographer_permissions', [])))
+                            <li><a class="dropdown-item" href="{{ route('admin.cartographers.list') }}">
+                                    <i class="bi bi-pin-map-fill"></i>{{ trans('panel.menu.cartographer') }}</a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
                 @can('tools_access')

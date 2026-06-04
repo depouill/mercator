@@ -489,6 +489,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['web.prote
         Route::get('/create',              [Admin\CartographerController::class, 'create'])->name('create');
         Route::post('/',                   [Admin\CartographerController::class, 'store'])->name('store');
         Route::get('/objects',             [Admin\CartographerController::class, 'getObjects'])->name('objects');
+        Route::get('/list',                [Admin\CartographerController::class, 'list'])->name('list');
         Route::get('/{cartographer}/edit', [Admin\CartographerController::class, 'edit'])->name('edit');
         Route::put('/{cartographer}',      [Admin\CartographerController::class, 'update'])->name('update');
         Route::delete('/{cartographer}',     [Admin\CartographerController::class, 'destroy'])->name('destroy');

@@ -122,6 +122,24 @@ class CartographerController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
+    public function list()
+    {
+        $user    = auth()->user();
+        $models  = $this->cartographiableModels();
+        $routes  = Cartographer::cartographiableRoutesMap();
+
+        $roleIds = $user->roles()->pluck('roles.id');
+
+        $cartographers = Cartographer::where('user_id', $user->id)
+            ->orWhereIn('role_id', $roleIds)
+            ->with('cartographiable')
+            ->orderBy('cartographiable_type')
+            ->get()
+            ->unique(fn ($c) => $c->cartographiable_type . '#' . $c->cartographiable_id);
+
+        return view('admin.cartographers.list', compact('cartographers', 'models', 'routes'));
+    }
+
     public function getObjects(Request $request): JsonResponse
     {
         abort_if(Gate::denies('cartographer_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');

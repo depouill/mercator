@@ -357,6 +357,11 @@ return [
     'cartographer' => [
         'title'          => 'Cartographes',
         'title_singular' => 'Cartographe',
+        'my_objects' => [
+            'title'   => 'Mes objets cartographiés',
+            'empty'   => "Vous n'êtes cartographe d'aucun objet.",
+            'deleted' => 'objet supprimé',
+        ],
         'description'    => 'Accès ciblé en lecture et modification sur des objets spécifiques de la cartographie, sans droits de création ni de suppression.',
         'fields' => [
             'type'        => "Type d'objet",
