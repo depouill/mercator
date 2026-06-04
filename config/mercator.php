@@ -29,7 +29,7 @@
   'cartography' => 
   array (
     'reminders_enabled' => true,
-    'reminder_from' => 'mercator@localhost',
+    'reminder_from' => 'mercator@localhost.com',
     'reminder_subject' => '[Mercator] Rappel',
     'reminder_body' => '<!DOCTYPE html>
 <html lang=\'fr\'>
@@ -46,18 +46,18 @@
 Si tu penses avoir reçu ce message par erreur, contacte ton administrateur.</em></p>
 </body>
 </html>',
-    'reminder_months' => 6,
+    'reminder_months' => 1,
     'reminder_every_days' => 30,
     'modification_enabled' => true,
-    'modification_to' => NULL,
-    'modification_from' => 'mercator@localhost',
-    'modification_subject' => '[Mercator] Objet modifié',
+    'modification_to' => 'mercator@localhost.com',
+    'modification_from' => 'mercator@localhost.com',
+    'modification_subject' => '[Mercator] Objet :name modifié',
     'modification_body' => '<!DOCTYPE html>
 <html lang=\'fr\'>
 <body>
-  <p>L\'objet <strong>:objet</strong> a été modifié :history par :user.</p>
+  <p>L\'objet <a href=":object_url">:object</a> a été <a href=":object_history_url">modifié</a> par :user :email.</p>
 </body>
 </html>',
-    'reminder_last_sent' => '2026-06-03 10:53',
+    'reminder_last_sent' => '2026-06-04 14:53',
   ),
 );

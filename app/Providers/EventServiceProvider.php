@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\CartographerModifiedObject;
 use App\Listeners\LoadCartographerPermissions;
+use App\Listeners\NotifyCartographerModification;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,6 +26,10 @@ class EventServiceProvider extends ServiceProvider
 
         Login::class => [
             LoadCartographerPermissions::class,
+        ],
+
+        CartographerModifiedObject::class => [
+            NotifyCartographerModification::class,
         ],
     ];
 

@@ -4,17 +4,22 @@ namespace App\Console\Commands;
 
 use App\Models\Cartographer;
 use App\Models\User;
+use App\Services\MailerService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class RemindCartographers extends Command
 {
-    protected $signature = 'mercator:remind-cartographers';
+    protected $signature = 'mercator:remind-cartographers {--force : Send reminders regardless of the last-sent delay}';
 
     protected $description = 'Send reminder emails to cartographers with outdated objects';
+
+    public function __construct(private readonly MailerService $mailer)
+    {
+        parent::__construct();
+    }
 
     public function handle(): int
     {
@@ -30,7 +35,7 @@ class RemindCartographers extends Command
         $everyDays = (int) config('mercator.cartography.reminder_every_days', 30);
         $lastSent  = config('mercator.cartography.reminder_last_sent');
 
-        if ($lastSent !== null) {
+        if (! $this->option('force') && $lastSent !== null) {
             $nextAllowed = Carbon::parse($lastSent)->addDays($everyDays);
             if ($nextAllowed->greaterThan(Carbon::today())) {
                 Log::info('[mercator:remind-cartographers] Too soon since last send (' . $lastSent . ') — skipping');
@@ -56,7 +61,7 @@ class RemindCartographers extends Command
                 continue;
             }
 
-            $userIds = Cartographer::where('cartographiable_type', $modelClass)
+            $userIds = Cartographer::query()->where('cartographiable_type', $modelClass)
                 ->whereIn('cartographiable_id', $outdated->pluck('id'))
                 ->whereNotNull('user_id')
                 ->pluck('user_id', 'cartographiable_id');
@@ -105,28 +110,12 @@ class RemindCartographers extends Command
                 $body,
             );
 
-            $mailable = new class($mailBody, $from, $user->email, $subject) extends \Illuminate\Mail\Mailable {
-                public function __construct(
-                    private string $htmlContent,
-                    private string $mailFrom,
-                    private string $mailTo,
-                    private string $mailSubject,
-                ) {}
-
-                public function build(): static
-                {
-                    return $this
-                        ->from($this->mailFrom)
-                        ->to($this->mailTo)
-                        ->subject($this->mailSubject)
-                        ->html($this->htmlContent);
-                }
-            };
-
-            Mail::send($mailable);
+            $this->mailer->send($from, $user->email, $subject, $mailBody);
 
             Log::info("[mercator:remind-cartographers] Reminder sent to {$user->email} ({$count} objects)");
             $sent++;
+
+            sleep(10);
         }
 
         $today = Carbon::now()->format('Y-m-d H:i');

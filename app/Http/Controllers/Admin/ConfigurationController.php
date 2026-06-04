@@ -195,23 +195,35 @@ class ConfigurationController extends Controller
 
         if ($action === 'test_modification') {
             return $this->sendTestMail(
-                $request->input('reminder_from'),
+                $request->input('modification_to'),
                 $request->input('modification_to'),
                 $request->input('modification_subject'),
             );
         }
 
         $cfg = $this->readConfigFile();
-        $cfg['cartography']['reminders_enabled']    = $request->boolean('reminders_enabled');
-        $cfg['cartography']['reminder_from']        = $request->input('reminder_from');
-        $cfg['cartography']['reminder_subject']     = $request->input('reminder_subject');
-        $cfg['cartography']['reminder_body']        = $request->input('reminder_body');
-        $cfg['cartography']['reminder_months']      = (int) $request->input('reminder_months', 6);
-        $cfg['cartography']['reminder_every_days']  = (int) $request->input('reminder_every_days', 30);
-        $cfg['cartography']['modification_enabled'] = $request->boolean('modification_enabled');
-        $cfg['cartography']['modification_to']      = $request->input('modification_to');
-        $cfg['cartography']['modification_subject'] = $request->input('modification_subject');
-        $cfg['cartography']['modification_body']    = $request->input('modification_body');
+
+        $remindersEnabled    = $request->boolean('reminders_enabled');
+        $modificationEnabled = $request->boolean('modification_enabled');
+
+        $cfg['cartography']['reminders_enabled']    = $remindersEnabled;
+        $cfg['cartography']['modification_enabled'] = $modificationEnabled;
+
+        // Disabled fieldsets are not submitted — only overwrite sub-fields when the section is enabled.
+        if ($remindersEnabled) {
+            $cfg['cartography']['reminder_from']       = $request->input('reminder_from');
+            $cfg['cartography']['reminder_subject']    = $request->input('reminder_subject');
+            $cfg['cartography']['reminder_body']       = $request->input('reminder_body');
+            $cfg['cartography']['reminder_months']     = (int) $request->input('reminder_months', 6);
+            $cfg['cartography']['reminder_every_days'] = (int) $request->input('reminder_every_days', 30);
+        }
+
+        if ($modificationEnabled) {
+            $cfg['cartography']['modification_to']      = $request->input('modification_to');
+            $cfg['cartography']['modification_subject'] = $request->input('modification_subject');
+            $cfg['cartography']['modification_body']    = $request->input('modification_body');
+        }
+
         $this->writeConfigFile($cfg);
 
         return [trans('cruds.configuration.saved'), true];
@@ -272,6 +284,8 @@ class ConfigurationController extends Controller
             $mail->SMTPAutoTLS = config('mail.mailers.smtp.auto_tls');
             $mail->Port        = (int) config('mail.mailers.smtp.port');
 
+            $mail->CharSet  = PHPMailer::CHARSET_UTF8;
+            $mail->Encoding = PHPMailer::ENCODING_BASE64;
             $mail->setFrom($from);
             foreach (explode(',', $to) as $email) {
                 $mail->addAddress(trim($email));

@@ -63,6 +63,11 @@ class AppServiceProvider extends ServiceProvider
             );
         }
 
+        // Observer: notify cartographers when they modify their own objects
+        foreach (array_keys(\App\Models\Cartographer::cartographiableRoutesMap()) as $modelClass) {
+            $modelClass::observe(\App\Observers\CartographerActivityObserver::class);
+        }
+
         // Directives Blade cartographes
         Blade::directive('canEdit', function (string $expression) {
             return "<?php if(Gate::allows('edit-object', {$expression})): ?>";

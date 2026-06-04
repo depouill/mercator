@@ -75,12 +75,20 @@ class User extends Authenticatable implements OAuthenticatable, HasIconContract
         return $this->belongsToMany(Role::class);
     }
 
+    private ?bool $isAdminCache = null;
+
     /**
      * L'utilisateur es-til administrateur ?
      */
     public function isAdmin(): bool
     {
-        return $this->roles()->whereKey(1)->exists();
+        if ($this->isAdminCache === null) {
+            $this->isAdminCache = $this->relationLoaded('roles')
+                ? $this->roles->contains('id', 1)
+                : $this->roles()->whereKey(1)->exists();
+        }
+
+        return $this->isAdminCache;
     }
 
     /**
