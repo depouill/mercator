@@ -148,6 +148,9 @@ class ExplorerController extends Controller
                 ob_flush();
             }
             flush();
+
+            $mb = round(memory_get_peak_usage(true) / 1048576, 2);
+            logger("Memory peak [getGraphData]: {$mb} MB");
         }, 200, [
             'Content-Type'     => 'application/json',
             'X-Accel-Buffering' => 'no',
