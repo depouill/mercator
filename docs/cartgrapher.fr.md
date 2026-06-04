@@ -64,20 +64,26 @@ Le rôle de cartographe **ne donne pas accès** à :
 - les fonctions d'administration de Mercator (gestion des utilisateurs, des rôles, de la configuration…),
 - les rapports et exports globaux réservés aux administrateurs.
 
-
 ## Visualiser ses objets assignés
 
-### Tableau de bord 
+### Tableau de bord
 
-Le tableau de bord de Mercator affiche uniquement les objets auxquels l'utilisateur a accès via son rôle, ainsi que les objets dont il est cartographe. Il n'y a pas de vue dédiée aux objets assignés : le tableau de bord reflète naturellement le périmètre du cartographe.
+Le tableau de bord de Mercator affiche uniquement les objets auxquels l'utilisateur a accès grâce à son rôle, ainsi que les objets dont il est cartographe. Le tableau de bord reflète ainsi naturellement le périmètre du cartographe, sans configuration supplémentaire.
+
+### Liste des objets du cartographe
+
+Les cartographes ont accès à la liste consolidée des objets dont ils sont responsables via le menu **Préférences → Cartographie**. Cette liste regroupe tous les objets assignés, quel que soit leur type, et permet d'accéder directement à chaque fiche et historiques des changements.
+
+!!! info "Menu visible uniquement si des objets sont assignés"
+  Le menu **Préférences → Cartographie** n'apparaît que si au moins un objet a été assigné à l'utilisateur. Il est invisible pour les utilisateurs sans responsabilité de cartographie.
 
 ### Filtrage dans les listes
 
-Dans les listes d'objets (serveurs, applications, réseaux…), un cartographe ne voit que les objets dont il est cartographe et les objets auxquels il a accès via son rôle.
+Dans les listes d'objets (serveurs, applications, réseaux…), chaque cartographe ne voit que les objets auxquels il a accès via son rôle et ceux dont il est cartographe. Ce filtrage est automatique et transparent : il n'y a rien à activer.
 
 ## Recevoir des notifications
 
-Mercator peut envoyer des notifications aux cartographes par e-mail pour les tenir informés de l'état de leurs objets.
+Mercator peut envoyer des notifications aux cartographes par e-mail pour les tenir informés de l'état de leurs objets et des modifications qui y sont apportées.
 
 ### Rappels périodiques pour maintenir la cartographie à jour
 
