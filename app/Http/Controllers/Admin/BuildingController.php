@@ -26,7 +26,11 @@ class BuildingController extends Controller
             abort(Response::HTTP_FORBIDDEN, '403 Forbidden');
         }
 
-        $buildings = Building::with('site')
+        $buildings = Building::with([
+                'site:id,name',
+                'building:id,name',
+                'buildings:id,name,building_id',
+            ])
             ->when(request('search'), function ($q, $search) {
                 $q->where(function ($q) use ($search) {
                     foreach (Building::$searchable as $field) {
