@@ -73,8 +73,7 @@ Le tableau de bord de Mercator affiche uniquement les objets auxquels l'utilisat
 
 ### Filtrage dans les listes
 
-Dans les listes d'objets (serveurs, applications, réseaux…), un cartographe peut filtrer l'affichage pour **ne voir que ses objets**. Ce filtre est accessible en haut de chaque liste via le bouton **Mes objets**.
-
+Dans les listes d'objets (serveurs, applications, réseaux…), un cartographe ne voit que les objets dont il est cartographe et les objets auxquels il a accès via son rôle.
 
 ## Recevoir des notifications
 

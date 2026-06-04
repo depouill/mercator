@@ -48,16 +48,16 @@ Si tu penses avoir reçu ce message par erreur, contacte ton administrateur.</em
 </html>',
     'reminder_months' => 1,
     'reminder_every_days' => 30,
-    'modification_enabled' => true,
-    'modification_to' => 'mercator@localhost.com',
-    'modification_from' => 'mercator@localhost.com',
-    'modification_subject' => '[Mercator] Objet :name modifié',
-    'modification_body' => '<!DOCTYPE html>
+    'notifier_enabled' => true,
+    'notifier_to' => 'mercator@localhost.com',
+    'notifier_from' => 'mercator@localhost.com',
+    'notifier_subject' => '[Mercator] Objet :name modifié',
+    'notifier_body' => '<!DOCTYPE html>
 <html lang=\'fr\'>
 <body>
   <p>L\'objet <a href=":object_url">:object</a> a été <a href=":object_history_url">modifié</a> par :user :email.</p>
 </body>
 </html>',
-    'reminder_last_sent' => '2026-06-04 14:53',
+    'reminder_last_sent' => '2026-06-04 16:39',
   ),
 );

@@ -51,7 +51,7 @@ class NotifyCartographerModification implements ShouldQueue
 
     public function handle(CartographerModifiedObject $event): void
     {
-        if (! config('mercator.cartography.modification_enabled', false)) {
+        if (! config('mercator.cartography.notifier_enabled', false)) {
             return;
         }
 
@@ -84,12 +84,12 @@ class NotifyCartographerModification implements ShouldQueue
             ':date'               => now()->format('d/m/Y H:i'),
         ];
 
-        $subject = str_replace(array_keys($placeholders), array_values($placeholders), (string) config('mercator.cartography.modification_subject', ''));
-        $body    = str_replace(array_keys($placeholders), array_values($placeholders), (string) config('mercator.cartography.modification_body', ''));
+        $subject = str_replace(array_keys($placeholders), array_values($placeholders), (string) config('mercator.cartography.notifier_subject', ''));
+        $body    = str_replace(array_keys($placeholders), array_values($placeholders), (string) config('mercator.cartography.notifier_body', ''));
 
-        $from = (string) config('mercator.cartography.modification_from', '');
+        $from = (string) config('mercator.cartography.notifier_from', '');
 
-        $recipients = $this->resolveRecipients($class, $objectKey, (string) config('mercator.cartography.modification_to', ''));
+        $recipients = $this->resolveRecipients($class, $objectKey, (string) config('mercator.cartography.notifier_to', ''));
 
         if ($recipients === []) {
             Log::warning('[cartographer] no recipients for modification notification, skipping');

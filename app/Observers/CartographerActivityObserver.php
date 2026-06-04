@@ -10,7 +10,7 @@ class CartographerActivityObserver
 {
     public function updating(Model $model): void
     {
-        if (! config('mercator.cartography.modification_enabled', false)) {
+        if (! config('mercator.cartography.notifier_enabled', false)) {
             return;
         }
 
