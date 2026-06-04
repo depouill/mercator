@@ -6,12 +6,11 @@ Changements prévus en 2026 et plus :
 
 ## Evolutions majeures
 
-- [ ] Dessin de processus avec BPMN v2.0 (https://github.com/process-analytics)
-- [ ] Lien avec Monarc : générer un modèle d'analyse de risques pour Monarc
+- [x] Dessin de processus avec BPMN v2.0 (https://github.com/process-analytics)
+- [x] Langage de requête pour générer des listes ou des graphes ( https://github.com/dbarzin/mercator/issues/1768 et https://github.com/dbarzin/mercator/discussions/1767 )
 - [ ] Générer les cartographes dans la gestion des utilisateurs
+- [ ] Lien avec Monarc : générer un modèle d'analyse de risques pour Monarc
 - [ ] Généraliser la notion de cartographe à tous les objets (cf.: https://laravel.com/docs/10.x/authorization)
-- [ ] Langage de requête pour générer des listes ou des graphes (
-  https://github.com/dbarzin/mercator/issues/1768 et https://github.com/dbarzin/mercator/discussions/1767 )
 - [ ] Purge de la DB : https://github.com/dbarzin/mercator/discussions/1525
 - [ ] Utiliser un modèle de document pour les rapports
 - [ ] Identifier les chemins critiques
