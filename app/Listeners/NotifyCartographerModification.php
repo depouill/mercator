@@ -17,6 +17,38 @@ class NotifyCartographerModification implements ShouldQueue
 
     public function __construct(private readonly MailerService $mailer) {}
 
+    /**
+     * Merge the general notification address with the emails of every cartographer
+     * assigned to the modified object (direct user_id or via role).
+     *
+     * @return string[]
+     */
+    private function resolveRecipients(string $modelClass, mixed $objectId, string $generalTo): array
+    {
+        $emails = array_filter(array_map('trim', explode(',', $generalTo)));
+
+        $cartographers = Cartographer::where('cartographiable_type', $modelClass)
+            ->where('cartographiable_id', $objectId)
+            ->with(['user', 'role.users'])
+            ->get();
+
+        foreach ($cartographers as $cartographer) {
+            if ($cartographer->user?->email) {
+                $emails[] = $cartographer->user->email;
+            }
+
+            if ($cartographer->role) {
+                foreach ($cartographer->role->users as $user) {
+                    if ($user->email) {
+                        $emails[] = $user->email;
+                    }
+                }
+            }
+        }
+
+        return array_values(array_unique(array_filter($emails)));
+    }
+
     public function handle(CartographerModifiedObject $event): void
     {
         if (! config('mercator.cartography.modification_enabled', false)) {
@@ -56,15 +88,18 @@ class NotifyCartographerModification implements ShouldQueue
         $body    = str_replace(array_keys($placeholders), array_values($placeholders), (string) config('mercator.cartography.modification_body', ''));
 
         $from = (string) config('mercator.cartography.modification_from', '');
-        $to   = (string) config('mercator.cartography.modification_to', '');
 
-        if ($to === '') {
-            Log::warning('[cartographer] modification_to is empty, skipping mail notification');
+        $recipients = $this->resolveRecipients($class, $objectKey, (string) config('mercator.cartography.modification_to', ''));
+
+        if ($recipients === []) {
+            Log::warning('[cartographer] no recipients for modification notification, skipping');
             return;
         }
 
+        $to = implode(',', $recipients);
+
         $this->mailer->send($from, $to, $subject, $body);
 
-        Log::info("[cartographer] notification sent for {$event->user->email} modified {$event->objectType}#{$event->object->getKey()}");
+        Log::info("[cartographer] notification sent for {$event->user->email} modified {$event->objectType}#{$objectKey} to: {$to}");
     }
 }
