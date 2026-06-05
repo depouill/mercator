@@ -58,6 +58,6 @@ Si tu penses avoir reçu ce message par erreur, contacte ton administrateur.</em
   <p>L\'objet <a href=":object_url">:object</a> a été <a href=":object_history_url">modifié</a> par :user :email.</p>
 </body>
 </html>',
-    'reminder_last_sent' => '2026-06-04 16:57',
+    'reminder_last_sent' => '2026-06-05 07:40',
   ),
 );

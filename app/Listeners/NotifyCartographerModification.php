@@ -46,7 +46,7 @@ class NotifyCartographerModification implements ShouldQueue
             }
         }
 
-        return array_values(array_unique(array_filter($emails)));
+        return array_values(array_unique($emails));
     }
 
     public function handle(CartographerModifiedObject $event): void
