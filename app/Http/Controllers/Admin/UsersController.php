@@ -60,7 +60,11 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('edit-object', $user), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $user->update($request->all());
+        $data = $request->all();
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+        $user->update($data);
 
         $user->roles()->sync($request->input('roles', []));
         Cache::put('roles_last_update', now()->timestamp);
