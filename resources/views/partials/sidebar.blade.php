@@ -529,12 +529,14 @@
                                 class="menu-text">{{ trans('cruds.role.title') }}</span>
                     </a>
                 @endcanAccess
+                {{--
                 @canAccess(\App\Models\Cartographer::class)
                     <a href="{{ route('admin.cartographers.index') }}"
                        class="ps-4 {{ request()->is('admin/cartographers*') ? 'active' : '' }}">
-                        <i class="bi bi-pin-map-fill"></i><span class="menu-text">Cartographes</span>
+                        <i class="bi bi-pin-map-fill"></i><span class="menu-text">{{ trans('cruds.cartographer.title') }}</span>
                     </a>
                 @endcanAccess
+                --}}
                 @can('configure')
                     <a href="{{ route("admin.config.parameters") }}"
                        class="ps-4 {{ request()->is('admin/config/parameters') ? 'active' : '' }}">
