@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\Peripheral
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Peripheral extends Model implements HasIconContract, HasPrefix
 {
     use Auditable, HasFactory, HasUniqueIdentifier, HasIcon, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'peripherals';
 

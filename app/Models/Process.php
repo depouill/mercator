@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use App\Traits\HasCartographers;
 
 /**
  * App\Process
@@ -24,6 +25,7 @@ use Illuminate\Support\Collection;
 class Process extends Model implements HasIconContract, HasPrefix
 {
     use Auditable, HasFactory, HasUniqueIdentifier, HasIcon, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'processes';
 

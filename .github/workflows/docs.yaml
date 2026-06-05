@@ -10,6 +10,9 @@ on:
       - 'requirements-docs.txt'
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -31,7 +34,9 @@ jobs:
         run: mkdocs build --clean
 
       - name: Add Helm index to site
-        run: cp docs/_helm_chart/index/index.yaml site/index.yaml
+        run: |
+          git fetch origin gh-pages
+          git show origin/gh-pages:index.yaml > site/index.yaml 2>/dev/null || true
 
       - name: Deploy to GitHub Pages
         run: |

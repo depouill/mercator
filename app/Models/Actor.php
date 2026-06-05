@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use App\Traits\HasCartographers;
 
 /**
  * App\Actor
@@ -22,6 +23,7 @@ use Illuminate\Support\Collection;
 class Actor extends Model implements HasPrefix, HasIconContract
 {
     use HasIcon, Auditable, HasUniqueIdentifier, HasFactory, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'actors';
 

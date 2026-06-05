@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasCartographers;
 
 /**
  * App\ApplicationBlock
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ApplicationBlock extends Model implements HasPrefix, HasIconContract
 {
     use HasIcon, Auditable, HasUniqueIdentifier, HasFactory, SoftDeletes;
+    use HasCartographers;
 
     public $table = 'application_blocks';
 
